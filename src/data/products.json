@@ -1,0 +1,48 @@
+[
+    {
+        "id": "mini-etm-rtr",
+        "name": "Mini ETM RTR Full Suspension Model",
+        "price": 1299,
+        "description": "The ultimate mini electric dirt bike with full suspension and high-torque motor.",
+        "images": [
+            "https://images.unsplash.com/photo-1449495169669-7b118f960237?auto=format&fit=crop&q=80&w=600"
+        ],
+        "category": "Bikes",
+        "options": [
+            {
+                "name": "Color",
+                "values": [
+                    "Electric Blue",
+                    "Neon Lime",
+                    "Stealth Black"
+                ]
+            },
+            {
+                "name": "Battery",
+                "values": [
+                    "15Ah",
+                    "20Ah (+ $200)"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "mini-surron-ultra",
+        "name": "Mini Surron Ultra Bee",
+        "price": 4499,
+        "description": "Professional grade mini electric bike for serious riders.",
+        "images": [
+            "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=600"
+        ],
+        "category": "Bikes",
+        "options": [
+            {
+                "name": "Suspension",
+                "values": [
+                    "Standard",
+                    "Pro Racing (+ $500)"
+                ]
+            }
+        ]
+    }
+]
