@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { fetchAllOrders } from '../order-actions';
 import { Order } from '@/lib/orders';

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { addProduct, deleteProduct, updateProduct } from './actions';
 
