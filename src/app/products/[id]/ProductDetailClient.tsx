@@ -39,13 +39,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     };
 
     const handleAddToCart = () => {
-        addToCart({
-            id: product.id,
-            name: product.name,
-            price: totalPrice,
-            quantity: quantity,
-            selectedOptions
-        } as any);
+        addToCart(
+            { ...product, price: totalPrice },
+            selectedOptions,
+            quantity
+        );
         alert('Added to cart!');
     };
 
