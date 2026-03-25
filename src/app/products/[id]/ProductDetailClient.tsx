@@ -84,18 +84,46 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                         {product.options.map((opt) => (
                             <div key={opt.name} className="option-group">
                                 <label>{opt.name}</label>
-                                <div className="option-pills">
-                                    {opt.values.map((v) => (
-                                        <button
-                                            key={v.value}
-                                            className={`pill ${selectedOptions[opt.name] === v.value ? 'active' : ''}`}
-                                            onClick={() => handleOptionChange(opt.name, v.value)}
-                                        >
-                                            {v.value}
-                                            {v.priceModifier ? ` (+$${v.priceModifier})` : ''}
-                                        </button>
-                                    ))}
-                                </div>
+                                
+                                {(!opt.type || opt.type === 'selection') && (
+                                    <div className="option-pills">
+                                        {opt.values.map((v) => (
+                                            <button
+                                                key={v.value}
+                                                className={`pill ${selectedOptions[opt.name] === v.value ? 'active' : ''}`}
+                                                onClick={() => handleOptionChange(opt.name, v.value)}
+                                            >
+                                                {v.value}
+                                                {v.priceModifier ? ` (+$${v.priceModifier})` : ''}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {opt.type === 'dropdown' && (
+                                    <select 
+                                        className="option-dropdown"
+                                        value={selectedOptions[opt.name] || (opt.values[0]?.value || '')} 
+                                        onChange={(e) => handleOptionChange(opt.name, e.target.value)}
+                                    >
+                                        {opt.values.map((v) => (
+                                            <option key={v.value} value={v.value}>
+                                                {v.value}
+                                                {v.priceModifier ? ` (+$${v.priceModifier})` : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+
+                                {opt.type === 'textbox' && (
+                                    <input 
+                                        type="text"
+                                        className="option-textbox"
+                                        placeholder={`Enter ${opt.name}`}
+                                        value={selectedOptions[opt.name] || ''}
+                                        onChange={(e) => handleOptionChange(opt.name, e.target.value)}
+                                    />
+                                )}
                             </div>
                         ))}
 
@@ -181,6 +209,23 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
                 .pill:hover { border-color: black; }
                 .pill.active { background: black; color: white; border-color: black; }
+
+                .option-dropdown, .option-textbox {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 1px solid #e2e2e2;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    color: black;
+                    background: white;
+                    outline: none;
+                    transition: border-color 0.2s;
+                    font-family: inherit;
+                }
+
+                .option-dropdown:focus, .option-textbox:focus {
+                    border-color: black;
+                }
 
                 .purchase-controls { display: flex; gap: 1rem; margin-top: 2rem; margin-bottom: 1rem; }
                 .quantity-selector {

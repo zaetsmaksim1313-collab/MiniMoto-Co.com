@@ -3,6 +3,7 @@ import path from 'path';
 
 export interface ProductOption {
     name: string;
+    type?: 'dropdown' | 'selection' | 'textbox';
     values: {
         value: string;
         priceModifier?: number;
@@ -21,11 +22,20 @@ export interface Product {
     status: 'Active' | 'Draft' | 'Archived';
 }
 
+import productsData from '../data/products.json';
+
 const productsFilePath = path.join(process.cwd(), 'src/data/products.json');
 
 export async function getProducts(): Promise<Product[]> {
-    const fileData = fs.readFileSync(productsFilePath, 'utf8');
-    return JSON.parse(fileData);
+    if (process.env.NODE_ENV === 'development') {
+        try {
+            const fileData = fs.readFileSync(productsFilePath, 'utf8');
+            return JSON.parse(fileData);
+        } catch (e) {
+            return productsData as unknown as Product[];
+        }
+    }
+    return productsData as unknown as Product[];
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {
