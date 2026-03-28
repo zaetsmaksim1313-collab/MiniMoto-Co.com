@@ -10,7 +10,7 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
             <section className="hero">
                 <div className="hero-overlay"></div>
                 <img
-                    src="/hero-bg.jpg"
+                    src="/hero-bg.JPG"
                     alt="Hero"
                     className="hero-image"
                 />
