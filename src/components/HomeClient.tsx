@@ -15,8 +15,9 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     className="hero-image"
                 />
                 <div className="hero-content container">
-                    <h1>Fully Custom Mini Surrons For Riders, By Riders</h1>
-                    <p>A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
+                    <h1>Custom Mini Surrons</h1>
+                    <hr className="hero-divider" />
+                    <p>Create your very own mini Surron with working suspension, spinning wheels, and upgrades to choose from.</p>
                     <Link href="/products" className="btn-hero">Shop all</Link>
                 </div>
             </section>
@@ -56,7 +57,7 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     overflow: hidden;
                     display: flex;
                     align-items: center;
-                    background-color: white;
+                    background-color: #000;
                 }
 
                 .hero-image {
@@ -65,7 +66,7 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    object-fit: contain;
+                    object-fit: cover;
                     z-index: 0;
                 }
 
@@ -75,7 +76,7 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.8) 100%);
+                    background: rgba(0, 0, 0, 0.25);
                     z-index: 1;
                 }
 
@@ -85,39 +86,45 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     max-width: 800px;
                     text-align: center;
                     margin: 0 auto;
-                    color: black;
+                    color: white;
                 }
 
                 .hero-content h1 {
-                    font-size: 4.5rem;
-                    font-weight: 900;
-                    margin-bottom: 1.5rem;
+                    font-size: 5rem;
+                    font-weight: 500;
+                    letter-spacing: -0.02em;
+                    margin-bottom: 1rem;
                     line-height: 1.1;
-                    text-shadow: 0 0 15px white;
+                }
+                
+                .hero-divider {
+                    width: 60%;
+                    margin: 0 auto 1.5rem auto;
+                    border: none;
+                    height: 2px;
+                    background-color: white;
                 }
 
                 .hero-content p {
-                    font-size: 1.25rem;
+                    font-size: 1.15rem;
                     margin-bottom: 2.5rem;
-                    font-weight: 600;
-                    text-shadow: 0 0 10px white;
+                    font-weight: 400;
                 }
 
                 .btn-hero {
                     display: inline-block;
                     padding: 14px 36px;
-                    background: black;
+                    background: white;
                     border-radius: 50px;
-                    color: white;
+                    color: black;
                     text-decoration: none;
-                    font-weight: 800;
+                    font-weight: 700;
                     font-size: 1.1rem;
                     transition: all 0.3s;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 }
 
                 .btn-hero:hover {
-                    background: #333;
+                    background: #eee;
                     transform: translateY(-2px);
                 }
 
