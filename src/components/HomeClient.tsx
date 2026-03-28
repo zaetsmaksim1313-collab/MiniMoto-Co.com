@@ -51,12 +51,12 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
             <style jsx>{`
                 .hero {
                     position: relative;
-                    height: 80vh;
+                    height: 85vh;
                     width: 100%;
                     overflow: hidden;
                     display: flex;
                     align-items: center;
-                    color: white;
+                    background-color: white;
                 }
 
                 .hero-image {
@@ -65,8 +65,8 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
-                    z-index: -1;
+                    object-fit: contain;
+                    z-index: 0;
                 }
 
                 .hero-overlay {
@@ -75,46 +75,50 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: rgba(0, 0, 0, 0.4);
-                    z-index: 0;
+                    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.8) 100%);
+                    z-index: 1;
                 }
 
                 .hero-content {
                     position: relative;
-                    z-index: 1;
+                    z-index: 2;
                     max-width: 800px;
                     text-align: center;
                     margin: 0 auto;
+                    color: black;
                 }
 
                 .hero-content h1 {
-                    font-size: 4rem;
-                    font-weight: 800;
+                    font-size: 4.5rem;
+                    font-weight: 900;
                     margin-bottom: 1.5rem;
                     line-height: 1.1;
+                    text-shadow: 0 0 15px white;
                 }
 
                 .hero-content p {
                     font-size: 1.25rem;
                     margin-bottom: 2.5rem;
-                    opacity: 0.9;
+                    font-weight: 600;
+                    text-shadow: 0 0 10px white;
                 }
 
                 .btn-hero {
                     display: inline-block;
-                    padding: 12px 32px;
-                    border: 2px solid white;
+                    padding: 14px 36px;
+                    background: black;
                     border-radius: 50px;
                     color: white;
                     text-decoration: none;
-                    font-weight: 700;
-                    font-size: 1rem;
+                    font-weight: 800;
+                    font-size: 1.1rem;
                     transition: all 0.3s;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 }
 
                 .btn-hero:hover {
-                    background: white;
-                    color: black;
+                    background: #333;
+                    transform: translateY(-2px);
                 }
 
                 .featured-section {
