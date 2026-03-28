@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { updateProduct } from '../../../actions';
+import { updateProduct } from '../../actions';
 import { useRouter } from 'next/navigation';
 import { Product, ProductOption } from '@/lib/products';
 
