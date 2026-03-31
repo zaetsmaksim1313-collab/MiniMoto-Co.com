@@ -6,5 +6,5 @@ export default async function HomePage() {
   const featuredProducts = products.slice(0, 4);
   const accessories = products.filter(p => p.category.toLowerCase().includes('accessories') || p.category.toLowerCase().includes('accessory'));
 
-  return <HomeClient featuredProducts={featuredProducts} accessories={accessories} />;
+  return <HomeClient featuredProducts={featuredProducts} accessories={accessories} allProducts={products} />;
 }

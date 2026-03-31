@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Product } from "@/lib/products";
 
-export default function HomeClient({ featuredProducts, accessories }: { featuredProducts: Product[], accessories?: Product[] }) {
+export default function HomeClient({ featuredProducts, accessories, allProducts }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[] }) {
     return (
         <div className="home-container">
             {/* Hero Section */}
@@ -43,26 +43,44 @@ export default function HomeClient({ featuredProducts, accessories }: { featured
             </section>
 
             {/* Mini Moto Accessories */}
-            {accessories && accessories.length > 0 && (
-                <section className="featured-section container">
-                    <div className="section-header">
-                        <h2>Mini Moto Accessories</h2>
-                        <Link href="/products?category=accessories" className="view-all">View all</Link>
-                    </div>
-                    <div className="carousel">
-                        {accessories.map((p) => (
-                            <div key={p.id} className="carousel-card">
-                                <Link href={`/products/${p.id}`}>
-                                    <div className="image-container">
-                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
-                                        <img src={p.images[0]} alt={p.name} />
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
+            <section className="featured-section container">
+                <div className="section-header">
+                    <h2>Mini Moto Accessories</h2>
+                    <Link href="/products?category=accessories" className="view-all">View all</Link>
+                </div>
+                <div className="carousel">
+                    {accessories && accessories.length > 0 ? accessories.map((p) => (
+                        <div key={p.id} className="carousel-card-small">
+                            <Link href={`/products/${p.id}`}>
+                                <div className="image-container">
+                                    {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                    <img src={p.images[0]} alt={p.name} />
+                                </div>
+                            </Link>
+                        </div>
+                    )) : <p style={{opacity: 0.5}}>No accessories added yet.</p>}
+                </div>
+            </section>
+
+            {/* All Products */}
+            <section className="featured-section container">
+                <div className="section-header">
+                    <h2>All Products</h2>
+                    <Link href="/products" className="view-all">View all</Link>
+                </div>
+                <div className="carousel">
+                    {allProducts && allProducts.map((p) => (
+                        <div key={p.id} className="carousel-card-small">
+                            <Link href={`/products/${p.id}`}>
+                                <div className="image-container">
+                                    {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                    <img src={p.images[0]} alt={p.name} />
+                                </div>
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             <style jsx>{`
                 .hero {
