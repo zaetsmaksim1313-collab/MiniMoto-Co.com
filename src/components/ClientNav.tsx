@@ -19,7 +19,6 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                             <li><a href="/">Home</a></li>
                             <li><a href="/products">Products</a></li>
                             <li><a href="/collections">Collections</a></li>
-                            <li><a href="/admin" style={{ color: 'var(--accent-secondary)' }}>Admin</a></li>
                         </ul>
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             <a href="/search" style={{ fontSize: '1.2rem' }}>🔍</a>

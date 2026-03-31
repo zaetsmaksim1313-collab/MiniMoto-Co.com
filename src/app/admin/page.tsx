@@ -84,30 +84,30 @@ export default function AdminPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Product ID (URL slug)</label>
-                            <input name="id" defaultValue={editingProduct?.id} readOnly={!!editingProduct} placeholder="e.g. mini-talaria-x3" style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px', opacity: editingProduct ? 0.6 : 1 }} required />
+                            <input name="id" defaultValue={editingProduct?.id} readOnly={!!editingProduct} placeholder="e.g. mini-talaria-x3" style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px', opacity: editingProduct ? 0.6 : 1 }} required />
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Name</label>
-                            <input name="name" defaultValue={editingProduct?.name} placeholder="Product Name" style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} required />
+                            <input name="name" defaultValue={editingProduct?.name} placeholder="Product Name" style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} required />
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Price ($)</label>
-                            <input name="price" type="number" defaultValue={editingProduct?.price} placeholder="2999" style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} required />
+                            <input name="price" type="number" step="any" defaultValue={editingProduct?.price} placeholder="2999" style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} required />
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Category</label>
-                            <input name="category" defaultValue={editingProduct?.category} placeholder="Bikes / Gear / Parts" style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} required />
+                            <input name="category" defaultValue={editingProduct?.category} placeholder="Bikes / Gear / Parts" style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} required />
                         </div>
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Description</label>
-                        <textarea name="description" defaultValue={editingProduct?.description} rows={4} style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} required></textarea>
+                        <textarea name="description" defaultValue={editingProduct?.description} rows={4} style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} required></textarea>
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Image URL (comma separated for multiple)</label>
-                        <input name="images" defaultValue={editingProduct?.images?.join(', ')} placeholder="https://..." style={{ width: '100%', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} />
+                        <input name="images" defaultValue={editingProduct?.images?.join(', ')} placeholder="https://..." style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} />
                     </div>
 
                     <div style={{ marginBottom: '2rem' }}>
@@ -117,8 +117,8 @@ export default function AdminPage() {
                         </div>
                         {options.map((opt, idx) => (
                             <div key={idx} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                                <input placeholder="Option Name (e.g. Color)" value={opt.name} onChange={(e) => updateOptionName(idx, e.target.value)} style={{ flex: 1, padding: '0.6rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} />
-                                <input placeholder="Values (Red, Blue:100, Green:-50)" defaultValue={opt.values?.map((v: any) => `${v.value}${v.priceModifier ? `:${v.priceModifier}` : ''}`).join(', ')} onChange={(e) => updateOptionValues(idx, e.target.value)} style={{ flex: 2, padding: '0.6rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: '#fff', borderRadius: '4px' }} />
+                                <input placeholder="Option Name (e.g. Color)" value={opt.name} onChange={(e) => updateOptionName(idx, e.target.value)} style={{ flex: 1, padding: '0.6rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} />
+                                <input placeholder="Values (Red, Blue:100, Green:-50)" defaultValue={opt.values?.map((v: any) => `${v.value}${v.priceModifier ? `:${v.priceModifier}` : ''}`).join(', ')} onChange={(e) => updateOptionValues(idx, e.target.value)} style={{ flex: 2, padding: '0.6rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} />
                             </div>
                         ))}
                     </div>
