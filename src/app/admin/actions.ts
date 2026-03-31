@@ -23,6 +23,7 @@ export async function addProduct(formData: FormData) {
 
     revalidatePath('/products');
     revalidatePath('/');
+    revalidatePath('/admin/products');
     return { success: true };
 }
 
@@ -32,6 +33,7 @@ export async function deleteProduct(id: string) {
     await saveProducts(filtered);
     revalidatePath('/products');
     revalidatePath('/');
+    revalidatePath('/admin/products');
 }
 
 export async function updateProduct(formData: FormData) {
@@ -59,5 +61,6 @@ export async function updateProduct(formData: FormData) {
     revalidatePath('/products');
     revalidatePath(`/products/${id}`);
     revalidatePath('/');
+    revalidatePath('/admin/products');
     return { success: true };
 }
