@@ -9,11 +9,6 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-overlay"></div>
-                <img
-                    src="/hero-bg.JPG"
-                    alt="Hero"
-                    className="hero-image"
-                />
                 <div className="hero-content container">
                     <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
                     <hr className="hero-divider animate-fade-in-up delay-1" />
@@ -106,16 +101,16 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                     display: flex;
                     align-items: center;
                     background-color: #000;
+                    background-image: url('/hero-bg.JPG');
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
                 }
 
-                .hero-image {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    z-index: 0;
+                @supports (-webkit-touch-callout: none) {
+                    .hero {
+                        background-attachment: scroll;
+                    }
                 }
 
                 .hero-overlay {
