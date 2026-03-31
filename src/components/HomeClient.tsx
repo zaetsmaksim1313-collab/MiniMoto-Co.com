@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Product } from "@/lib/products";
 
-export default function HomeClient({ featuredProducts }: { featuredProducts: Product[] }) {
+export default function HomeClient({ featuredProducts, accessories }: { featuredProducts: Product[], accessories?: Product[] }) {
     return (
         <div className="home-container">
             {/* Hero Section */}
@@ -15,9 +15,9 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     className="hero-image"
                 />
                 <div className="hero-content container">
-                    <h1>Custom Mini Surrons</h1>
+                    <h1>Fully Custom Mini Surrons</h1>
                     <hr className="hero-divider" />
-                    <p>Create your very own mini Surron with working suspension, spinning wheels, and upgrades to choose from.</p>
+                    <p>A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
                     <Link href="/products" className="btn-hero">Shop all</Link>
                 </div>
             </section>
@@ -28,26 +28,41 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     <h2>New Releases</h2>
                     <Link href="/products" className="view-all">View all</Link>
                 </div>
-                <div className="product-grid">
+                <div className="carousel">
                     {featuredProducts.map((p) => (
-                        <div key={p.id} className="product-card">
+                        <div key={p.id} className="carousel-card">
                             <Link href={`/products/${p.id}`}>
                                 <div className="image-container">
                                     {p.compareAtPrice && <span className="badge-sale">Sale</span>}
                                     <img src={p.images[0]} alt={p.name} />
-                                </div>
-                                <div className="product-info">
-                                    <h3>{p.name}</h3>
-                                    <div className="price-container">
-                                        <span className="price">${p.price.toFixed(2)}</span>
-                                        {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
-                                    </div>
                                 </div>
                             </Link>
                         </div>
                     ))}
                 </div>
             </section>
+
+            {/* Mini Moto Accessories */}
+            {accessories && accessories.length > 0 && (
+                <section className="featured-section container">
+                    <div className="section-header">
+                        <h2>Mini Moto Accessories</h2>
+                        <Link href="/products?category=accessories" className="view-all">View all</Link>
+                    </div>
+                    <div className="carousel">
+                        {accessories.map((p) => (
+                            <div key={p.id} className="carousel-card">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="image-container">
+                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             <style jsx>{`
                 .hero {
@@ -150,23 +165,42 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     font-weight: 600;
                 }
 
-                .product-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                    gap: 2rem;
+                .carousel {
+                    display: flex;
+                    gap: 1.5rem;
+                    overflow-x: auto;
+                    scroll-snap-type: x mandatory;
+                    padding-bottom: 2rem;
+                    width: 100%;
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                
+                .carousel::-webkit-scrollbar {
+                    display: none;
                 }
 
-                .product-card {
+                .carousel-card {
+                    flex: 0 0 320px;
+                    scroll-snap-align: start;
                     transition: transform 0.3s;
                 }
 
-                .product-card:hover {
+                @media (max-width: 768px) {
+                    .carousel-card {
+                        flex: 0 0 280px;
+                    }
+                }
+
+                .carousel-card:hover {
                     transform: translateY(-5px);
                 }
 
-                .product-card a {
+                .carousel-card a {
                     text-decoration: none;
                     color: inherit;
+                    display: block;
+                    width: 100%;
                 }
 
                 .image-container {
@@ -196,29 +230,6 @@ export default function HomeClient({ featuredProducts }: { featuredProducts: Pro
                     font-weight: 700;
                     z-index: 10;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-
-                .product-info h3 {
-                    font-size: 1.1rem;
-                    margin-bottom: 0.5rem;
-                    font-weight: 600;
-                }
-
-                .price-container {
-                    display: flex;
-                    gap: 12px;
-                    align-items: center;
-                }
-
-                .price {
-                    font-weight: 700;
-                    font-size: 1.1rem;
-                }
-
-                .compare-price {
-                    text-decoration: line-through;
-                    opacity: 0.5;
-                    font-size: 0.9rem;
                 }
             `}</style>
         </div>

@@ -4,7 +4,7 @@ import ClientLayout from "@/components/ClientLayout";
 import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
-  title: "Mini Moto & Co | Premium Mini Electric Bikes",
+  title: "Fully Custom Mini Surrons",
   description: "Highest quality mini surrons, talarias, and electric dirt bikes.",
 };
 
