@@ -30,7 +30,7 @@ export default function HomeClient({ featuredProducts, accessories }: { featured
                 </div>
                 <div className="carousel">
                     {featuredProducts.map((p) => (
-                        <div key={p.id} className="carousel-card">
+                        <div key={p.id} className="carousel-card-small">
                             <Link href={`/products/${p.id}`}>
                                 <div className="image-container">
                                     {p.compareAtPrice && <span className="badge-sale">Sale</span>}
@@ -178,6 +178,29 @@ export default function HomeClient({ featuredProducts, accessories }: { featured
                 
                 .carousel::-webkit-scrollbar {
                     display: none;
+                }
+
+                .carousel-card-small {
+                    flex: 0 0 220px;
+                    scroll-snap-align: start;
+                    transition: transform 0.3s;
+                }
+
+                @media (max-width: 768px) {
+                    .carousel-card-small {
+                        flex: 0 0 180px;
+                    }
+                }
+
+                .carousel-card-small:hover {
+                    transform: translateY(-5px);
+                }
+
+                .carousel-card-small a {
+                    text-decoration: none;
+                    color: inherit;
+                    display: block;
+                    width: 100%;
                 }
 
                 .carousel-card {
