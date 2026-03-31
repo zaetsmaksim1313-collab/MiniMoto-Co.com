@@ -15,7 +15,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                     className="hero-image"
                 />
                 <div className="hero-content container">
-                    <h1 className="text-gradient-premium animate-fade-in-up">Fully Custom Mini Surrons</h1>
+                    <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
                     <hr className="hero-divider animate-fade-in-up delay-1" />
                     <p className="animate-fade-in-up delay-1">A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
                     <Link href="/products" className="btn-hero animate-fade-in-up delay-2">Shop all</Link>
@@ -23,71 +23,77 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
             </section>
 
             {/* Featured Products */}
-            <section className="featured-section container">
-                <div className="section-header">
-                    <div>
-                        <span className="section-subtitle">FEATURED</span>
-                        <h2>New Releases</h2>
-                    </div>
-                    <Link href="/products" className="btn-outline-pill">View all</Link>
-                </div>
-                <div className="carousel">
-                    {featuredProducts.map((p) => (
-                        <div key={p.id} className="carousel-card-small">
-                            <Link href={`/products/${p.id}`}>
-                                <div className="image-container">
-                                    {p.compareAtPrice && <span className="badge-sale">Sale</span>}
-                                    <img src={p.images[0]} alt={p.name} />
-                                </div>
-                            </Link>
+            <section className="featured-section alt-bg">
+                <div className="container">
+                    <div className="section-header">
+                        <div>
+                            <span className="section-subtitle">FEATURED</span>
+                            <h2>New Releases</h2>
                         </div>
-                    ))}
+                        <Link href="/products" className="btn-outline-pill">View all</Link>
+                    </div>
+                    <div className="carousel">
+                        {featuredProducts.map((p) => (
+                            <div key={p.id} className="carousel-card-small">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="image-container">
+                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* Mini Moto Accessories */}
-            <section className="featured-section container">
-                <div className="section-header">
-                    <div>
-                        <span className="section-subtitle">ADD-ONS</span>
-                        <h2>Mini Moto Accessories</h2>
-                    </div>
-                    <Link href="/products?category=accessories" className="btn-outline-pill">View all</Link>
-                </div>
-                <div className="carousel">
-                    {accessories && accessories.length > 0 ? accessories.map((p) => (
-                        <div key={p.id} className="carousel-card-small">
-                            <Link href={`/products/${p.id}`}>
-                                <div className="image-container">
-                                    {p.compareAtPrice && <span className="badge-sale">Sale</span>}
-                                    <img src={p.images[0]} alt={p.name} />
-                                </div>
-                            </Link>
+            <section className="featured-section alt-bg">
+                <div className="container">
+                    <div className="section-header">
+                        <div>
+                            <span className="section-subtitle">ADD-ONS</span>
+                            <h2>Mini Moto Accessories</h2>
                         </div>
-                    )) : <p style={{opacity: 0.5}}>No accessories added yet.</p>}
+                        <Link href="/products?category=accessories" className="btn-outline-pill">View all</Link>
+                    </div>
+                    <div className="carousel">
+                        {accessories && accessories.length > 0 ? accessories.map((p) => (
+                            <div key={p.id} className="carousel-card-small">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="image-container">
+                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                </Link>
+                            </div>
+                        )) : <p style={{opacity: 0.5}}>No accessories added yet.</p>}
+                    </div>
                 </div>
             </section>
 
             {/* All Products */}
-            <section className="featured-section container">
-                <div className="section-header">
-                    <div>
-                        <span className="section-subtitle">COLLECTION</span>
-                        <h2>All Products</h2>
-                    </div>
-                    <Link href="/products" className="btn-outline-pill">View all</Link>
-                </div>
-                <div className="carousel">
-                    {allProducts && allProducts.map((p) => (
-                        <div key={p.id} className="carousel-card-small">
-                            <Link href={`/products/${p.id}`}>
-                                <div className="image-container">
-                                    {p.compareAtPrice && <span className="badge-sale">Sale</span>}
-                                    <img src={p.images[0]} alt={p.name} />
-                                </div>
-                            </Link>
+            <section className="featured-section">
+                <div className="container">
+                    <div className="section-header">
+                        <div>
+                            <span className="section-subtitle">COLLECTION</span>
+                            <h2>All Products</h2>
                         </div>
-                    ))}
+                        <Link href="/products" className="btn-outline-pill">View all</Link>
+                    </div>
+                    <div className="carousel">
+                        {allProducts && allProducts.map((p) => (
+                            <div key={p.id} className="carousel-card-small">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="image-container">
+                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -171,7 +177,14 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                 }
 
                 .featured-section {
-                    padding: 4rem 0;
+                    padding: 5rem 0;
+                    width: 100%;
+                }
+
+                .alt-bg {
+                    background-color: #f7f7f7;
+                    border-top: 1px solid rgba(0,0,0,0.03);
+                    border-bottom: 1px solid rgba(0,0,0,0.03);
                 }
 
                 .section-header {
