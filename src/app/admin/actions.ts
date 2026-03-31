@@ -21,9 +21,7 @@ export async function addProduct(formData: FormData) {
     products.push(newProduct);
     await saveProducts(products);
 
-    revalidatePath('/products');
-    revalidatePath('/');
-    revalidatePath('/admin/products');
+    revalidatePath('/', 'layout');
     return { success: true };
 }
 
@@ -31,9 +29,7 @@ export async function deleteProduct(id: string) {
     const products = await getProducts();
     const filtered = products.filter(p => p.id !== id);
     await saveProducts(filtered);
-    revalidatePath('/products');
-    revalidatePath('/');
-    revalidatePath('/admin/products');
+    revalidatePath('/', 'layout');
 }
 
 export async function updateProduct(formData: FormData) {
@@ -58,9 +54,6 @@ export async function updateProduct(formData: FormData) {
     products[index] = updatedProduct;
     await saveProducts(products);
 
-    revalidatePath('/products');
-    revalidatePath(`/products/${id}`);
-    revalidatePath('/');
-    revalidatePath('/admin/products');
+    revalidatePath('/', 'layout');
     return { success: true };
 }

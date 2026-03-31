@@ -79,21 +79,21 @@ export default function EditProductForm({ product }: { product: Product }) {
                 <div className="admin-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <div>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Name</label>
-                        <input type="text" value={name} onChange={e => setName(e.target.value)} required style={{ width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Short title e.g. Mini ETM RTR" />
+                        <input type="text" value={name} onChange={e => setName(e.target.value)} required style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Short title e.g. Mini ETM RTR" />
                     </div>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <div style={{ flex: 1 }}>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Price</label>
-                            <input type="number" step="0.01" value={price} onChange={e => setPrice(e.target.value)} required style={{ width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="0.00" />
+                            <input type="number" step="any" value={price} onChange={e => setPrice(e.target.value)} required style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="0.00" />
                         </div>
                         <div style={{ flex: 1 }}>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Category</label>
-                            <input type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Bikes" />
+                            <input type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Bikes" />
                         </div>
                     </div>
                     <div>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Description</label>
-                        <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4} style={{ width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Product details..." />
+                        <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4} style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Product details..." />
                     </div>
                 </div>
                 
