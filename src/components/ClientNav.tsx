@@ -10,7 +10,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
     return (
         <>
             {!isCheckout && (
-                <header className="glass" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, padding: '1rem 0' }}>
+                <header className="glass" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, padding: '1rem 0', borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none', backgroundColor: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
                     <nav className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ fontSize: '1.5rem', fontWeight: '900', color: 'var(--accent-color)', fontFamily: 'var(--font-heading)' }}>
                             MINI MOTO & CO
@@ -32,7 +32,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
             {!isCheckout && (
-                <footer className="glass" style={{ marginTop: '4rem', padding: '4rem 0', textAlign: 'center' }}>
+                <footer style={{ marginTop: '4rem', padding: '4rem 0', textAlign: 'center', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
                     <div className="container">
                         <h2 style={{ color: 'var(--accent-color)', marginBottom: '1rem' }}>MINI MOTO & CO</h2>
                         <p style={{ opacity: 0.6, fontSize: '0.9rem', marginBottom: '2rem' }}>Highest quality mini surrons around!</p>
