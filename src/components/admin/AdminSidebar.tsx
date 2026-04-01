@@ -55,21 +55,20 @@ export default function AdminSidebar() {
                     <span className="icon">⚙️</span>
                     <span className="label">Settings</span>
                 </Link>
-                <style jsx>{`
-                    .btn-logout {
-                        width: 100%;
-                        text-align: left;
-                        background: transparent;
-                        border: none;
-                        cursor: pointer;
-                        font-family: inherit;
-                        padding: 8px 12px;
-                        margin-bottom: 4px;
-                    }
-                `}</style>
             </div>
 
             <style jsx>{`
+                .btn-logout {
+                    width: 100%;
+                    text-align: left;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    font-family: inherit;
+                    padding: 8px 12px;
+                    margin-bottom: 4px;
+                }
+
                 .admin-sidebar {
                     width: 240px;
                     background: #ebebeb;
