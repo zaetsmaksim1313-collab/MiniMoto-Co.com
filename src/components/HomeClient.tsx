@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { Product } from "@/lib/products";
+import MakeItYoursSection from "./MakeItYoursSection";
 
-export default function HomeClient({ featuredProducts, accessories, allProducts }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[] }) {
+export default function HomeClient({ featuredProducts, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     return (
         <div className="home-container">
             {/* Hero Section */}
@@ -16,6 +17,9 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                     <Link href="/products" className="btn-hero animate-fade-in-up delay-2">Shop all</Link>
                 </div>
             </section>
+
+            {/* Make It Yours Collage */}
+            <MakeItYoursSection images={makeItYoursImages} />
 
             {/* Featured Products */}
             <section className="featured-section alt-bg">

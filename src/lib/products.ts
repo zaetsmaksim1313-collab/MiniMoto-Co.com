@@ -35,6 +35,24 @@ export async function ensureDb() {
             status VARCHAR(50)
         );
     `;
+    await sql`
+        CREATE TABLE IF NOT EXISTS site_settings (
+            key VARCHAR(255) PRIMARY KEY,
+            value JSONB NOT NULL
+        );
+    `;
+    const defaultImages = [
+        "https://images.unsplash.com/photo-1558981806-ec527fa84c39?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1558980394-0a06c4631733?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1558980663-3685c65c9c84?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1558981420-87aa9dad1c89?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1558980664-ce6960be3236?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+    ];
+    await sql`
+        INSERT INTO site_settings (key, value)
+        VALUES ('make_it_yours_images', ${JSON.stringify(defaultImages)}::jsonb)
+        ON CONFLICT (key) DO NOTHING;
+    `;
 }
 
 export async function getProducts(): Promise<Product[]> {
@@ -77,5 +95,16 @@ export async function getProductById(id: string): Promise<Product | undefined> {
         };
     } catch (e) {
         return undefined;
+    }
+}
+
+export async function getMakeItYoursImages(): Promise<string[]> {
+    try {
+        await ensureDb();
+        const { rows } = await sql`SELECT value FROM site_settings WHERE key = 'make_it_yours_images'`;
+        if (rows.length > 0) return rows[0].value as string[];
+        return [];
+    } catch (e) {
+        return [];
     }
 }

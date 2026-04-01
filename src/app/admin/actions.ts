@@ -71,3 +71,18 @@ export async function updateProduct(formData: FormData) {
         return { success: false, error: e.message };
     }
 }
+
+export async function updateMakeItYoursImages(images: string[]) {
+    await ensureDb();
+    try {
+        await sql`
+            UPDATE site_settings 
+            SET value = ${JSON.stringify(images)}::jsonb 
+            WHERE key = 'make_it_yours_images'
+        `;
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
