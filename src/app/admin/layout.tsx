@@ -19,7 +19,6 @@ export default function AdminLayout({
                     background: #f1f1f1;
                     color: #1a1a1a;
                     margin: 0;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                 }
 
                 .admin-container {

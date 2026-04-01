@@ -1,59 +1,73 @@
 'use server';
 
-import { getProducts, saveProducts, Product } from '@/lib/products';
+import { getProductById, ensureDb } from '@/lib/products';
+import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 
 export async function addProduct(formData: FormData) {
-    const products = await getProducts();
+    await ensureDb();
+    
+    const id = (formData.get('id') as string) || Math.random().toString(36).substr(2, 9);
+    const name = formData.get('name') as string;
+    const price = Number(formData.get('price'));
+    const compareAtPrice = formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : null;
+    const description = formData.get('description') as string;
+    
+    const imagesRaw = formData.get('images') as string;
+    const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : ["https://images.unsplash.com/photo-1558981403-c5f94bbde586"];
+    
+    const category = formData.get('category') as string;
+    const optionsRaw = formData.get('options') as string;
+    const options = optionsRaw ? JSON.parse(optionsRaw) : [];
+    const status = (formData.get('status') as string) || 'Active';
 
-    const newProduct: Product = {
-        id: formData.get('id') as string || Math.random().toString(36).substr(2, 9),
-        name: formData.get('name') as string,
-        price: Number(formData.get('price')),
-        compareAtPrice: formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : undefined,
-        description: formData.get('description') as string,
-        images: formData.get('images') ? (formData.get('images') as string).split(',').map(img => img.trim()) : ["https://images.unsplash.com/photo-1558981403-c5f94bbde586?auto=format&fit=crop&q=80&w=600"],
-        category: formData.get('category') as string,
-        options: JSON.parse(formData.get('options') as string || '[]'),
-        status: (formData.get('status') as any) || 'Active'
-    };
-
-    products.push(newProduct);
-    await saveProducts(products);
-
-    revalidatePath('/', 'layout');
-    return { success: true };
+    try {
+        await sql`
+            INSERT INTO products (id, name, price, compareAtPrice, description, images, category, options, status)
+            VALUES (${id}, ${name}, ${price}, ${compareAtPrice}, ${description}, ${JSON.stringify(images)}, ${category}, ${JSON.stringify(options)}, ${status})
+        `;
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
 }
 
 export async function deleteProduct(id: string) {
-    const products = await getProducts();
-    const filtered = products.filter(p => p.id !== id);
-    await saveProducts(filtered);
+    await ensureDb();
+    await sql`DELETE FROM products WHERE id = ${id}`;
     revalidatePath('/', 'layout');
 }
 
 export async function updateProduct(formData: FormData) {
-    const products = await getProducts();
+    await ensureDb();
     const id = formData.get('id') as string;
-    const index = products.findIndex(p => p.id === id);
+    
+    const existing = await getProductById(id);
+    if (!existing) return { success: false, error: 'Product not found' };
 
-    if (index === -1) return { success: false, error: 'Product not found' };
+    const name = formData.get('name') as string;
+    const price = Number(formData.get('price'));
+    const compareAtPrice = formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : null;
+    const description = formData.get('description') as string;
+    
+    const imagesRaw = formData.get('images') as string;
+    const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : existing.images;
+    
+    const category = formData.get('category') as string;
+    const optionsRaw = formData.get('options') as string;
+    const options = optionsRaw ? JSON.parse(optionsRaw) : existing.options;
+    const status = (formData.get('status') as string) || existing.status;
 
-    const updatedProduct: Product = {
-        ...products[index],
-        name: formData.get('name') as string,
-        price: Number(formData.get('price')),
-        compareAtPrice: formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : undefined,
-        description: formData.get('description') as string,
-        images: formData.get('images') ? (formData.get('images') as string).split(',').map(img => img.trim()) : products[index].images,
-        category: formData.get('category') as string,
-        options: JSON.parse(formData.get('options') as string || '[]'),
-        status: (formData.get('status') as any) || products[index].status
-    };
-
-    products[index] = updatedProduct;
-    await saveProducts(products);
-
-    revalidatePath('/', 'layout');
-    return { success: true };
+    try {
+        await sql`
+            UPDATE products
+            SET name = ${name}, price = ${price}, compareAtPrice = ${compareAtPrice}, description = ${description}, images = ${JSON.stringify(images)}, category = ${category}, options = ${JSON.stringify(options)}, status = ${status}
+            WHERE id = ${id}
+        `;
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
 }

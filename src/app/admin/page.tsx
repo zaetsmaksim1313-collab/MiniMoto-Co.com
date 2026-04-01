@@ -143,7 +143,7 @@ export default function AdminPage() {
                                 <div style={{ fontWeight: '700' }}>{p.name}</div>
                                 <div style={{ fontSize: '0.7rem', opacity: 0.5 }}>{p.id}</div>
                             </td>
-                            <td style={{ padding: '1rem' }}>${p.price}</td>
+                            <td style={{ padding: '1rem' }}>${Number(p.price).toFixed(2)}</td>
                             <td style={{ padding: '1rem' }}>
                                 <div style={{ display: 'flex', gap: '1rem' }}>
                                     <button onClick={() => startEdit(p)} style={{ background: 'transparent', color: 'var(--accent-color)', border: 'none', cursor: 'pointer', fontWeight: '700' }}>Edit</button>

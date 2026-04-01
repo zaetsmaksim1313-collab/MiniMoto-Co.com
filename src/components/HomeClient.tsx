@@ -172,14 +172,17 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                 }
 
                 .featured-section {
-                    padding: 5rem 0;
+                    padding: 3rem 0;
                     width: 100%;
                 }
 
                 .alt-bg {
-                    background-color: #f7f7f7;
-                    border-top: 1px solid rgba(0,0,0,0.03);
-                    border-bottom: 1px solid rgba(0,0,0,0.03);
+                    background: radial-gradient(circle at 50% 0%, #fefefe 0%, #f4f4f5 100%);
+                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 20px 40px rgba(0,0,0,0.03);
+                    border-top: 1px solid rgba(0,0,0,0.06);
+                    border-bottom: 1px solid rgba(0,0,0,0.06);
+                    position: relative;
+                    z-index: 10;
                 }
 
                 .section-header {
@@ -243,14 +246,14 @@ export default function HomeClient({ featuredProducts, accessories, allProducts 
                 }
 
                 .carousel-card-small {
-                    flex: 0 0 220px;
+                    flex: 0 0 160px;
                     scroll-snap-align: start;
                     transition: transform 0.3s;
                 }
 
                 @media (max-width: 768px) {
                     .carousel-card-small {
-                        flex: 0 0 180px;
+                        flex: 0 0 140px;
                     }
                 }
 
