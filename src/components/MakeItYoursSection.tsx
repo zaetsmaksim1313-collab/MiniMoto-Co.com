@@ -11,6 +11,8 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
     const sectionRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
+    const [scrollY, setScrollY] = useState(0);
+
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!sectionRef.current) return;
@@ -20,8 +22,17 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
             setMousePos({ x, y });
         };
         
+        const handleScroll = () => setScrollY(window.scrollY);
+
         window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     // Provide default layout metrics for desktop "chaos"
@@ -59,7 +70,8 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                     const s = imageStyles[i];
                     if (!s) return null;
                     const transformX = mousePos.x * s.parallax * 1000;
-                    const transformY = mousePos.y * s.parallax * 1000;
+                    // Integrate scrollY to make them drift vertically as user scrolls
+                    const transformY = (mousePos.y * s.parallax * 1000) + (scrollY * s.parallax * 0.3);
 
                     return (
                         <div 

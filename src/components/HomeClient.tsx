@@ -1,15 +1,29 @@
 'use client';
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/products";
 import MakeItYoursSection from "./MakeItYoursSection";
 
 export default function HomeClient({ featuredProducts, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
+    const [scrollY, setScrollY] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <div className="home-container">
             {/* Hero Section */}
             <section className="hero">
-                <div className="hero-bg"></div>
+                <div style={{ position: 'absolute', inset: '-10%', transform: `translateY(${scrollY * 0.4}px)` }}>
+                    <div className="hero-bg"></div>
+                </div>
                 <div className="hero-overlay"></div>
                 <div className="hero-content container">
                     <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
