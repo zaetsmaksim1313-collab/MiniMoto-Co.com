@@ -9,6 +9,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
         <div className="home-container">
             {/* Hero Section */}
             <section className="hero">
+                <div className="hero-bg"></div>
                 <div className="hero-overlay"></div>
                 <div className="hero-content container">
                     <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
@@ -105,15 +106,28 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     display: flex;
                     align-items: center;
                     background-color: #000;
+                }
+
+                .hero-bg {
+                    position: absolute;
+                    inset: -5%;
+                    width: 110%;
+                    height: 110%;
                     background-image: url('/hero-bg.JPG');
                     background-size: cover;
                     background-position: center;
-                    background-attachment: fixed;
+                    z-index: 0;
+                    animation: heroPan 30s infinite alternate ease-in-out;
+                }
+
+                @keyframes heroPan {
+                    0% { transform: scale(1) translate(0, 0); }
+                    100% { transform: scale(1.05) translate(-1.5%, -1.5%); }
                 }
 
                 @supports (-webkit-touch-callout: none) {
-                    .hero {
-                        background-attachment: scroll;
+                    .hero-bg {
+                        animation: none;
                     }
                 }
 
@@ -159,20 +173,48 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 }
 
                 .btn-hero {
+                    position: relative;
                     display: inline-block;
-                    padding: 14px 36px;
-                    background: white;
+                    padding: 16px 40px;
+                    background: transparent;
                     border-radius: 50px;
                     color: black;
                     text-decoration: none;
-                    font-weight: 700;
+                    font-weight: 800;
                     font-size: 1.1rem;
-                    transition: all 0.3s;
+                    transition: color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                    overflow: hidden;
+                    z-index: 1;
+                }
+
+                .btn-hero::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: white;
+                    z-index: -1;
+                    border-radius: 50px;
+                    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                }
+
+                .btn-hero::after {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: black;
+                    z-index: -2;
+                    border-radius: 50px;
                 }
 
                 .btn-hero:hover {
-                    background: #eee;
+                    color: white;
                     transform: translateY(-2px);
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                }
+
+                .btn-hero:hover::before {
+                    transform: scaleY(0);
+                    transform-origin: top;
                 }
 
                 .featured-section {
@@ -216,22 +258,40 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 }
 
                 .btn-outline-pill {
-                    padding: 8px 24px;
+                    position: relative;
+                    padding: 10px 28px;
                     border: 1px solid rgba(0,0,0,0.15);
                     border-radius: 50px;
                     font-size: 0.85rem;
-                    font-weight: 600;
+                    font-weight: 700;
                     text-decoration: none;
                     color: black;
-                    transition: all 0.3s ease;
+                    background: transparent;
+                    transition: color 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
+                    overflow: hidden;
+                    z-index: 1;
                 }
-                
-                .btn-outline-pill:hover {
-                    border-color: black;
+
+                .btn-outline-pill::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
                     background: black;
+                    z-index: -1;
+                    transform: scaleY(0);
+                    transform-origin: bottom;
+                    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                }
+
+                .btn-outline-pill:hover {
                     color: white;
+                    border-color: black;
                     transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+                }
+
+                .btn-outline-pill:hover::before {
+                    transform: scaleY(1);
                 }
 
                 .carousel {
@@ -330,16 +390,150 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     position: absolute;
                     top: 12px;
                     left: 12px;
-                    background: #fff;
+                    background: rgba(255, 255, 255, 0.7);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
                     color: black;
                     padding: 4px 12px;
                     border-radius: 20px;
                     font-size: 0.75rem;
                     font-weight: 700;
                     z-index: 10;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                }
+                .premium-footer {
+                    background: #111;
+                    color: #fff;
+                    padding: 6rem 0 2rem 0;
+                    width: 100%;
+                }
+
+                .footer-grid {
+                    display: grid;
+                    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+                    gap: 3rem;
+                    margin-bottom: 4rem;
+                }
+
+                .footer-brand h2 {
+                    font-size: 1.5rem;
+                    font-weight: 800;
+                    letter-spacing: -0.02em;
+                    margin-bottom: 1rem;
+                }
+
+                .footer-brand p {
+                    color: #888;
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    max-width: 80%;
+                }
+
+                .footer-links h4, .footer-newsletter h4 {
+                    font-size: 0.9rem;
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    margin-bottom: 1.5rem;
+                    color: #fff;
+                }
+
+                .footer-links a {
+                    display: block;
+                    color: #888;
+                    text-decoration: none;
+                    margin-bottom: 0.8rem;
+                    font-size: 0.95rem;
+                    transition: color 0.3s;
+                }
+
+                .footer-links a:hover {
+                    color: #fff;
+                }
+
+                .newsletter-input {
+                    display: flex;
+                    border-bottom: 1px solid #333;
+                    padding-bottom: 0.5rem;
+                }
+
+                .newsletter-input input {
+                    background: transparent;
+                    border: none;
+                    color: #fff;
+                    flex: 1;
+                    outline: none;
+                    font-size: 0.95rem;
+                }
+
+                .newsletter-input input::placeholder {
+                    color: #666;
+                }
+
+                .newsletter-input button {
+                    background: transparent;
+                    border: none;
+                    color: #fff;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    transition: transform 0.3s;
+                }
+
+                .newsletter-input button:hover {
+                    transform: translateX(4px);
+                }
+
+                .footer-bottom {
+                    border-top: 1px solid #222;
+                    padding-top: 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    color: #666;
+                    font-size: 0.85rem;
+                }
+
+                @media (max-width: 768px) {
+                    .footer-grid {
+                        grid-template-columns: 1fr;
+                        gap: 2.5rem;
+                    }
+                    .footer-brand p {
+                        max-width: 100%;
+                    }
                 }
             `}</style>
+            {/* Dark Mode Footer */}
+            <footer className="premium-footer">
+                <div className="container footer-grid">
+                    <div className="footer-brand">
+                        <h2>MINI MOTO CO</h2>
+                        <p>Hand-designed, 3D-printed perfection. The ultimate custom mini Surron experience.</p>
+                    </div>
+                    <div className="footer-links">
+                        <h4>Explore</h4>
+                        <Link href="/products">All Bikes</Link>
+                        <Link href="/products?category=accessories">Accessories</Link>
+                        <Link href="/customizer">Bike Builder</Link>
+                        <Link href="/decal-builder">Decal Lab</Link>
+                    </div>
+                    <div className="footer-links">
+                        <h4>Company</h4>
+                        <Link href="#">About Us</Link>
+                        <Link href="#">Contact</Link>
+                        <Link href="#">Shipping & Returns</Link>
+                    </div>
+                    <div className="footer-newsletter">
+                        <h4>Join the cult</h4>
+                        <div className="newsletter-input">
+                            <input type="email" placeholder="Email Address" />
+                            <button type="submit">→</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="footer-bottom container">
+                    <p>&copy; {new Date().getFullYear()} Mini Moto Co. All rights reserved.</p>
+                </div>
+            </footer>
         </div>
     );
 }
