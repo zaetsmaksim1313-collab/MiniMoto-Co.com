@@ -42,16 +42,15 @@ export async function ensureDb() {
         );
     `;
     const defaultImages = [
-        "https://images.unsplash.com/photo-1558981806-ec527fa84c39?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1558980394-0a06c4631733?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1558980663-3685c65c9c84?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1558981420-87aa9dad1c89?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1558980664-ce6960be3236?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/a73f835cb51ee8e74e30.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/1d0a51beff5e8bd8cd04.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/dc71c08d167fcfcdfb3e.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/3d0b2fbe987f28ab09af.png"
     ];
     await sql`
         INSERT INTO site_settings (key, value)
         VALUES ('make_it_yours_images', ${JSON.stringify(defaultImages)}::jsonb)
-        ON CONFLICT (key) DO NOTHING;
+        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
     `;
 }
 
