@@ -98,12 +98,11 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 }
 
 export async function getMakeItYoursImages(): Promise<string[]> {
-    try {
-        await ensureDb();
-        const { rows } = await sql`SELECT value FROM site_settings WHERE key = 'make_it_yours_images'`;
-        if (rows.length > 0) return rows[0].value as string[];
-        return [];
-    } catch (e) {
-        return [];
-    }
+    return [
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/a73f835cb51ee8e74e30.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/1d0a51beff5e8bd8cd04.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/dc71c08d167fcfcdfb3e.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/3d0b2fbe987f28ab09af.png",
+        "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/a73f835cb51ee8e74e30.png"
+    ];
 }
