@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import ClientNav from './ClientNav';
 
 const COLORS = [
     { name: 'Factory Black', hex: '#222222', filter: 'hue-rotate(0deg) saturate(0%) brightness(80%)' },
@@ -50,7 +49,6 @@ export default function BikeCustomizerClient() {
 
     return (
         <div className="customizer-wrapper">
-            <ClientNav cartItemCount={0} />
             
             <main className="builder-layout">
                 {/* Visualizer Panel */}

@@ -2,7 +2,6 @@
 
 import { useState, useRef, PointerEvent as ReactPointerEvent } from 'react';
 import Link from 'next/link';
-import ClientNav from './ClientNav';
 
 interface CanvasItem {
     id: string;
@@ -108,8 +107,6 @@ export default function DecalCanvas() {
 
     return (
         <div className="decal-wrapper">
-            <ClientNav cartItemCount={0} />
-
             <main className="decal-layout">
                 {/* Visual Canvas Area */}
                 <section className="canvas-section">
