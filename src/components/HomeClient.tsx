@@ -168,7 +168,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 }
 
                 .hero-content h1 {
-                    font-size: 5rem;
+                    font-size: clamp(2.5rem, 8vw, 5rem);
                     font-weight: 500;
                     letter-spacing: -0.02em;
                     margin-bottom: 1rem;

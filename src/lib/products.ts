@@ -50,7 +50,7 @@ export async function ensureDb() {
     await sql`
         INSERT INTO site_settings (key, value)
         VALUES ('make_it_yours_images', ${JSON.stringify(defaultImages)}::jsonb)
-        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+        ON CONFLICT (key) DO NOTHING;
     `;
 }
 
@@ -98,6 +98,15 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 }
 
 export async function getMakeItYoursImages(): Promise<string[]> {
+    try {
+        await ensureDb();
+        const { rows } = await sql`SELECT value FROM site_settings WHERE key = 'make_it_yours_images'`;
+        if (rows.length > 0) {
+            return rows[0].value;
+        }
+    } catch (e) {
+        console.error("Failed to fetch make it yours images", e);
+    }
     return [
         "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/a73f835cb51ee8e74e30.png",
         "https://storage.googleapis.com/hiss-image-storage/5b423852-be10-4156-b6f9-303cf903ac24/1d0a51beff5e8bd8cd04.png",
