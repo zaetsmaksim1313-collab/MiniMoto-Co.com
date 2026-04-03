@@ -29,9 +29,9 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
                     <hr className="hero-divider animate-fade-in-up delay-1" />
                     <p className="animate-fade-in-up delay-1">A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '3rem' }}>
-                        <Link href="/products" className="btn-hero animate-fade-in-up delay-2">Shop all</Link>
-                        <Link href="/customizer" className="btn-outline-pill animate-fade-in-up delay-2" style={{ borderColor: 'white', color: 'white', padding: '16px 40px', fontSize: '1.1rem', backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>Build Yours</Link>
+                    <div className="animate-fade-in-up delay-2" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1rem' }}>
+                        <Link href="/products" className="btn-hero">Shop all</Link>
+                        <Link href="/customizer" className="btn-outline-pill" style={{ borderColor: 'white', color: 'white', padding: '16px 40px', fontSize: '1.1rem', backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>Build Yours</Link>
                     </div>
                 </div>
             </section>
@@ -165,19 +165,21 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     text-align: center;
                     margin: 0 auto;
                     color: white;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.5rem;
                 }
 
                 .hero-content h1 {
                     font-size: clamp(2.5rem, 8vw, 5rem);
                     font-weight: 500;
                     letter-spacing: -0.02em;
-                    margin-bottom: 1rem;
                     line-height: 1.1;
                 }
                 
                 .hero-divider {
                     width: 60%;
-                    margin: 0 auto 1.5rem auto;
                     border: none;
                     height: 2px;
                     background-color: white;
@@ -185,8 +187,9 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
 
                 .hero-content p {
                     font-size: 1.15rem;
-                    margin-bottom: 2.5rem;
                     font-weight: 400;
+                    max-width: 600px;
+                    margin: 0 auto;
                 }
 
                 .btn-hero {

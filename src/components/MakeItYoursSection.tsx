@@ -100,7 +100,7 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                 .make-it-yours-container {
                     position: relative;
                     width: 100%;
-                    min-height: 80vh;
+                    min-height: 120vh;
                     background: #ffffff;
                     overflow: hidden;
                     display: flex;
