@@ -29,7 +29,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
                     <hr className="hero-divider animate-fade-in-up delay-1" />
                     <p className="animate-fade-in-up delay-1">A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '3rem' }}>
                         <Link href="/products" className="btn-hero animate-fade-in-up delay-2">Shop all</Link>
                         <Link href="/customizer" className="btn-outline-pill animate-fade-in-up delay-2" style={{ borderColor: 'white', color: 'white', padding: '16px 40px', fontSize: '1.1rem', backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>Build Yours</Link>
                     </div>
