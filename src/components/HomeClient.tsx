@@ -275,6 +275,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 }
 
                 .btn-outline-pill {
+                    display: inline-block;
                     position: relative;
                     padding: 10px 28px;
                     border: 1px solid rgba(0,0,0,0.15);

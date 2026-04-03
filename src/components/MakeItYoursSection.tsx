@@ -60,7 +60,7 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
             <div className="collage-grid-mobile">
                 {displayImages.map((src, i) => (
                     <div key={i} className="mobile-img-wrapper" style={{ aspectRatio: imageStyles[i]?.aspectRatio || '1/1' }}>
-                        <Image src={src} alt="Custom Moto Build" fill style={{ objectFit: 'cover' }} />
+                        <img src={src} alt="Custom Moto Build" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                 ))}
             </div>
@@ -86,12 +86,10 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                                 transform: `translate(${transformX}px, ${transformY}px)`
                             }}
                         >
-                            <Image 
+                            <img 
                                 src={src} 
                                 alt="Custom Moto" 
-                                fill 
-                                sizes="(max-width: 768px) 100vw, 30vw"
-                                style={{ objectFit: 'cover' }} 
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                             />
                         </div>
                     );
