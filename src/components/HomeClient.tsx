@@ -31,7 +31,6 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     <p className="animate-fade-in-up delay-1">A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
                     <div className="animate-fade-in-up delay-2" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1rem' }}>
                         <Link href="/products" className="btn-hero">Shop all</Link>
-                        <Link href="/customizer" className="btn-outline-pill" style={{ borderColor: 'white', color: 'white', padding: '16px 40px', fontSize: '1.1rem', backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>Build Yours</Link>
                     </div>
                 </div>
             </section>
