@@ -39,11 +39,11 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
     // Provide default layout metrics for desktop "chaos"
     // Using percentages so they scale with screen width
     const imageStyles = [
-        { top: '15%', left: '10%', width: '22%', aspectRatio: '4/5', zIndex: 2, parallax: 0.04 },
-        { top: '5%', left: '60%', width: '25%', aspectRatio: '16/9', zIndex: 1, parallax: -0.02 },
-        { top: '55%', left: '5%', width: '18%', aspectRatio: '1/1', zIndex: 3, parallax: -0.05 },
-        { top: '50%', left: '70%', width: '22%', aspectRatio: '3/4', zIndex: 4, parallax: 0.03 },
-        { top: '75%', left: '45%', width: '24%', aspectRatio: '16/10', zIndex: 2, parallax: -0.03 },
+        { top: '15%', left: '10%', width: '22%', aspectRatio: '4/5', zIndex: 2, parallax: 0.04, objectFit: 'cover' },
+        { top: '5%', left: '60%', width: '25%', aspectRatio: '16/9', zIndex: 1, parallax: -0.02, objectFit: 'contain' },
+        { top: '55%', left: '5%', width: '18%', aspectRatio: '1/1', zIndex: 3, parallax: -0.05, objectFit: 'cover' },
+        { top: '50%', left: '70%', width: '22%', aspectRatio: '3/4', zIndex: 4, parallax: 0.03, objectFit: 'cover' },
+        { top: '75%', left: '45%', width: '24%', aspectRatio: '16/10', zIndex: 2, parallax: -0.03, objectFit: 'contain' },
     ];
 
     if (!images || images.length === 0) return null;
@@ -64,11 +64,14 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
             </div>
 
             <div className="collage-grid-mobile">
-                {displayImages.map((src, i) => (
-                    <div key={i} className="mobile-img-wrapper" style={{ aspectRatio: imageStyles[i]?.aspectRatio || '1/1' }}>
-                        <img src={src} alt="Custom Moto Build" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                ))}
+                {displayImages.map((src, i) => {
+                    const fit = imageStyles[i]?.objectFit || 'cover';
+                    return (
+                        <div key={i} className="mobile-img-wrapper" style={{ aspectRatio: imageStyles[i]?.aspectRatio || '1/1', backgroundColor: '#fff' }}>
+                            <img src={src} alt="Custom Moto Build" style={{ width: '100%', height: '100%', objectFit: fit as any }} />
+                        </div>
+                    );
+                })}
             </div>
 
             <div className="collage-desktop">
@@ -78,6 +81,7 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                     const transformX = mousePos.x * s.parallax * 1000;
                     // Integrate scrollY to make them drift vertically as user scrolls
                     const transformY = (mousePos.y * s.parallax * 1000) + (scrollY * s.parallax * 0.3);
+                    const fit = s.objectFit || 'cover';
 
                     return (
                         <div 
@@ -89,13 +93,14 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                                 width: s.width,
                                 aspectRatio: s.aspectRatio,
                                 zIndex: s.zIndex,
-                                transform: `translate(${transformX}px, ${transformY}px)`
+                                transform: `translate(${transformX}px, ${transformY}px)`,
+                                backgroundColor: '#fff'
                             }}
                         >
                             <img 
                                 src={src} 
                                 alt="Custom Moto" 
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                style={{ width: '100%', height: '100%', objectFit: fit as any }} 
                             />
                         </div>
                     );
