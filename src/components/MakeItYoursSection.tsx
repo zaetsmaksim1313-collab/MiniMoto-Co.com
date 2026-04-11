@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface MakeItYoursSectionProps {
     images: string[];
@@ -55,6 +56,11 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
             <div className="center-text-wrapper">
                 <h1 className="center-text">MAKE IT<br/>YOURS</h1>
                 <p className="center-subtext">Build Your Own Mini Moto</p>
+                <div style={{ pointerEvents: 'auto', marginTop: '2.5rem' }}>
+                    <Link href="/customizer" className="make-yours-btn">
+                        MAKE YOURS
+                    </Link>
+                </div>
             </div>
 
             <div className="collage-grid-mobile">
@@ -134,6 +140,29 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
                     text-transform: uppercase;
                     letter-spacing: 0.1em;
                     opacity: 0.7;
+                }
+
+                .make-yours-btn {
+                    display: inline-block;
+                    padding: 1rem 3rem;
+                    background: #000;
+                    color: #fff;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    border-radius: 50px;
+                    text-decoration: none;
+                    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                    pointer-events: auto;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+
+                .make-yours-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                    background: #222;
                 }
 
                 .collage-desktop {

@@ -42,11 +42,11 @@ export async function ensureDb() {
         );
     `;
     const defaultImages = [
-        "https://images.unsplash.com/photo-1558981403-c5f94bbde586",
-        "https://images.unsplash.com/photo-1558980394-0a06c4631733",
-        "https://images.unsplash.com/photo-1568772585407-9361f9bf3c87",
-        "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f",
-        "https://images.unsplash.com/photo-1558981420-c532902e58b4"
+        "/custom%201.JPG",
+        "/custom%202.JPG",
+        "/custom%203.JPG",
+        "/custom%204.JPG",
+        "/custom%205.JPG"
     ];
     await sql`
         INSERT INTO site_settings (key, value)
@@ -109,10 +109,10 @@ export async function getMakeItYoursImages(): Promise<string[]> {
         console.error("Failed to fetch make it yours images", e);
     }
     return [
-        "https://images.unsplash.com/photo-1558981403-c5f94bbde586",
-        "https://images.unsplash.com/photo-1558980394-0a06c4631733",
-        "https://images.unsplash.com/photo-1568772585407-9361f9bf3c87",
-        "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f",
-        "https://images.unsplash.com/photo-1558981420-c532902e58b4"
+        "/custom%201.JPG",
+        "/custom%202.JPG",
+        "/custom%203.JPG",
+        "/custom%204.JPG",
+        "/custom%205.JPG"
     ];
 }
