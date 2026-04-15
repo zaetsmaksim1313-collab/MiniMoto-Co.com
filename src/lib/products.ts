@@ -76,8 +76,9 @@ export async function getProducts(): Promise<Product[]> {
     }
 }
 
-export async function getProductById(id: string): Promise<Product | undefined> {
+export async function getProductById(idRaw: string): Promise<Product | undefined> {
     try {
+        const id = decodeURIComponent(idRaw);
         await ensureDb();
         const { rows } = await sql`SELECT * FROM products WHERE id = ${id}`;
         if (rows.length === 0) return undefined;
