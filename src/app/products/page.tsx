@@ -1,8 +1,11 @@
 import { getProducts } from "@/lib/products";
 
-export default async function ProductsPage({ searchParams }: { searchParams: { category?: string } }) {
+export const dynamic = 'force-dynamic';
+
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
     let products = await getProducts();
-    const category = searchParams.category;
+    const resolvedParams = await searchParams;
+    const category = resolvedParams.category;
 
     if (category) {
         products = products.filter(p => p.category === category);
