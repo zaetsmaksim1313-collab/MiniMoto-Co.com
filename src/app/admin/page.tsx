@@ -52,6 +52,8 @@ export default function AdminPage() {
         if (res.success) {
             alert(editingProduct ? 'Product updated!' : 'Product added!');
             window.location.reload();
+        } else {
+            alert("Error: " + res.error);
         }
     };
 
