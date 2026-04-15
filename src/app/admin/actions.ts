@@ -5,23 +5,23 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 
 export async function addProduct(formData: FormData) {
-    await ensureDb();
-    
-    const id = (formData.get('id') as string) || Math.random().toString(36).substr(2, 9);
-    const name = formData.get('name') as string;
-    const price = Number(formData.get('price'));
-    const compareAtPrice = formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : null;
-    const description = formData.get('description') as string;
-    
-    const imagesRaw = formData.get('images') as string;
-    const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : ["https://images.unsplash.com/photo-1558981403-c5f94bbde586"];
-    
-    const category = formData.get('category') as string;
-    const optionsRaw = formData.get('options') as string;
-    const options = optionsRaw ? JSON.parse(optionsRaw) : [];
-    const status = (formData.get('status') as string) || 'Active';
-
     try {
+        await ensureDb();
+        
+        const id = (formData.get('id') as string) || Math.random().toString(36).substr(2, 9);
+        const name = formData.get('name') as string;
+        const price = Number(formData.get('price'));
+        const compareAtPrice = formData.get('compareAtPrice') ? Number(formData.get('compareAtPrice')) : null;
+        const description = formData.get('description') as string;
+        
+        const imagesRaw = formData.get('images') as string;
+        const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : ["https://images.unsplash.com/photo-1558981403-c5f94bbde586"];
+        
+        const category = formData.get('category') as string;
+        const optionsRaw = formData.get('options') as string;
+        const options = optionsRaw ? JSON.parse(optionsRaw) : [];
+        const status = (formData.get('status') as string) || 'Active';
+
         await sql`
             INSERT INTO products (id, name, price, compareAtPrice, description, images, category, options, status)
             VALUES (${id}, ${name}, ${price}, ${compareAtPrice}, ${description}, ${JSON.stringify(images)}, ${category}, ${JSON.stringify(options)}, ${status})
@@ -29,6 +29,7 @@ export async function addProduct(formData: FormData) {
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (e: any) {
+        console.error("Add Product Error:", e);
         return { success: false, error: e.message };
     }
 }

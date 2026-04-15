@@ -63,8 +63,18 @@ export default function NewProductPage() {
         formData.append('options', JSON.stringify(options));
         formData.append('status', 'Active');
         
-        await addProduct(formData);
-        router.push('/admin/products');
+        try {
+            const res = await addProduct(formData);
+            if (res && res.success === false) {
+                alert("Error saving product: " + res.error);
+                setIsSaving(false);
+            } else {
+                router.push('/admin/products');
+            }
+        } catch (error: any) {
+            alert("Error connecting to database. Make sure your Postgres keys are linked if testing locally! " + error.message);
+            setIsSaving(false);
+        }
     };
 
     return (
