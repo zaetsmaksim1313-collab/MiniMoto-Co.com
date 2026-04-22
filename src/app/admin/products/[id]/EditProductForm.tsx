@@ -14,12 +14,39 @@ export default function EditProductForm({ product }: { product: Product }) {
     const [images, setImages] = useState<string[]>(product.images || []);
     const [options, setOptions] = useState<ProductOption[]>(product.options || []);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
 
         Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImages(prev => [...prev, reader.result as string]);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const files = e.dataTransfer.files;
+        if (!files) return;
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImages(prev => [...prev, reader.result as string]);
@@ -99,9 +126,16 @@ export default function EditProductForm({ product }: { product: Product }) {
                 
                 <div className="admin-card">
                     <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '1rem' }}>Media</label>
-                    <div style={{ border: '1px dashed #ccc', padding: '2rem', textAlign: 'center', borderRadius: '8px', marginBottom: '1rem', background: '#fafafa' }}>
-                        <input type="file" multiple accept="image/*" onChange={handleImageUpload} style={{ margin: '0 auto', display: 'block' }} />
-                        <p style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem' }}>Select images from your computer.</p>
+                    <div 
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        style={{ border: `2px dashed ${isDragging ? '#000' : '#ccc'}`, padding: '2rem', textAlign: 'center', borderRadius: '8px', marginBottom: '1rem', background: isDragging ? '#f0f0f0' : '#fafafa', transition: 'all 0.2s ease', cursor: 'pointer' }}
+                        onClick={() => document.getElementById('edit-file-upload')?.click()}
+                    >
+                        <input id="edit-file-upload" type="file" multiple accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
+                        <p style={{ margin: 0, color: '#333', fontWeight: 'bold' }}>Drop images here</p>
+                        <p style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem' }}>or click to select from your computer.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                         {images.map((img, i) => (

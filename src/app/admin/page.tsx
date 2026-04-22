@@ -9,6 +9,8 @@ export default function AdminPage() {
     const [showForm, setShowForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState<any>(null);
     const [options, setOptions] = useState<any[]>([]);
+    const [images, setImages] = useState<string[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         fetch('/api/products')
@@ -44,6 +46,7 @@ export default function AdminPage() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         formData.set('options', JSON.stringify(options));
+        formData.set('images', images.join(','));
 
         const res = editingProduct
             ? await updateProduct(formData)
@@ -60,6 +63,7 @@ export default function AdminPage() {
     const startEdit = (product: any) => {
         setEditingProduct(product);
         setOptions(product.options || []);
+        setImages(product.images || []);
         setShowForm(true);
     };
 
@@ -67,6 +71,43 @@ export default function AdminPage() {
         setShowForm(false);
         setEditingProduct(null);
         setOptions([]);
+        setImages([]);
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files) return;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onloadend = () => setImages(prev => [...prev, reader.result as string]);
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const files = e.dataTransfer.files;
+        if (!files) return;
+
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImages(prev => [...prev, reader.result as string]);
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
     if (loading) return <div className="container">Loading...</div>;
@@ -108,8 +149,26 @@ export default function AdminPage() {
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Image URL (comma separated for multiple)</label>
-                        <input name="images" defaultValue={editingProduct?.images?.join(', ')} placeholder="https://..." style={{ width: '100%', padding: '0.8rem', background: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '4px' }} />
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem' }}>Media</label>
+                        <div 
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            style={{ border: `2px dashed ${isDragging ? '#000' : '#ccc'}`, padding: '2rem', textAlign: 'center', borderRadius: '8px', marginBottom: '1rem', background: isDragging ? '#f0f0f0' : '#fff', transition: 'all 0.2s ease', cursor: 'pointer', color: '#000' }}
+                            onClick={() => document.getElementById('modal-file-upload')?.click()}
+                        >
+                            <input id="modal-file-upload" type="file" multiple accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
+                            <p style={{ margin: 0, fontWeight: 'bold' }}>Drop images here</p>
+                            <p style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem' }}>or click to select from your computer.</p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                            {images.map((img, i) => (
+                                <div key={i} style={{ position: 'relative' }}>
+                                    <img src={img} alt="" style={{ width: '80px', height: '80px', objectFit: 'cover', border: '1px solid #ccc', borderRadius: '4px' }} />
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); setImages(images.filter((_, idx) => idx !== i)); }} style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: '10px' }}>X</button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <div style={{ marginBottom: '2rem' }}>
