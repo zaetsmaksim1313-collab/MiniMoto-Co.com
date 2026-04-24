@@ -11,6 +11,7 @@ export default function AdminPage() {
     const [options, setOptions] = useState<any[]>([]);
     const [images, setImages] = useState<string[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         fetch('/api/products')
@@ -44,19 +45,27 @@ export default function AdminPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        formData.set('options', JSON.stringify(options));
-        formData.set('images', images.join(','));
+        setIsSaving(true);
+        try {
+            const formData = new FormData(e.currentTarget);
+            formData.set('options', JSON.stringify(options));
+            formData.set('images', images.join(','));
 
-        const res = editingProduct
-            ? await updateProduct(formData)
-            : await addProduct(formData);
+            const res = editingProduct
+                ? await updateProduct(formData)
+                : await addProduct(formData);
 
-        if (res.success) {
-            alert(editingProduct ? 'Product updated!' : 'Product added!');
-            window.location.reload();
-        } else {
-            alert("Error: " + res.error);
+            if (res && res.success) {
+                alert(editingProduct ? 'Product updated!' : 'Product added!');
+                window.location.reload();
+            } else {
+                alert("Error: " + (res?.error || "Unknown error occurred."));
+            }
+        } catch (err: any) {
+            console.error("Submit Error:", err);
+            alert("Failed to submit. The payload might be too large or there's a network issue. " + err.message);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -74,14 +83,42 @@ export default function AdminPage() {
         setImages([]);
     };
 
+    const processImageFile = (file: File) => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const MAX_DIMENSION = 800;
+
+                if (width > height && width > MAX_DIMENSION) {
+                    height *= MAX_DIMENSION / width;
+                    width = MAX_DIMENSION;
+                } else if (height > MAX_DIMENSION) {
+                    width *= MAX_DIMENSION / height;
+                    height = MAX_DIMENSION;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                setImages(prev => [...prev, compressedDataUrl]);
+            };
+            img.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+    };
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onloadend = () => setImages(prev => [...prev, reader.result as string]);
-            reader.readAsDataURL(file);
-        });
+        Array.from(files).forEach(processImageFile);
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -99,15 +136,7 @@ export default function AdminPage() {
         setIsDragging(false);
         const files = e.dataTransfer.files;
         if (!files) return;
-
-        Array.from(files).forEach(file => {
-            if (!file.type.startsWith('image/')) return;
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImages(prev => [...prev, reader.result as string]);
-            };
-            reader.readAsDataURL(file);
-        });
+        Array.from(files).forEach(processImageFile);
     };
 
     if (loading) return <div className="container">Loading...</div>;
@@ -184,7 +213,9 @@ export default function AdminPage() {
                         ))}
                     </div>
 
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{editingProduct ? 'Update Product' : 'Create Product'}</button>
+                    <button type="submit" disabled={isSaving} className="btn btn-primary" style={{ width: '100%', opacity: isSaving ? 0.7 : 1 }}>
+                        {isSaving ? "Saving..." : (editingProduct ? 'Update Product' : 'Create Product')}
+                    </button>
                 </form>
             )}
 
