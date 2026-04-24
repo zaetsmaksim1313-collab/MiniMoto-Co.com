@@ -87,7 +87,7 @@ export default function EditProductForm({ product }: { product: Product }) {
         formData.append('description', description);
         formData.append('category', category);
         if (images.length > 0) {
-            formData.append('images', images.join(','));
+            formData.append('images', JSON.stringify(images));
         }
         formData.append('options', JSON.stringify(options));
         formData.append('status', product.status || 'Active');

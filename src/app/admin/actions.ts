@@ -15,7 +15,14 @@ export async function addProduct(formData: FormData) {
         const description = formData.get('description') as string;
         
         const imagesRaw = formData.get('images') as string;
-        const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : ["https://images.unsplash.com/photo-1558981403-c5f94bbde586"];
+        let images: string[] = ["https://images.unsplash.com/photo-1558981403-c5f94bbde586"];
+        if (imagesRaw) {
+            try {
+                images = JSON.parse(imagesRaw);
+            } catch {
+                images = imagesRaw.split(',').map(img => img.trim());
+            }
+        }
         
         const category = formData.get('category') as string;
         const optionsRaw = formData.get('options') as string;
@@ -53,7 +60,14 @@ export async function updateProduct(formData: FormData) {
     const description = formData.get('description') as string;
     
     const imagesRaw = formData.get('images') as string;
-    const images = imagesRaw ? imagesRaw.split(',').map(img => img.trim()) : existing.images;
+    let images: string[] = existing.images;
+    if (imagesRaw) {
+        try {
+            images = JSON.parse(imagesRaw);
+        } catch {
+            images = imagesRaw.split(',').map(img => img.trim());
+        }
+    }
     
     const category = formData.get('category') as string;
     const optionsRaw = formData.get('options') as string;

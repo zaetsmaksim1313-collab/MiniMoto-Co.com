@@ -49,7 +49,7 @@ export default function AdminPage() {
         try {
             const formData = new FormData(e.currentTarget);
             formData.set('options', JSON.stringify(options));
-            formData.set('images', images.join(','));
+            formData.set('images', JSON.stringify(images));
 
             const res = editingProduct
                 ? await updateProduct(formData)
