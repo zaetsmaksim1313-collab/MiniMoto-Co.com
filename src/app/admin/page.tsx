@@ -92,7 +92,7 @@ export default function AdminPage() {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const MAX_DIMENSION = 800;
+                const MAX_DIMENSION = 1600;
 
                 if (width > height && width > MAX_DIMENSION) {
                     height *= MAX_DIMENSION / width;
@@ -107,7 +107,7 @@ export default function AdminPage() {
                 const ctx = canvas.getContext('2d');
                 ctx?.drawImage(img, 0, 0, width, height);
 
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
                 setImages(prev => [...prev, compressedDataUrl]);
             };
             img.src = reader.result as string;

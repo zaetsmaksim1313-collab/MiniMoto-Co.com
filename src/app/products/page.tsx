@@ -18,14 +18,14 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             </h1>
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '2rem'
             }}>
                 {products.map(product => (
                     <div key={product.id} className="glass" style={{ padding: '1rem', transition: 'var(--transition)' }}>
                         <div style={{
                             height: '300px',
-                            background: `url(${product.images[0]}) no-repeat center/cover`,
+                            background: `url(${product.images[0]}) no-repeat center/contain`,
                             borderRadius: '8px',
                             marginBottom: '1rem'
                         }}></div>

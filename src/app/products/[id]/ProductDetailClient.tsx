@@ -10,6 +10,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
     const [totalPrice, setTotalPrice] = useState(product.price);
     const [quantity, setQuantity] = useState(1);
+    const [mainImage, setMainImage] = useState(product.images[0]);
 
     useEffect(() => {
         // Initialize with first values
@@ -54,11 +55,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     {/* Image Gallery */}
                     <div className="product-gallery">
                         <div className="main-image">
-                            <img src={product.images[0]} alt={product.name} />
+                            <img src={mainImage} alt={product.name} />
                         </div>
                         <div className="thumbnail-grid">
                             {product.images.map((img, idx) => (
-                                <div key={idx} className="thumb">
+                                <div key={idx} className="thumb" onClick={() => setMainImage(img)}>
                                     <img src={img} alt={`${product.name} ${idx}`} />
                                 </div>
                             ))}
@@ -154,8 +155,14 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
                 .product-layout {
                     display: grid;
-                    grid-template-columns: 1.2fr 1fr;
+                    grid-template-columns: 450px 1fr;
                     gap: 4rem;
+                }
+
+                @media (max-width: 900px) {
+                    .product-layout {
+                        grid-template-columns: 1fr;
+                    }
                 }
 
                 .main-image {
@@ -166,7 +173,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     margin-bottom: 1rem;
                 }
 
-                .main-image img { width: 100%; height: 100%; object-fit: cover; }
+                .main-image img { width: 100%; height: 100%; object-fit: contain; }
 
                 .thumbnail-grid {
                     display: grid;
@@ -179,9 +186,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     background: #f7f7f7;
                     border-radius: 4px;
                     cursor: pointer;
+                    overflow: hidden;
+                    border: 2px solid transparent;
                 }
+                
+                .thumb:hover { border-color: black; }
 
-                .thumb img { width: 100%; height: 100%; object-fit: cover; }
+                .thumb img { width: 100%; height: 100%; object-fit: contain; }
 
                 .breadcrumb { font-size: 0.8rem; color: #666; margin-bottom: 1rem; }
                 .breadcrumb a { color: #666; text-decoration: none; }
