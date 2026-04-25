@@ -172,6 +172,8 @@ export default function NewProductPage() {
                                     <select value={opt.type} onChange={e => updateOption(optIndex, 'type', e.target.value)} style={{ width: '100%', padding: '0.6rem', border: '1px solid #e1e1e1', borderRadius: '4px', marginTop: '4px' }}>
                                         <option value="dropdown">Dropdown</option>
                                         <option value="selection">Selection (Pills)</option>
+                                        <option value="color">Color Bubbles</option>
+                                        <option value="radio">Radio Bubbles</option>
                                         <option value="textbox">Textbox</option>
                                     </select>
                                 </div>
@@ -181,7 +183,10 @@ export default function NewProductPage() {
                                 <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #eee' }}>
                                     <label style={{ fontSize: '0.9rem', color: '#444', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Option Values</label>
                                     {opt.values.map((val: any, valIndex: number) => (
-                                        <div key={valIndex} style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem' }}>
+                                        <div key={valIndex} style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', alignItems: 'center' }}>
+                                            {opt.type === 'color' && (
+                                                <input type="color" value={val.colorHex || '#000000'} onChange={e => updateOptionValue(optIndex, valIndex, 'colorHex', e.target.value)} style={{ width: '40px', height: '40px', border: 'none', padding: 0, cursor: 'pointer', borderRadius: '4px' }} title="Pick Color" />
+                                            )}
                                             <input type="text" placeholder="Value (e.g. Red)" value={val.value} onChange={e => updateOptionValue(optIndex, valIndex, 'value', e.target.value)} style={{ flex: 2, padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
                                             <input type="number" placeholder="Price Modifier (+)" value={val.priceModifier} onChange={e => updateOptionValue(optIndex, valIndex, 'priceModifier', Number(e.target.value))} style={{ flex: 1, padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
                                         </div>

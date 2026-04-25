@@ -2,10 +2,11 @@ import { sql } from '@vercel/postgres';
 
 export interface ProductOption {
     name: string;
-    type?: 'dropdown' | 'selection' | 'textbox';
+    type?: 'dropdown' | 'selection' | 'textbox' | 'color' | 'radio';
     values: {
         value: string;
         priceModifier?: number;
+        colorHex?: string;
     }[];
 }
 
