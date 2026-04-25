@@ -14,30 +14,39 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
     return (
         <div className="container" style={{ padding: '4rem 0' }}>
             <h1 className="section-title">
-                {category ? category.toUpperCase() : 'ALL'} <span style={{ color: 'var(--accent-color)' }}>PRODUCTS</span>
+                {category ? category.toUpperCase() : 'ALL'} <span style={{ color: 'var(--accent-color)' }}>{category ? '' : 'PRODUCTS'}</span>
             </h1>
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
+                gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: '2rem'
             }}>
                 {products.map(product => (
-                    <div key={product.id} className="glass" style={{ padding: '1rem', transition: 'var(--transition)' }}>
+                    <a key={product.id} href={`/products/${product.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit', transition: 'opacity 0.2s' }} onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'} onMouseOut={(e) => e.currentTarget.style.opacity = '1'}>
                         <div style={{
-                            height: '300px',
-                            background: `url(${product.images[0]}) no-repeat center/contain`,
-                            borderRadius: '8px',
-                            marginBottom: '1rem'
-                        }}></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                            <div>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{product.name}</h3>
-                                <p style={{ opacity: 0.6, fontSize: '0.8rem', marginBottom: '1rem' }}>{product.category}</p>
-                            </div>
-                            <p style={{ color: 'var(--accent-color)', fontWeight: '700', fontSize: '1.2rem' }}>${product.price}</p>
+                            aspectRatio: '4/5',
+                            width: '100%',
+                            background: `url(${product.images[0]}) no-repeat center/cover`,
+                            marginBottom: '1rem',
+                            position: 'relative'
+                        }}>
+                            {/* Example placeholder for out of stock logic if status was used for inventory */}
+                            {product.status === 'Draft' && (
+                                <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'black', color: 'white', padding: '4px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                    SOLD OUT
+                                </div>
+                            )}
                         </div>
-                        <a href={`/products/${product.id}`} className="btn btn-primary" style={{ display: 'block', textAlign: 'center', marginTop: '1rem', width: '100%' }}>View Details</a>
-                    </div>
+                        <div style={{ padding: '0 0.25rem' }}>
+                            <h3 style={{ fontSize: '1rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '0.25rem' }}>{product.name}</h3>
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <p style={{ color: '#333', fontSize: '0.9rem' }}>${Number(product.price).toFixed(2)}</p>
+                                {product.compareAtPrice && (
+                                    <p style={{ color: '#999', fontSize: '0.9rem', textDecoration: 'line-through' }}>${Number(product.compareAtPrice).toFixed(2)}</p>
+                                )}
+                            </div>
+                        </div>
+                    </a>
                 ))}
             </div>
         </div>
