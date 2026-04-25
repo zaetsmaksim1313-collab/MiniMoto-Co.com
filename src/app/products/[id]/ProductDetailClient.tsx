@@ -7,17 +7,21 @@ import Link from "next/link";
 
 export default function ProductDetailClient({ product }: { product: Product }) {
     const { addToCart } = useCart();
-    const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string }>({});
+    const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: string | string[] }>({});
     const [totalPrice, setTotalPrice] = useState(product.price);
     const [quantity, setQuantity] = useState(1);
     const [mainImage, setMainImage] = useState(product.images[0]);
 
     useEffect(() => {
         // Initialize with first values
-        const initial: { [key: string]: string } = {};
+        const initial: { [key: string]: string | string[] } = {};
         product.options.forEach(opt => {
             if (opt.values.length > 0) {
-                initial[opt.name] = opt.values[0].value;
+                if (!opt.type || opt.type === 'selection') {
+                    initial[opt.name] = []; // Multi-select starts empty
+                } else {
+                    initial[opt.name] = opt.values[0].value;
+                }
             }
         });
         setSelectedOptions(initial);
@@ -27,22 +31,47 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         let extra = 0;
         product.options.forEach(opt => {
             const selectedVal = selectedOptions[opt.name];
-            const valObj = opt.values.find(v => v.value === selectedVal);
-            if (valObj?.priceModifier) {
-                extra += valObj.priceModifier;
+            if (Array.isArray(selectedVal)) {
+                selectedVal.forEach(val => {
+                    const valObj = opt.values.find(v => v.value === val);
+                    if (valObj?.priceModifier) extra += valObj.priceModifier;
+                });
+            } else if (selectedVal) {
+                const valObj = opt.values.find(v => v.value === selectedVal);
+                if (valObj?.priceModifier) {
+                    extra += valObj.priceModifier;
+                }
             }
         });
         setTotalPrice(product.price + extra);
     }, [selectedOptions, product]);
 
-    const handleOptionChange = (optionName: string, value: string) => {
-        setSelectedOptions(prev => ({ ...prev, [optionName]: value }));
+    const handleOptionChange = (optionName: string, value: string, isMulti: boolean = false) => {
+        if (isMulti) {
+            setSelectedOptions(prev => {
+                const currentArr = Array.isArray(prev[optionName]) ? prev[optionName] as string[] : [];
+                if (currentArr.includes(value)) {
+                    return { ...prev, [optionName]: currentArr.filter(v => v !== value) };
+                } else {
+                    return { ...prev, [optionName]: [...currentArr, value] };
+                }
+            });
+        } else {
+            setSelectedOptions(prev => ({ ...prev, [optionName]: value }));
+        }
     };
 
     const handleAddToCart = () => {
+        // Convert array selections to comma separated strings for the cart string record
+        const cartOptions: { [key: string]: string } = {};
+        Object.keys(selectedOptions).forEach(key => {
+            const val = selectedOptions[key];
+            cartOptions[key] = Array.isArray(val) ? val.join(', ') : val;
+        });
+
         addToCart(
             { ...product, price: totalPrice },
-            selectedOptions,
+            cartOptions,
             quantity
         );
         alert('Added to cart!');
@@ -94,16 +123,21 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                         {/* Options */}
                         <div className="options-container">
                             {product.options.map((opt) => {
-                                const activeValObj = opt.values.find(v => v.value === selectedOptions[opt.name]);
+                                const selectedVals = Array.isArray(selectedOptions[opt.name]) ? selectedOptions[opt.name] as string[] : [selectedOptions[opt.name] as string];
+                                const activeValObj = opt.values.find(v => v.value === selectedVals[0]); // Only show name for single-select headers
 
                                 return (
                                     <div key={opt.name} className="option-group">
                                         <div className="option-label" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{opt.name}</span>
-                                            {selectedOptions[opt.name] && (
-                                                <span style={{ color: '#a3a3a3', fontWeight: 400 }}>— {selectedOptions[opt.name]}</span>
+                                            {(!opt.type || opt.type === 'selection') ? (
+                                                <span style={{ color: '#a3a3a3', fontWeight: 400 }}>— Pick multiple</span>
+                                            ) : (
+                                                <>
+                                                    {selectedOptions[opt.name] && <span style={{ color: '#a3a3a3', fontWeight: 400 }}>— {selectedOptions[opt.name]}</span>}
+                                                    {activeValObj?.priceModifier ? <span style={{ color: '#a3a3a3', fontWeight: 400 }}>(+ ${activeValObj.priceModifier.toFixed(2)})</span> : null}
+                                                </>
                                             )}
-                                            {activeValObj?.priceModifier ? <span style={{ color: '#a3a3a3', fontWeight: 400 }}>(+ ${activeValObj.priceModifier.toFixed(2)})</span> : null}
                                         </div>
                                         
                                         {opt.type === 'color' && (
@@ -133,24 +167,31 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                                         )}
 
                                         {(!opt.type || opt.type === 'selection') && (
-                                            <div className="option-pills">
-                                                {opt.values.map((v) => (
+                                            <div className="option-pills" style={{ flexDirection: 'column' }}>
+                                                {opt.values.map((v) => {
+                                                    const isChecked = selectedVals.includes(v.value);
+                                                    return (
                                                     <button
                                                         key={v.value}
                                                         type="button"
-                                                        className={`pill ${selectedOptions[opt.name] === v.value ? 'active' : ''}`}
-                                                        onClick={() => handleOptionChange(opt.name, v.value)}
+                                                        className={`pill ${isChecked ? 'active' : ''}`}
+                                                        style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}
+                                                        onClick={() => handleOptionChange(opt.name, v.value, true)}
                                                     >
-                                                        {v.value}
+                                                        <span>{v.value}</span>
+                                                        {v.priceModifier !== undefined && v.priceModifier !== 0 && (
+                                                            <span style={{ opacity: 0.7 }}>+ ${v.priceModifier.toFixed(2)}</span>
+                                                        )}
                                                     </button>
-                                                ))}
+                                                    );
+                                                })}
                                             </div>
                                         )}
 
                                         {opt.type === 'dropdown' && (
                                             <select 
                                                 className="option-dropdown"
-                                                value={selectedOptions[opt.name] || (opt.values[0]?.value || '')} 
+                                                value={(selectedOptions[opt.name] as string) || (opt.values[0]?.value || '')} 
                                                 onChange={(e) => handleOptionChange(opt.name, e.target.value)}
                                             >
                                                 {opt.values.map((v) => (
