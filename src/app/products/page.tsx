@@ -22,7 +22,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 gap: '2rem'
             }}>
                 {products.map(product => (
-                    <a key={product.id} href={`/products/${product.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit', transition: 'opacity 0.2s' }} onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'} onMouseOut={(e) => e.currentTarget.style.opacity = '1'}>
+                    <a key={product.id} href={`/products/${product.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit', transition: 'opacity 0.2s' }} className="product-card">
                         <div style={{
                             aspectRatio: '4/5',
                             width: '100%',
