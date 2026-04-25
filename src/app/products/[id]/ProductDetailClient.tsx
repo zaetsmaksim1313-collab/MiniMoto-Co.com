@@ -160,7 +160,10 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                                                 {opt.values.map((v) => (
                                                     <label key={v.value} className="radio-item" onClick={() => handleOptionChange(opt.name, v.value)}>
                                                         <div className={`radio-circle ${selectedOptions[opt.name] === v.value ? 'active' : ''}`} />
-                                                        <span className="radio-text">{v.value.toLowerCase()}</span>
+                                                        <span className="radio-text">
+                                                            {v.value.toLowerCase()} 
+                                                            {v.priceModifier ? <span style={{ opacity: 0.7, marginLeft: '4px' }}>(+ ${v.priceModifier.toFixed(2)})</span> : null}
+                                                        </span>
                                                     </label>
                                                 ))}
                                             </div>
