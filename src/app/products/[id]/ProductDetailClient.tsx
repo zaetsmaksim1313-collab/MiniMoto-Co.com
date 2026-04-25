@@ -98,8 +98,12 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
                                 return (
                                     <div key={opt.name} className="option-group">
-                                        <div className="option-label">
-                                            {opt.name.toLowerCase()} {activeValObj?.priceModifier ? `(+ $${activeValObj.priceModifier.toFixed(2)})` : ''} *
+                                        <div className="option-label" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{opt.name}</span>
+                                            {selectedOptions[opt.name] && (
+                                                <span style={{ color: '#a3a3a3', fontWeight: 400 }}>— {selectedOptions[opt.name]}</span>
+                                            )}
+                                            {activeValObj?.priceModifier ? <span style={{ color: '#a3a3a3', fontWeight: 400 }}>(+ ${activeValObj.priceModifier.toFixed(2)})</span> : null}
                                         </div>
                                         
                                         {opt.type === 'color' && (
