@@ -15,17 +15,42 @@ export default function NewProductPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
+    const processImageFile = (file: File) => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const MAX_DIMENSION = 1200;
+
+                if (width > height && width > MAX_DIMENSION) {
+                    height *= MAX_DIMENSION / width;
+                    width = MAX_DIMENSION;
+                } else if (height > MAX_DIMENSION) {
+                    width *= MAX_DIMENSION / height;
+                    height = MAX_DIMENSION;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                setImages(prev => [...prev, compressedDataUrl]);
+            };
+            img.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+    };
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
-
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImages(prev => [...prev, reader.result as string]);
-            };
-            reader.readAsDataURL(file);
-        });
+        Array.from(files).forEach(processImageFile);
     };
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -43,15 +68,7 @@ export default function NewProductPage() {
         setIsDragging(false);
         const files = e.dataTransfer.files;
         if (!files) return;
-
-        Array.from(files).forEach(file => {
-            if (!file.type.startsWith('image/')) return;
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImages(prev => [...prev, reader.result as string]);
-            };
-            reader.readAsDataURL(file);
-        });
+        Array.from(files).forEach(processImageFile);
     };
 
     const addOption = () => {
@@ -79,18 +96,18 @@ export default function NewProductPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('price', price);
-        formData.append('description', description);
-        formData.append('category', category);
-        if (images.length > 0) {
-            formData.append('images', JSON.stringify(images));
-        }
-        formData.append('options', JSON.stringify(options));
-        formData.append('status', 'Active');
-        
         try {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('description', description);
+            formData.append('category', category);
+            if (images.length > 0) {
+                formData.append('images', JSON.stringify(images));
+            }
+            formData.append('options', JSON.stringify(options));
+            formData.append('status', 'Active');
+            
             const res = await addProduct(formData);
             if (res && res.success === false) {
                 alert("Error saving product: " + res.error);
@@ -99,7 +116,8 @@ export default function NewProductPage() {
                 router.push('/admin/products');
             }
         } catch (error: any) {
-            alert("Error connecting to database. Make sure your Postgres keys are linked if testing locally! " + error.message);
+            console.error("Save Error:", error);
+            alert("Failed to save: Payload might be too large. Try picking fewer photos or compressing them. " + error.message);
             setIsSaving(false);
         }
     };
