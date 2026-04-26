@@ -110,8 +110,14 @@ export default function EditProductForm({ product }: { product: Product }) {
             formData.append('options', JSON.stringify(options));
             formData.append('status', product.status || 'Active');
             
-            await updateProduct(formData);
+            const res = await updateProduct(formData);
+            if (res && res.success === false) {
+                alert("Error saving product: " + res.error);
+                setIsSaving(false);
+                return;
+            }
             router.push('/admin/products');
+            router.refresh();
         } catch (err: any) {
             console.error("Save Error:", err);
             alert("Failed to save: Payload might be too large. Try picking fewer photos or compressing them.");

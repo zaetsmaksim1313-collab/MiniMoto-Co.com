@@ -34,6 +34,9 @@ export async function addProduct(formData: FormData) {
             VALUES (${id}, ${name}, ${price}, ${compareAtPrice}, ${description}, ${JSON.stringify(images)}, ${category}, ${JSON.stringify(options)}, ${status})
         `;
         revalidatePath('/', 'layout');
+        revalidatePath('/admin/products');
+        revalidatePath(`/admin/products/${id}`);
+        revalidatePath(`/products/${id}`);
         return { success: true };
     } catch (e: any) {
         console.error("Add Product Error:", e);
@@ -45,6 +48,7 @@ export async function deleteProduct(id: string) {
     await ensureDb();
     await sql`DELETE FROM products WHERE id = ${id}`;
     revalidatePath('/', 'layout');
+    revalidatePath('/admin/products');
 }
 
 export async function updateProduct(formData: FormData) {
@@ -81,6 +85,9 @@ export async function updateProduct(formData: FormData) {
             WHERE id = ${id}
         `;
         revalidatePath('/', 'layout');
+        revalidatePath('/admin/products');
+        revalidatePath(`/admin/products/${id}`);
+        revalidatePath(`/products/${id}`);
         return { success: true };
     } catch (e: any) {
         return { success: false, error: e.message };
