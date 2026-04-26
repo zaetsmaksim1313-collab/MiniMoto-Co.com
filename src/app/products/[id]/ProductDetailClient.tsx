@@ -80,20 +80,22 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     return (
         <div className="product-page">
             <div className="split-layout">
-                {/* Left Side: Sticky Image Gallery */}
+                {/* Left Side: Scrollable Image Collage */}
                 <div className="left-panel">
-                    <img src={mainImage} className="full-image" alt={product.name} />
-                    <div className="floating-thumbnails">
-                        {product.images.map((img, idx) => (
-                            <img 
-                                key={idx} 
-                                src={img} 
-                                onClick={() => setMainImage(img)} 
-                                className={`thumb ${mainImage === img ? 'active' : ''}`}
-                                alt={`${product.name} thumbnail`} 
-                            />
-                        ))}
-                    </div>
+                    <img src={product.images[0]} className="full-image" alt={product.name} />
+                    {product.images.length > 1 && (
+                        <div className="thumbnail-grid">
+                            {product.images.slice(1).map((img, idx) => (
+                                <img 
+                                    key={idx} 
+                                    src={img} 
+                                    className="thumb active"
+                                    style={{ opacity: 1, cursor: 'default' }}
+                                    alt={`${product.name} thumbnail ${idx}`} 
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Side: Informational Content */}
@@ -253,51 +255,49 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 }
 
                 .left-panel {
-                    position: sticky;
-                    top: 0;
                     height: 100vh;
-                    overflow: hidden;
+                    overflow-y: auto;
                     background: #111;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                /* Hide scrollbar for a cleaner look natively */
+                .left-panel::-webkit-scrollbar {
+                    display: none;
                 }
 
                 @media (max-width: 900px) {
                     .left-panel {
+                        height: auto;
                         position: relative;
-                        height: 60vh;
+                        overflow-y: visible;
                     }
                 }
 
                 .full-image {
                     width: 100%;
-                    height: 100%;
+                    min-height: 50vh;
                     object-fit: cover;
                 }
 
-                .floating-thumbnails {
-                    position: absolute;
-                    bottom: 20px;
-                    left: 20px;
-                    display: flex;
-                    gap: 10px;
-                    z-index: 10;
+                .thumbnail-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0px; /* seamless edge to edge matching the collage */
                 }
 
                 .thumb {
-                    width: 60px;
-                    height: 60px;
+                    width: 100%;
+                    aspect-ratio: 1/1;
                     object-fit: cover;
-                    border-radius: 4px;
-                    border: 2px solid transparent;
                     cursor: pointer;
-                    transition: transform 0.2s, border-color 0.2s;
+                    opacity: 0.5;
+                    transition: opacity 0.2s;
                 }
 
-                .thumb:hover {
-                    transform: scale(1.05);
-                }
-
-                .thumb.active {
-                    border-color: #fff;
+                .thumb:hover, .thumb.active {
+                    opacity: 1;
                 }
 
                 .right-panel {
