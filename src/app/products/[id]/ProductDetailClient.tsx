@@ -277,8 +277,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
                 .full-image {
                     width: 100%;
-                    min-height: 50vh;
-                    object-fit: cover;
+                    height: auto;
+                    display: block;
                 }
 
                 .thumbnail-grid {
@@ -291,13 +291,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     width: 100%;
                     aspect-ratio: 1/1;
                     object-fit: cover;
-                    cursor: pointer;
-                    opacity: 0.5;
-                    transition: opacity 0.2s;
-                }
-
-                .thumb:hover, .thumb.active {
-                    opacity: 1;
+                    display: block;
                 }
 
                 .right-panel {
