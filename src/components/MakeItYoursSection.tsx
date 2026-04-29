@@ -54,7 +54,7 @@ export default function MakeItYoursSection({ images }: MakeItYoursSectionProps) 
     return (
         <section className="make-it-yours-container" ref={sectionRef}>
             <div className="center-text-wrapper">
-                <h1 className="center-text">DECAL<br/>LAB</h1>
+                <h1 className="center-text">MAKE IT<br/>YOURS</h1>
                 <p className="center-subtext">Build Your Custom Moto Plate</p>
                 <div style={{ pointerEvents: 'auto', marginTop: '2.5rem' }}>
                     <Link href="/decal-builder" className="make-yours-btn">
