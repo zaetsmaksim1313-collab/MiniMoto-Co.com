@@ -16,11 +16,11 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                             <li><a href="/" style={{ color: '#fff', textDecoration: 'none' }}>HOME</a></li>
                             <li><a href="/products" style={{ color: '#fff', textDecoration: 'none' }}>ALL BIKES</a></li>
                             <li><a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a></li>
-                            <li><a href="/collections" style={{ color: '#fff', textDecoration: 'none' }}>CATALOG</a></li>
+                            <li><a href="/decal-builder" style={{ color: '#fff', textDecoration: 'none' }}>DECAL LAB</a></li>
                             <li><a href="#" style={{ color: '#fff', textDecoration: 'none' }}>CONTACT</a></li>
                         </ul>
                         <div style={{ fontSize: '1.2rem', fontWeight: '800', fontFamily: 'var(--font-heading)', textAlign: 'center', margin: '0 2rem' }}>
-                            <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>ProjectMini</a>
+                            <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>MINIMOTO & CO</a>
                         </div>
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'flex-end', fontSize: '0.9rem', fontWeight: '800' }}>
                             <span style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer' }}>USD <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>

@@ -21,7 +21,7 @@ const PLATE_COLORS = ['#ffffff', '#000000'];
 
 export default function DecalCanvas() {
     const [items, setItems] = useState<CanvasItem[]>([]);
-    const [plateColor, setPlateColor] = useState('#ffffff');
+    const [plateColor, setPlateColor] = useState('#000000');
     const [template, setTemplate] = useState<'ODI' | 'MotoCutz'>('ODI');
     
     // Add Tool State
@@ -241,20 +241,13 @@ export default function DecalCanvas() {
                     </div>
 
                     <div className="tool-group">
-                        <h3>4. Add Sponsors & Logos</h3>
+                        <h3>4. Add Custom Logos</h3>
                         <div className="sponsor-list">
-                            <button className="btn-sponsor" onClick={() => addSponsor('DUNLOP')}>+ DUNLOP</button>
-                            <button className="btn-sponsor" onClick={() => addSponsor('FOX RACING')}>+ FOX</button>
-                            <button className="btn-sponsor" onClick={() => addSponsor('PRO TAPER')}>+ PRO TAPER</button>
-                            <button className="btn-sponsor" onClick={() => addSponsor('RED BULL')}>+ RED BULL</button>
+                            <button className="btn-sponsor" onClick={() => addLogo('https://placehold.co/100x100/000000/FFFFFF/png?text=Valknut', 80)}>+ Valknut</button>
+                            <button className="btn-sponsor" onClick={() => addLogo('https://placehold.co/200x80/000000/FFFFFF/png?text=EXT+RACING', 120)}>+ EXT Racing</button>
+                            <button className="btn-sponsor" onClick={() => addLogo('https://placehold.co/200x80/000000/FFFFFF/png?text=THRILL+SEEKERS', 120)}>+ Thrill Seekers</button>
                         </div>
-                        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.8rem', fontSize: '0.8rem', opacity: 0.7 }}>CUSTOM LOGOS</h4>
-                        <div className="sponsor-list">
-                            <button className="btn-sponsor" onClick={() => addLogo('/valknut-logo.png', 80)}>+ Valknut</button>
-                            <button className="btn-sponsor" onClick={() => addLogo('/ext-racing-logo.png', 120)}>+ EXT Racing</button>
-                            <button className="btn-sponsor" onClick={() => addLogo('/thrill-seekers-logo.png', 120)}>+ Thrill Seekers</button>
-                        </div>
-                        <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos change color based on selected Number color.</p>
+                        <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos invert color based on selected Number color. (Currently using placeholders, please save your actual images to the public folder and update the code paths to use them!)</p>
                     </div>
 
                     <div className="checkout-footer">
@@ -326,19 +319,19 @@ export default function DecalCanvas() {
 
                 .odi-shape {
                     clip-path: polygon(
-                        10% 0%, 30% 5%, 50% 8%, 70% 5%, 90% 0%,
-                        98% 20%, 100% 40%, 95% 60%, 85% 75%, 75% 88%,
-                        60% 98%, 50% 100%, 40% 98%,
-                        25% 88%, 15% 75%, 5% 60%, 0% 40%, 2% 20%
+                        10% 5%, 20% 5%, 50% 10%, 80% 5%, 90% 5%,
+                        100% 30%, 93% 45%, 93% 55%, 100% 70%,
+                        85% 90%, 65% 100%, 35% 100%, 15% 90%,
+                        0% 70%, 7% 55%, 7% 45%, 0% 30%
                     );
                 }
 
                 .motocutz-shape {
                     clip-path: polygon(
-                        10% 5%, 20% 5%, 50% 10%, 80% 5%, 90% 5%,
-                        100% 30%, 93% 45%, 93% 55%, 100% 70%,
-                        85% 90%, 65% 100%, 35% 100%, 15% 90%,
-                        0% 70%, 7% 55%, 7% 45%, 0% 30%
+                        10% 0%, 30% 5%, 50% 8%, 70% 5%, 90% 0%,
+                        98% 20%, 100% 40%, 95% 60%, 85% 75%, 75% 88%,
+                        60% 98%, 50% 100%, 40% 98%,
+                        25% 88%, 15% 75%, 5% 60%, 0% 40%, 2% 20%
                     );
                 }
 

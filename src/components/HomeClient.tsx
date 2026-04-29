@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/products";
+import MakeItYoursSection from "./MakeItYoursSection";
 
 export default function HomeClient({ featuredProducts, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     const [scrollY, setScrollY] = useState(0);
@@ -33,6 +34,9 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     </div>
                 </div>
             </section>
+
+            {/* Make It Yours Collage */}
+            <MakeItYoursSection images={makeItYoursImages} />
 
             {/* EMOTOS Section */}
             <section className="featured-section emotos-section">
