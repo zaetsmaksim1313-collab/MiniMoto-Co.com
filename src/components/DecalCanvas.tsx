@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface CanvasItem {
     id: string;
-    type: 'text' | 'sponsor';
+    type: 'text' | 'sponsor' | 'image';
     content: string;
     x: number;
     y: number;
@@ -13,14 +13,16 @@ interface CanvasItem {
     fontFamily?: string;
     fontSize?: number;
     rotation?: number;
+    width?: number;
 }
 
 const FONTS = ['Impact', 'Arial', 'Courier New', 'Bebas Neue', 'Trebuchet MS'];
-const PLATE_COLORS = ['#ffffff', '#000000', '#e63946', '#aacc00', '#0077b6'];
+const PLATE_COLORS = ['#ffffff', '#000000'];
 
 export default function DecalCanvas() {
     const [items, setItems] = useState<CanvasItem[]>([]);
     const [plateColor, setPlateColor] = useState('#ffffff');
+    const [template, setTemplate] = useState<'ODI' | 'MotoCutz'>('ODI');
     
     // Add Tool State
     const [numberInput, setNumberInput] = useState('1');
@@ -58,6 +60,19 @@ export default function DecalCanvas() {
             y: 300,
             color: '#000000',
             fontSize: 24,
+            rotation: 0
+        }]);
+    };
+
+    const addLogo = (logoPath: string, defaultWidth: number) => {
+        setItems(prev => [...prev, {
+            id: 'item_' + Date.now(),
+            type: 'image',
+            content: logoPath,
+            x: 90,
+            y: 200,
+            color: selectedColor, // Used to determine if we should invert color
+            width: defaultWidth,
             rotation: 0
         }]);
     };
@@ -113,7 +128,7 @@ export default function DecalCanvas() {
                     <div className="canvas-container">
                         {/* The Front Plate */}
                         <div 
-                            className="front-plate" 
+                            className={`front-plate ${template === 'ODI' ? 'odi-shape' : 'motocutz-shape'}`} 
                             ref={canvasRef}
                             style={{ backgroundColor: plateColor }}
                         >
@@ -141,6 +156,17 @@ export default function DecalCanvas() {
                                 >
                                     {item.type === 'sponsor' && <div className="sponsor-badge">{item.content}</div>}
                                     {item.type === 'text' && <span>{item.content}</span>}
+                                    {item.type === 'image' && (
+                                        <img 
+                                            src={item.content} 
+                                            alt="Custom Logo" 
+                                            style={{ 
+                                                width: `${item.width}px`,
+                                                filter: item.color === '#000000' ? 'invert(1)' : 'none',
+                                                pointerEvents: 'none'
+                                            }} 
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -157,7 +183,22 @@ export default function DecalCanvas() {
                     </div>
 
                     <div className="tool-group">
-                        <h3>1. Plate Color</h3>
+                        <h3>1. Plate Template</h3>
+                        <div className="template-toggle">
+                            <button 
+                                className={`btn-template ${template === 'ODI' ? 'active' : ''}`}
+                                onClick={() => setTemplate('ODI')}
+                            >
+                                ODI Plate
+                            </button>
+                            <button 
+                                className={`btn-template ${template === 'MotoCutz' ? 'active' : ''}`}
+                                onClick={() => setTemplate('MotoCutz')}
+                            >
+                                MotoCutz Plate
+                            </button>
+                        </div>
+                        <h3 style={{ marginTop: '1.5rem' }}>2. Plate Color</h3>
                         <div className="color-swatches">
                             {PLATE_COLORS.map(color => (
                                 <button
@@ -172,7 +213,7 @@ export default function DecalCanvas() {
                     </div>
 
                     <div className="tool-group">
-                        <h3>2. Racing Number</h3>
+                        <h3>3. Racing Number</h3>
                         <div className="number-tool">
                             <input 
                                 type="text" 
@@ -200,13 +241,20 @@ export default function DecalCanvas() {
                     </div>
 
                     <div className="tool-group">
-                        <h3>3. Add Sponsors</h3>
+                        <h3>4. Add Sponsors & Logos</h3>
                         <div className="sponsor-list">
                             <button className="btn-sponsor" onClick={() => addSponsor('DUNLOP')}>+ DUNLOP</button>
                             <button className="btn-sponsor" onClick={() => addSponsor('FOX RACING')}>+ FOX</button>
                             <button className="btn-sponsor" onClick={() => addSponsor('PRO TAPER')}>+ PRO TAPER</button>
                             <button className="btn-sponsor" onClick={() => addSponsor('RED BULL')}>+ RED BULL</button>
                         </div>
+                        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.8rem', fontSize: '0.8rem', opacity: 0.7 }}>CUSTOM LOGOS</h4>
+                        <div className="sponsor-list">
+                            <button className="btn-sponsor" onClick={() => addLogo('/valknut-logo.png', 80)}>+ Valknut</button>
+                            <button className="btn-sponsor" onClick={() => addLogo('/ext-racing-logo.png', 120)}>+ EXT Racing</button>
+                            <button className="btn-sponsor" onClick={() => addLogo('/thrill-seekers-logo.png', 120)}>+ Thrill Seekers</button>
+                        </div>
+                        <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos change color based on selected Number color.</p>
                     </div>
 
                     <div className="checkout-footer">
@@ -269,13 +317,29 @@ export default function DecalCanvas() {
                     width: 280px;
                     height: 360px;
                     background: white;
-                    border-radius: 40px 40px 80px 80px;
                     position: relative;
                     overflow: hidden;
                     box-shadow: 0 30px 60px rgba(0,0,0,0.1), inset 0 4px 10px rgba(255,255,255,0.5);
-                    border: 4px solid #fff;
-                    transition: background-color 0.3s;
+                    transition: all 0.3s ease;
                     touch-action: none; /* Crucial for preventing scroll during drag on mobile */
+                }
+
+                .odi-shape {
+                    clip-path: polygon(
+                        10% 0%, 30% 5%, 50% 8%, 70% 5%, 90% 0%,
+                        98% 20%, 100% 40%, 95% 60%, 85% 75%, 75% 88%,
+                        60% 98%, 50% 100%, 40% 98%,
+                        25% 88%, 15% 75%, 5% 60%, 0% 40%, 2% 20%
+                    );
+                }
+
+                .motocutz-shape {
+                    clip-path: polygon(
+                        10% 5%, 20% 5%, 50% 10%, 80% 5%, 90% 5%,
+                        100% 30%, 93% 45%, 93% 55%, 100% 70%,
+                        85% 90%, 65% 100%, 35% 100%, 15% 90%,
+                        0% 70%, 7% 55%, 7% 45%, 0% 30%
+                    );
                 }
 
                 .canvas-node {
@@ -370,6 +434,30 @@ export default function DecalCanvas() {
                 .swatch.active {
                     transform: scale(1.15);
                     border: 3px solid #000;
+                }
+
+                .template-toggle {
+                    display: flex;
+                    gap: 1rem;
+                }
+
+                .btn-template {
+                    flex: 1;
+                    padding: 0.8rem;
+                    background: #fff;
+                    color: #000;
+                    border: 1px solid #ccc;
+                    border-radius: 6px;
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .btn-template.active {
+                    background: #000;
+                    color: #fff;
+                    border-color: #000;
                 }
 
                 .number-tool {

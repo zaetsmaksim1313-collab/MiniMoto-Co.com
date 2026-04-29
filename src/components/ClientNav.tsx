@@ -10,26 +10,32 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
     return (
         <>
             {!isCheckout && (
-                <header className="glass" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, padding: '1rem 0', borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none', backgroundColor: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-                    <nav className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: '1.5rem', fontWeight: '900', color: 'var(--accent-color)', fontFamily: 'var(--font-heading)' }}>
-                            MINI MOTO & CO
-                        </div>
-                        <ul style={{ display: 'flex', gap: '2rem', fontWeight: '600', textTransform: 'uppercase', fontSize: '0.8rem' }}>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/products">Products</a></li>
-                            <li><a href="/collections">Collections</a></li>
-                            <li><a href="/customizer">Bike Builder</a></li>
-                            <li><a href="/decal-builder">Decal Lab</a></li>
+                <header style={{ position: 'relative', width: '100%', zIndex: 1000, padding: '1.5rem 0', backgroundColor: '#000', color: '#fff', borderBottom: '1px solid #333' }}>
+                    <nav className="container" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
+                        <ul style={{ display: 'flex', gap: '2rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', margin: 0, padding: 0, listStyle: 'none' }}>
+                            <li><a href="/" style={{ color: '#fff', textDecoration: 'none' }}>HOME</a></li>
+                            <li><a href="/products" style={{ color: '#fff', textDecoration: 'none' }}>ALL BIKES</a></li>
+                            <li><a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a></li>
+                            <li><a href="/collections" style={{ color: '#fff', textDecoration: 'none' }}>CATALOG</a></li>
+                            <li><a href="#" style={{ color: '#fff', textDecoration: 'none' }}>CONTACT</a></li>
                         </ul>
-                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                            <a href="/search" style={{ fontSize: '1.2rem' }}>🔍</a>
+                        <div style={{ fontSize: '1.2rem', fontWeight: '800', fontFamily: 'var(--font-heading)', textAlign: 'center', margin: '0 2rem' }}>
+                            <a href="/" style={{ color: '#fff', textDecoration: 'none' }}>ProjectMini</a>
+                        </div>
+                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'flex-end', fontSize: '0.9rem', fontWeight: '800' }}>
+                            <span style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer' }}>USD <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                            <a href="/search" style={{ color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </a>
+                            <a href="#" style={{ color: '#fff', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </a>
                             <CartIcon />
                         </div>
                     </nav>
                 </header>
             )}
-            <main style={{ marginTop: isCheckout ? '0' : '80px' }}>
+            <main style={{ marginTop: isCheckout ? '0' : '0' }}>
                 {children}
             </main>
             {!isCheckout && (

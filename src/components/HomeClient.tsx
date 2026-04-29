@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/products";
-import MakeItYoursSection from "./MakeItYoursSection";
 
 export default function HomeClient({ featuredProducts, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     const [scrollY, setScrollY] = useState(0);
@@ -35,26 +34,27 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 </div>
             </section>
 
-            {/* Make It Yours Collage */}
-            <MakeItYoursSection images={makeItYoursImages} />
-
-            {/* Featured Products */}
-            <section className="featured-section alt-bg">
+            {/* EMOTOS Section */}
+            <section className="featured-section emotos-section">
                 <div className="container">
-                    <div className="section-header">
-                        <div>
-                            <span className="section-subtitle">FEATURED</span>
-                            <h2>New Releases</h2>
-                        </div>
-                        <Link href="/products" className="btn-outline-pill">View all</Link>
+                    <div className="emotos-header">
+                        <h2>EMOTOS</h2>
+                        <Link href="/products" className="shop-all-link">SHOP ALL</Link>
                     </div>
-                    <div className="carousel">
+                    <div className="emotos-grid">
                         {featuredProducts.map((p) => (
-                            <div key={p.id} className="carousel-card-small">
+                            <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
-                                    <div className="image-container">
-                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                    <div className="emoto-image-container">
+                                        <span className="badge-sold-out">SOLD OUT</span>
                                         <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                    <div className="emoto-info">
+                                        <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                        <div className="emoto-price">
+                                            <span>${p.price.toFixed(2)}</span>
+                                            {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                        </div>
                                     </div>
                                 </Link>
                             </div>
@@ -64,22 +64,26 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
             </section>
 
             {/* Mini Moto Accessories */}
-            <section className="featured-section alt-bg">
+            <section className="featured-section emotos-section">
                 <div className="container">
-                    <div className="section-header">
-                        <div>
-                            <span className="section-subtitle">ADD-ONS</span>
-                            <h2>Mini Moto Accessories</h2>
-                        </div>
-                        <Link href="/products?category=accessories" className="btn-outline-pill">View all</Link>
+                    <div className="emotos-header">
+                        <h2>ACCESSORIES</h2>
+                        <Link href="/products?category=accessories" className="shop-all-link">SHOP ALL</Link>
                     </div>
-                    <div className="carousel">
+                    <div className="emotos-grid">
                         {accessories && accessories.length > 0 ? accessories.map((p) => (
-                            <div key={p.id} className="carousel-card-small">
+                            <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
-                                    <div className="image-container">
-                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                    <div className="emoto-image-container">
+                                        <span className="badge-sold-out">SOLD OUT</span>
                                         <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                    <div className="emoto-info">
+                                        <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                        <div className="emoto-price">
+                                            <span>${p.price.toFixed(2)}</span>
+                                            {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                        </div>
                                     </div>
                                 </Link>
                             </div>
@@ -89,22 +93,26 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
             </section>
 
             {/* All Products */}
-            <section className="featured-section">
+            <section className="featured-section emotos-section">
                 <div className="container">
-                    <div className="section-header">
-                        <div>
-                            <span className="section-subtitle">COLLECTION</span>
-                            <h2>All Products</h2>
-                        </div>
-                        <Link href="/products" className="btn-outline-pill">View all</Link>
+                    <div className="emotos-header">
+                        <h2>ALL PRODUCTS</h2>
+                        <Link href="/products" className="shop-all-link">SHOP ALL</Link>
                     </div>
-                    <div className="carousel">
+                    <div className="emotos-grid">
                         {allProducts && allProducts.map((p) => (
-                            <div key={p.id} className="carousel-card-small">
+                            <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
-                                    <div className="image-container">
-                                        {p.compareAtPrice && <span className="badge-sale">Sale</span>}
+                                    <div className="emoto-image-container">
+                                        <span className="badge-sold-out">SOLD OUT</span>
                                         <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                    <div className="emoto-info">
+                                        <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                        <div className="emoto-price">
+                                            <span>${p.price.toFixed(2)}</span>
+                                            {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                        </div>
                                     </div>
                                 </Link>
                             </div>
@@ -237,191 +245,133 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 }
 
                 .featured-section {
-                    padding: 3rem 0;
+                    padding: 4rem 0;
                     width: 100%;
                 }
 
-                .alt-bg {
-                    background: radial-gradient(circle at 50% 0%, #fefefe 0%, #f4f4f5 100%);
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 20px 40px rgba(0,0,0,0.03);
-                    border-top: 1px solid rgba(0,0,0,0.06);
-                    border-bottom: 1px solid rgba(0,0,0,0.06);
-                    position: relative;
-                    z-index: 10;
+                .emotos-section {
+                    background: white;
                 }
 
-                .section-header {
+                .emotos-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
-                    margin-bottom: 2rem;
+                    margin-bottom: 2.5rem;
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 1rem;
                 }
 
-                .section-header div {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .section-subtitle {
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    letter-spacing: 0.15em;
-                    color: var(--accent-secondary);
-                    margin-bottom: 0.3rem;
-                }
-
-                .section-header h2 {
-                    font-size: 2rem;
-                    font-weight: 700;
+                .emotos-header h2 {
+                    font-size: 3.5rem;
+                    font-weight: 800;
+                    letter-spacing: -0.02em;
+                    margin: 0;
                     line-height: 1;
                 }
 
-                .btn-outline-pill {
-                    display: inline-block;
-                    position: relative;
-                    padding: 10px 28px;
-                    border: 1px solid rgba(0,0,0,0.15);
-                    border-radius: 50px;
+                .shop-all-link {
                     font-size: 0.85rem;
-                    font-weight: 700;
+                    font-weight: 600;
                     text-decoration: none;
                     color: black;
-                    background: transparent;
-                    transition: color 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
-                    overflow: hidden;
-                    z-index: 1;
+                    letter-spacing: 0.05em;
+                    padding-bottom: 4px;
                 }
 
-                .btn-outline-pill::before {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    background: black;
-                    z-index: -1;
-                    transform: scaleY(0);
-                    transform-origin: bottom;
-                    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                .shop-all-link:hover {
+                    opacity: 0.7;
                 }
 
-                .btn-outline-pill:hover {
-                    color: white;
-                    border-color: black;
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-                }
-
-                .btn-outline-pill:hover::before {
-                    transform: scaleY(1);
-                }
-
-                .carousel {
-                    display: flex;
+                .emotos-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
                     gap: 1.5rem;
-                    overflow-x: auto;
-                    scroll-snap-type: x mandatory;
-                    padding-bottom: 2rem;
-                    width: 100%;
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-                
-                .carousel::-webkit-scrollbar {
-                    display: none;
                 }
 
-                .carousel-card-small {
-                    flex: 0 0 160px;
-                    scroll-snap-align: start;
-                    transition: transform 0.3s;
-                }
-
-                @media (max-width: 768px) {
-                    .carousel-card-small {
-                        flex: 0 0 140px;
+                @media (max-width: 1024px) {
+                    .emotos-grid {
+                        grid-template-columns: repeat(2, 1fr);
                     }
                 }
 
-                .carousel-card-small:hover {
-                    /* Subtle lift can go here, or handled by img scale */
-                }
-
-                .carousel-card-small:hover .image-container img {
-                    transform: scale(1.06);
-                }
-
-                .carousel-card-small a {
-                    text-decoration: none;
-                    color: inherit;
-                    display: block;
-                    width: 100%;
-                }
-
-                .carousel-card {
-                    flex: 0 0 320px;
-                    scroll-snap-align: start;
-                    transition: transform 0.3s;
-                }
-
-                @media (max-width: 768px) {
-                    .carousel-card {
-                        flex: 0 0 280px;
+                @media (max-width: 480px) {
+                    .emotos-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    .emotos-header h2 {
+                        font-size: 2.5rem;
                     }
                 }
 
-                .carousel-card:hover {
-                    /* Handled by img scale */
+                .emoto-card {
+                    text-decoration: none;
+                    transition: transform 0.3s ease;
                 }
 
-                .carousel-card:hover .image-container img {
-                    transform: scale(1.06);
-                }
-
-                .carousel-card a {
+                .emoto-card a {
                     text-decoration: none;
                     color: inherit;
-                    display: block;
-                    width: 100%;
                 }
 
-                .image-container {
+                .emoto-image-container {
                     position: relative;
-                    aspect-ratio: 1/1;
-                    background: #fdfdfd;
-                    border-radius: 12px;
+                    aspect-ratio: 1 / 1.1;
+                    background: #f5f5f5;
                     overflow: hidden;
                     margin-bottom: 1rem;
-                    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-                    transition: box-shadow 0.4s ease;
                 }
 
-                .carousel-card-small:hover .image-container,
-                .carousel-card:hover .image-container {
-                    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-                }
-
-                .image-container img {
+                .emoto-image-container img {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+                    transition: transform 0.5s ease;
                 }
 
-                .badge-sale {
-                    position: absolute;
-                    top: 12px;
-                    left: 12px;
-                    background: rgba(255, 255, 255, 0.7);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: black;
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    z-index: 10;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                .emoto-card:hover img {
+                    transform: scale(1.05);
                 }
+
+                .badge-sold-out {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: black;
+                    color: white;
+                    padding: 5px 12px;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    z-index: 5;
+                }
+
+                .emoto-info {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.3rem;
+                }
+
+                .emoto-name {
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    margin: 0;
+                    color: black;
+                }
+
+                .emoto-price {
+                    font-size: 0.9rem;
+                    color: #333;
+                    display: flex;
+                    gap: 0.5rem;
+                    align-items: center;
+                }
+
+                .compare-price {
+                    text-decoration: line-through;
+                    color: #999;
+                    font-weight: 400;
+                }
+
                 .premium-footer {
                     background: #111;
                     color: #fff;
@@ -533,7 +483,7 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                         <h4>Explore</h4>
                         <Link href="/products">All Bikes</Link>
                         <Link href="/products?category=accessories">Accessories</Link>
-                        <Link href="/customizer">Bike Builder</Link>
+                        <Link href="/products?category=Upgrades">Upgrades</Link>
                         <Link href="/decal-builder">Decal Lab</Link>
                     </div>
                     <div className="footer-links">
