@@ -37,7 +37,6 @@ export default function DecalCanvas() {
     
     // Dynamic Mask State
     const [masks, setMasks] = useState<Record<string, string>>({});
-    const [processedLogos, setProcessedLogos] = useState<Record<string, string>>({});
 
     const logosList = [
         { src: '/ALPLINE%20STARS%20LOGO.png', key: 'Alpinestars', width: 100 },
@@ -190,53 +189,8 @@ export default function DecalCanvas() {
             img.src = src;
         };
 
-        const generateLogoImage = (src: string, key: string) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                if (!ctx) return;
-                ctx.drawImage(img, 0, 0);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-                
-                const bgR = data[0];
-                const bgG = data[1];
-                const bgB = data[2];
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i];
-                    const g = data[i+1];
-                    const b = data[i+2];
-                    const a = data[i+3];
-
-                    if (a < 50) continue;
-
-                    const diffR = Math.abs(r - bgR);
-                    const diffG = Math.abs(g - bgG);
-                    const diffB = Math.abs(b - bgB);
-                    
-                    if ((diffR < 25 && diffG < 25 && diffB < 25) || (r > 220 && g > 220 && b > 220)) {
-                        data[i+3] = 0;
-                    } else {
-                        data[i] = 0;
-                        data[i+1] = 0;
-                        data[i+2] = 0;
-                        data[i+3] = 255;
-                    }
-                }
-                ctx.putImageData(imageData, 0, 0);
-                setProcessedLogos(prev => ({ ...prev, [key]: canvas.toDataURL('image/png') }));
-            };
-            img.src = src;
-        };
-
         generateSilhouette('/MOTOCUTZ%20DECAL.png', 'MotoCutz');
         generateSilhouette('/ODI%20DECAL.png', 'ODI');
-        
-        logosList.forEach(logo => generateLogoImage(logo.src, logo.key));
     }, []);
 
     // Add Functions
@@ -379,7 +333,7 @@ export default function DecalCanvas() {
                                             alt="Custom Logo" 
                                             style={{ 
                                                 width: `${item.width}px`,
-                                                filter: item.color === '#ffffff' ? 'invert(1)' : 'none',
+                                                filter: item.color === '#ffffff' ? 'brightness(0) invert(1)' : 'none',
                                                 pointerEvents: 'none'
                                             }} 
                                         />
@@ -465,13 +419,7 @@ export default function DecalCanvas() {
                                 <button 
                                     key={logo.key}
                                     className="btn-sponsor" 
-                                    onClick={() => {
-                                        if (processedLogos[logo.key]) {
-                                            addLogo(processedLogos[logo.key], logo.width);
-                                        } else {
-                                            addLogo(logo.src, logo.width);
-                                        }
-                                    }}
+                                    onClick={() => addLogo(logo.src, logo.width)}
                                 >
                                     + {logo.key}
                                 </button>
