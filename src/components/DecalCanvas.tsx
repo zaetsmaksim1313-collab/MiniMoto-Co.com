@@ -34,6 +34,90 @@ export default function DecalCanvas() {
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
     const [itemStartPos, setItemStartPos] = useState({ x: 0, y: 0 });
     const canvasRef = useRef<HTMLDivElement>(null);
+    
+    // Dynamic Mask State
+    const [masks, setMasks] = useState<Record<string, string>>({});
+
+    // Process images into pure solid masks
+    import('react').then((React) => {
+        React.useEffect(() => {
+            const generateSilhouette = (src: string, key: string) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return;
+                    ctx.drawImage(img, 0, 0);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    const w = canvas.width;
+                    const h = canvas.height;
+
+                    const visited = new Uint8Array(w * h);
+                    const queue: {x: number, y: number}[] = [];
+
+                    const isBg = (x: number, y: number) => {
+                        const idx = (y * w + x) * 4;
+                        if (data[idx+3] < 50) return true; // transparent is bg
+                        if (data[idx] > 220 && data[idx+1] > 220 && data[idx+2] > 220) return true; // white is bg
+                        return false;
+                    };
+
+                    for (let x = 0; x < w; x++) {
+                        if (isBg(x, 0)) { queue.push({x, y: 0}); visited[x] = 1; }
+                        if (isBg(x, h - 1)) { queue.push({x, y: h - 1}); visited[(h - 1) * w + x] = 1; }
+                    }
+                    for (let y = 0; y < h; y++) {
+                        if (isBg(0, y)) { queue.push({x: 0, y}); visited[y * w] = 1; }
+                        if (isBg(w - 1, y)) { queue.push({x: w - 1, y}); visited[y * w + (w - 1)] = 1; }
+                    }
+
+                    let head = 0;
+                    while (head < queue.length) {
+                        const {x, y} = queue[head++];
+                        const idx = (y * w + x) * 4;
+                        data[idx + 3] = 0; // make background transparent
+
+                        const neighbors = [
+                            {nx: x + 1, ny: y}, {nx: x - 1, ny: y},
+                            {nx: x, ny: y + 1}, {nx: x, ny: y - 1}
+                        ];
+
+                        for (const {nx, ny} of neighbors) {
+                            if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                                const nIdx = ny * w + nx;
+                                if (!visited[nIdx]) {
+                                    visited[nIdx] = 1;
+                                    if (isBg(nx, ny)) queue.push({x: nx, y: ny});
+                                }
+                            }
+                        }
+                    }
+
+                    // Fill plate with solid black
+                    for (let i = 0; i < w * h; i++) {
+                        if (!visited[i]) {
+                            const idx = i * 4;
+                            data[idx] = 0;
+                            data[idx+1] = 0;
+                            data[idx+2] = 0;
+                            data[idx+3] = 255;
+                        }
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                    setMasks(prev => ({ ...prev, [key]: canvas.toDataURL('image/png') }));
+                };
+                img.src = src;
+            };
+
+            generateSilhouette('/MOTOCUTZ%20DECAL.png', 'MotoCutz');
+            generateSilhouette('/ODI%20DECAL.png', 'ODI');
+        }, []);
+    });
 
     // Add Functions
     const addNumber = () => {
@@ -133,18 +217,16 @@ export default function DecalCanvas() {
                                 ref={canvasRef}
                                 style={{ 
                                     backgroundColor: plateColor,
-                                    backgroundImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
-                                    backgroundSize: 'contain',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                    WebkitMaskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
+                                    WebkitMaskImage: masks[template] ? `url(${masks[template]})` : 'none',
                                     WebkitMaskSize: 'contain',
                                     WebkitMaskPosition: 'center',
                                     WebkitMaskRepeat: 'no-repeat',
-                                    maskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
+                                    maskImage: masks[template] ? `url(${masks[template]})` : 'none',
                                     maskSize: 'contain',
                                     maskPosition: 'center',
-                                    maskRepeat: 'no-repeat'
+                                    maskRepeat: 'no-repeat',
+                                    opacity: masks[template] ? 1 : 0.5,
+                                    transition: 'all 0.3s ease'
                                 }}
                             >
                             {items.map(item => (
