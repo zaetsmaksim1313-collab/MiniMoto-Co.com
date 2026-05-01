@@ -43,7 +43,6 @@ export default function DecalCanvas() {
         React.useEffect(() => {
             const generateSilhouette = (src: string, key: string) => {
                 const img = new Image();
-                img.crossOrigin = 'Anonymous';
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
@@ -59,10 +58,24 @@ export default function DecalCanvas() {
                     const visited = new Uint8Array(w * h);
                     const queue: {x: number, y: number}[] = [];
 
+                    // Auto-detect background color from the top-left pixel
+                    const bgR = data[0];
+                    const bgG = data[1];
+                    const bgB = data[2];
+
                     const isBg = (x: number, y: number) => {
                         const idx = (y * w + x) * 4;
                         if (data[idx+3] < 50) return true; // transparent is bg
-                        if (data[idx] > 220 && data[idx+1] > 220 && data[idx+2] > 220) return true; // white is bg
+                        
+                        // Check if pixel is similar to the top-left background color
+                        const diffR = Math.abs(data[idx] - bgR);
+                        const diffG = Math.abs(data[idx+1] - bgG);
+                        const diffB = Math.abs(data[idx+2] - bgB);
+                        if (diffR < 25 && diffG < 25 && diffB < 25) return true;
+                        
+                        // Fallback: any very bright pixel is considered background
+                        if (data[idx] > 220 && data[idx+1] > 220 && data[idx+2] > 220) return true; 
+                        
                         return false;
                     };
 
