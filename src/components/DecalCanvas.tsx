@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, PointerEvent as ReactPointerEvent } from 'react';
+import { useState, useRef, useEffect, PointerEvent as ReactPointerEvent } from 'react';
 import Link from 'next/link';
 
 interface CanvasItem {
