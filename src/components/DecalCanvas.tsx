@@ -109,14 +109,65 @@ export default function DecalCanvas() {
                     }
                 }
 
-                // Fill plate with solid black
+                // Now, instead of filling all !visited with black,
+                // we find the largest connected component of !visited (the plate itself)
+                // and erase any smaller isolated artifacts (like corner logos or noise).
+                const plateVisited = new Uint8Array(w * h);
+                let maxArea = 0;
+                let largestComponentId = 0;
+                let currentComponentId = 1;
+                const componentMap = new Int32Array(w * h);
+
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) {
+                        const i = y * w + x;
+                        if (!visited[i] && !plateVisited[i]) {
+                            let area = 0;
+                            const compQueue = [{x, y}];
+                            plateVisited[i] = 1;
+
+                            let qHead = 0;
+                            while (qHead < compQueue.length) {
+                                const curr = compQueue[qHead++];
+                                const cIdx = curr.y * w + curr.x;
+                                componentMap[cIdx] = currentComponentId;
+                                area++;
+
+                                const nbs = [
+                                    {nx: curr.x + 1, ny: curr.y}, {nx: curr.x - 1, ny: curr.y},
+                                    {nx: curr.x, ny: curr.y + 1}, {nx: curr.x, ny: curr.y - 1}
+                                ];
+
+                                for (const {nx, ny} of nbs) {
+                                    if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                                        const nIdx = ny * w + nx;
+                                        if (!visited[nIdx] && !plateVisited[nIdx]) {
+                                            plateVisited[nIdx] = 1;
+                                            compQueue.push({x: nx, y: ny});
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (area > maxArea) {
+                                maxArea = area;
+                                largestComponentId = currentComponentId;
+                            }
+                            currentComponentId++;
+                        }
+                    }
+                }
+
+                // Fill ONLY the largest plate component with solid black, make rest transparent
                 for (let i = 0; i < w * h; i++) {
-                    if (!visited[i]) {
-                        const idx = i * 4;
+                    const idx = i * 4;
+                    if (componentMap[i] === largestComponentId) {
                         data[idx] = 0;
                         data[idx+1] = 0;
                         data[idx+2] = 0;
                         data[idx+3] = 255;
+                    } else {
+                        data[idx+3] = 0;
                     }
                 }
 
