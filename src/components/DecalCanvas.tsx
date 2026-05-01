@@ -39,98 +39,96 @@ export default function DecalCanvas() {
     const [masks, setMasks] = useState<Record<string, string>>({});
 
     // Process images into pure solid masks
-    import('react').then((React) => {
-        React.useEffect(() => {
-            const generateSilhouette = (src: string, key: string) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    if (!ctx) return;
-                    ctx.drawImage(img, 0, 0);
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
-                    const w = canvas.width;
-                    const h = canvas.height;
+    useEffect(() => {
+        const generateSilhouette = (src: string, key: string) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                const w = canvas.width;
+                const h = canvas.height;
 
-                    const visited = new Uint8Array(w * h);
-                    const queue: {x: number, y: number}[] = [];
+                const visited = new Uint8Array(w * h);
+                const queue: {x: number, y: number}[] = [];
 
-                    // Auto-detect background color from the top-left pixel
-                    const bgR = data[0];
-                    const bgG = data[1];
-                    const bgB = data[2];
+                // Auto-detect background color from the top-left pixel
+                const bgR = data[0];
+                const bgG = data[1];
+                const bgB = data[2];
 
-                    const isBg = (x: number, y: number) => {
-                        const idx = (y * w + x) * 4;
-                        if (data[idx+3] < 50) return true; // transparent is bg
-                        
-                        // Check if pixel is similar to the top-left background color
-                        const diffR = Math.abs(data[idx] - bgR);
-                        const diffG = Math.abs(data[idx+1] - bgG);
-                        const diffB = Math.abs(data[idx+2] - bgB);
-                        if (diffR < 25 && diffG < 25 && diffB < 25) return true;
-                        
-                        // Fallback: any very bright pixel is considered background
-                        if (data[idx] > 220 && data[idx+1] > 220 && data[idx+2] > 220) return true; 
-                        
-                        return false;
-                    };
+                const isBg = (x: number, y: number) => {
+                    const idx = (y * w + x) * 4;
+                    if (data[idx+3] < 50) return true; // transparent is bg
+                    
+                    // Check if pixel is similar to the top-left background color
+                    const diffR = Math.abs(data[idx] - bgR);
+                    const diffG = Math.abs(data[idx+1] - bgG);
+                    const diffB = Math.abs(data[idx+2] - bgB);
+                    if (diffR < 35 && diffG < 35 && diffB < 35) return true;
+                    
+                    // Fallback: any very bright pixel is considered background
+                    if (data[idx] > 220 && data[idx+1] > 220 && data[idx+2] > 220) return true; 
+                    
+                    return false;
+                };
 
-                    for (let x = 0; x < w; x++) {
-                        if (isBg(x, 0)) { queue.push({x, y: 0}); visited[x] = 1; }
-                        if (isBg(x, h - 1)) { queue.push({x, y: h - 1}); visited[(h - 1) * w + x] = 1; }
-                    }
-                    for (let y = 0; y < h; y++) {
-                        if (isBg(0, y)) { queue.push({x: 0, y}); visited[y * w] = 1; }
-                        if (isBg(w - 1, y)) { queue.push({x: w - 1, y}); visited[y * w + (w - 1)] = 1; }
-                    }
+                for (let x = 0; x < w; x++) {
+                    if (isBg(x, 0)) { queue.push({x, y: 0}); visited[x] = 1; }
+                    if (isBg(x, h - 1)) { queue.push({x, y: h - 1}); visited[(h - 1) * w + x] = 1; }
+                }
+                for (let y = 0; y < h; y++) {
+                    if (isBg(0, y)) { queue.push({x: 0, y}); visited[y * w] = 1; }
+                    if (isBg(w - 1, y)) { queue.push({x: w - 1, y}); visited[y * w + (w - 1)] = 1; }
+                }
 
-                    let head = 0;
-                    while (head < queue.length) {
-                        const {x, y} = queue[head++];
-                        const idx = (y * w + x) * 4;
-                        data[idx + 3] = 0; // make background transparent
+                let head = 0;
+                while (head < queue.length) {
+                    const {x, y} = queue[head++];
+                    const idx = (y * w + x) * 4;
+                    data[idx + 3] = 0; // make background transparent
 
-                        const neighbors = [
-                            {nx: x + 1, ny: y}, {nx: x - 1, ny: y},
-                            {nx: x, ny: y + 1}, {nx: x, ny: y - 1}
-                        ];
+                    const neighbors = [
+                        {nx: x + 1, ny: y}, {nx: x - 1, ny: y},
+                        {nx: x, ny: y + 1}, {nx: x, ny: y - 1}
+                    ];
 
-                        for (const {nx, ny} of neighbors) {
-                            if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
-                                const nIdx = ny * w + nx;
-                                if (!visited[nIdx]) {
-                                    visited[nIdx] = 1;
-                                    if (isBg(nx, ny)) queue.push({x: nx, y: ny});
-                                }
+                    for (const {nx, ny} of neighbors) {
+                        if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                            const nIdx = ny * w + nx;
+                            if (!visited[nIdx]) {
+                                visited[nIdx] = 1;
+                                if (isBg(nx, ny)) queue.push({x: nx, y: ny});
                             }
                         }
                     }
+                }
 
-                    // Fill plate with solid black
-                    for (let i = 0; i < w * h; i++) {
-                        if (!visited[i]) {
-                            const idx = i * 4;
-                            data[idx] = 0;
-                            data[idx+1] = 0;
-                            data[idx+2] = 0;
-                            data[idx+3] = 255;
-                        }
+                // Fill plate with solid black
+                for (let i = 0; i < w * h; i++) {
+                    if (!visited[i]) {
+                        const idx = i * 4;
+                        data[idx] = 0;
+                        data[idx+1] = 0;
+                        data[idx+2] = 0;
+                        data[idx+3] = 255;
                     }
+                }
 
-                    ctx.putImageData(imageData, 0, 0);
-                    setMasks(prev => ({ ...prev, [key]: canvas.toDataURL('image/png') }));
-                };
-                img.src = src;
+                ctx.putImageData(imageData, 0, 0);
+                setMasks(prev => ({ ...prev, [key]: canvas.toDataURL('image/png') }));
             };
+            img.src = src;
+        };
 
-            generateSilhouette('/MOTOCUTZ%20DECAL.png', 'MotoCutz');
-            generateSilhouette('/ODI%20DECAL.png', 'ODI');
-        }, []);
-    });
+        generateSilhouette('/MOTOCUTZ%20DECAL.png', 'MotoCutz');
+        generateSilhouette('/ODI%20DECAL.png', 'ODI');
+    }, []);
 
     // Add Functions
     const addNumber = () => {
