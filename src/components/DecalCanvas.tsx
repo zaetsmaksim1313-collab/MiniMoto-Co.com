@@ -133,11 +133,15 @@ export default function DecalCanvas() {
                                 ref={canvasRef}
                                 style={{ 
                                     backgroundColor: plateColor,
-                                    WebkitMaskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ DECAL.png' : '/ODI DECAL.png'}')`,
+                                    backgroundImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
+                                    backgroundSize: 'contain',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat',
+                                    WebkitMaskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
                                     WebkitMaskSize: 'contain',
                                     WebkitMaskPosition: 'center',
                                     WebkitMaskRepeat: 'no-repeat',
-                                    maskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ DECAL.png' : '/ODI DECAL.png'}')`,
+                                    maskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ%20DECAL.png' : '/ODI%20DECAL.png'}')`,
                                     maskSize: 'contain',
                                     maskPosition: 'center',
                                     maskRepeat: 'no-repeat'
