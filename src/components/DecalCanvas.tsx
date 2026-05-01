@@ -126,12 +126,23 @@ export default function DecalCanvas() {
                 {/* Visual Canvas Area */}
                 <section className="canvas-section">
                     <div className="canvas-container">
-                        {/* The Front Plate */}
-                        <div 
-                            className={`front-plate ${template === 'ODI' ? 'odi-shape' : 'motocutz-shape'}`} 
-                            ref={canvasRef}
-                            style={{ backgroundColor: plateColor }}
-                        >
+                        <div style={{ filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.1))' }}>
+                            {/* The Front Plate */}
+                            <div 
+                                className="front-plate" 
+                                ref={canvasRef}
+                                style={{ 
+                                    backgroundColor: plateColor,
+                                    WebkitMaskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ DECAL.png' : '/ODI DECAL.png'}')`,
+                                    WebkitMaskSize: 'contain',
+                                    WebkitMaskPosition: 'center',
+                                    WebkitMaskRepeat: 'no-repeat',
+                                    maskImage: `url('${template === 'MotoCutz' ? '/MOTOCUTZ DECAL.png' : '/ODI DECAL.png'}')`,
+                                    maskSize: 'contain',
+                                    maskPosition: 'center',
+                                    maskRepeat: 'no-repeat'
+                                }}
+                            >
                             {items.map(item => (
                                 <div
                                     key={item.id}
@@ -162,13 +173,14 @@ export default function DecalCanvas() {
                                             alt="Custom Logo" 
                                             style={{ 
                                                 width: `${item.width}px`,
-                                                filter: item.color === '#000000' ? 'invert(1)' : 'none',
+                                                filter: item.color === '#ffffff' ? 'invert(1)' : 'none',
                                                 pointerEvents: 'none'
                                             }} 
                                         />
                                     )}
                                 </div>
                             ))}
+                            </div>
                         </div>
                         <p className="canvas-hint">Drag items to move. Double-click to delete.</p>
                     </div>
@@ -307,32 +319,13 @@ export default function DecalCanvas() {
                 }
 
                 .front-plate {
-                    width: 280px;
-                    height: 360px;
+                    width: 320px;
+                    height: 320px;
                     background: white;
                     position: relative;
                     overflow: hidden;
-                    box-shadow: 0 30px 60px rgba(0,0,0,0.1), inset 0 4px 10px rgba(255,255,255,0.5);
                     transition: all 0.3s ease;
                     touch-action: none; /* Crucial for preventing scroll during drag on mobile */
-                }
-
-                .odi-shape {
-                    clip-path: polygon(
-                        10% 5%, 20% 5%, 50% 10%, 80% 5%, 90% 5%,
-                        100% 30%, 93% 45%, 93% 55%, 100% 70%,
-                        85% 90%, 65% 100%, 35% 100%, 15% 90%,
-                        0% 70%, 7% 55%, 7% 45%, 0% 30%
-                    );
-                }
-
-                .motocutz-shape {
-                    clip-path: polygon(
-                        10% 0%, 30% 5%, 50% 8%, 70% 5%, 90% 0%,
-                        98% 20%, 100% 40%, 95% 60%, 85% 75%, 75% 88%,
-                        60% 98%, 50% 100%, 40% 98%,
-                        25% 88%, 15% 75%, 5% 60%, 0% 40%, 2% 20%
-                    );
                 }
 
                 .canvas-node {
