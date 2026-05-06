@@ -144,7 +144,16 @@ export default function EditProductForm({ product }: { product: Product }) {
                         </div>
                         <div style={{ flex: 1 }}>
                             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Category</label>
-                            <input type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} placeholder="Bikes" />
+                            <select value={category} onChange={e => setCategory(e.target.value)} style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }}>
+                                <option value="">Select a category</option>
+                                <option value="Bikes">Bikes</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Upgrades">Upgrades</option>
+                                <option value="Upgraded Controllers">Upgraded Controllers</option>
+                                <option value="Tyres">Tyres</option>
+                                <option value="Upgraded Forks">Upgraded Forks</option>
+                                <option value="Seat Covers">Seat Covers</option>
+                            </select>
                         </div>
                     </div>
                     <div>

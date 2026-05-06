@@ -9,17 +9,26 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
 
     return (
         <>
+            <style>{`
+                .nav-dropdown-parent:hover .nav-dropdown {
+                    display: flex !important;
+                }
+            `}</style>
             {!isCheckout && (
                 <header style={{ position: 'relative', width: '100%', zIndex: 1000, padding: '1.5rem 0', backgroundColor: '#000', color: '#fff', borderBottom: '1px solid #333' }}>
                     <nav className="container" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
                         <ul style={{ display: 'flex', gap: '2rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em', margin: 0, padding: 0, listStyle: 'none' }}>
                             <li><a href="/" style={{ color: '#fff', textDecoration: 'none' }}>HOME</a></li>
                             <li><a href="/products" style={{ color: '#fff', textDecoration: 'none' }}>ALL BIKES</a></li>
-                            <li><a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a></li>
-                            <li><a href="/products?category=Upgraded%20Controllers" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED CONTROLLERS</a></li>
-                            <li><a href="/products?category=Tyres" style={{ color: '#fff', textDecoration: 'none' }}>TYRES</a></li>
-                            <li><a href="/products?category=Upgraded%20Forks" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED FORKS</a></li>
-                            <li><a href="/products?category=Seat%20Covers" style={{ color: '#fff', textDecoration: 'none' }}>SEAT COVERS</a></li>
+                            <li className="nav-dropdown-parent" style={{ position: 'relative', padding: '1rem 0', margin: '-1rem 0' }}>
+                                <a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a>
+                                <ul className="nav-dropdown" style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: '#000', listStyle: 'none', padding: '1rem', margin: 0, display: 'none', flexDirection: 'column', gap: '1rem', border: '1px solid #333', minWidth: '200px', zIndex: 1000 }}>
+                                    <li><a href="/products?category=Upgraded%20Controllers" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED CONTROLLERS</a></li>
+                                    <li><a href="/products?category=Tyres" style={{ color: '#fff', textDecoration: 'none' }}>TYRES</a></li>
+                                    <li><a href="/products?category=Upgraded%20Forks" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED FORKS</a></li>
+                                    <li><a href="/products?category=Seat%20Covers" style={{ color: '#fff', textDecoration: 'none' }}>SEAT COVERS</a></li>
+                                </ul>
+                            </li>
                             <li><a href="/decal-builder" style={{ color: '#fff', textDecoration: 'none' }}>DECAL LAB</a></li>
                             <li><a href="#" style={{ color: '#fff', textDecoration: 'none' }}>CONTACT</a></li>
                         </ul>
