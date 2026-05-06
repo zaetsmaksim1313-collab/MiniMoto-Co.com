@@ -488,6 +488,10 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                         <Link href="/products">All Bikes</Link>
                         <Link href="/products?category=accessories">Accessories</Link>
                         <Link href="/products?category=Upgrades">Upgrades</Link>
+                        <Link href="/products?category=Upgraded Controllers">Upgraded Controllers</Link>
+                        <Link href="/products?category=Tyres">Tyres</Link>
+                        <Link href="/products?category=Upgraded Forks">Upgraded Forks</Link>
+                        <Link href="/products?category=Seat Covers">Seat Covers</Link>
                         <Link href="/decal-builder">Decal Lab</Link>
                     </div>
                     <div className="footer-links">

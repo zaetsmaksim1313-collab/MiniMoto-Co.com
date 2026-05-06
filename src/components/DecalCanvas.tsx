@@ -14,6 +14,7 @@ interface CanvasItem {
     fontSize?: number;
     rotation?: number;
     width?: number;
+    isBgBlack?: boolean;
 }
 
 const FONTS = ['Impact', 'Arial', 'Courier New', 'Bebas Neue', 'Trebuchet MS'];
@@ -223,16 +224,32 @@ export default function DecalCanvas() {
     };
 
     const addLogo = (logoPath: string, defaultWidth: number) => {
-        setItems(prev => [...prev, {
-            id: 'item_' + Date.now(),
-            type: 'image',
-            content: logoPath,
-            x: 90,
-            y: 200,
-            color: selectedColor, // Used to determine if we should invert color
-            width: defaultWidth,
-            rotation: 0
-        }]);
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0, 1, 1);
+                const data = ctx.getImageData(0, 0, 1, 1).data;
+                const luminance = data[0]*0.299 + data[1]*0.587 + data[2]*0.114;
+                const isBgBlack = luminance < 128;
+                
+                setItems(prev => [...prev, {
+                    id: 'item_' + Date.now(),
+                    type: 'image',
+                    content: logoPath,
+                    x: 90,
+                    y: 200,
+                    color: selectedColor,
+                    width: defaultWidth,
+                    rotation: 0,
+                    isBgBlack
+                }]);
+            }
+        };
+        img.src = logoPath;
     };
 
     const deleteItem = (id: string) => {
@@ -333,7 +350,8 @@ export default function DecalCanvas() {
                                             alt="Custom Logo" 
                                             style={{ 
                                                 width: `${item.width}px`,
-                                                filter: item.color === '#ffffff' ? 'brightness(0) invert(1)' : 'none',
+                                                filter: (item.isBgBlack ? item.color !== '#ffffff' : item.color === '#ffffff') ? 'invert(1)' : 'none',
+                                                mixBlendMode: item.color === '#ffffff' ? 'screen' : 'multiply',
                                                 pointerEvents: 'none'
                                             }} 
                                         />

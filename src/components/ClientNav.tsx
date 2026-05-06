@@ -16,6 +16,10 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                             <li><a href="/" style={{ color: '#fff', textDecoration: 'none' }}>HOME</a></li>
                             <li><a href="/products" style={{ color: '#fff', textDecoration: 'none' }}>ALL BIKES</a></li>
                             <li><a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a></li>
+                            <li><a href="/products?category=Upgraded%20Controllers" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED CONTROLLERS</a></li>
+                            <li><a href="/products?category=Tyres" style={{ color: '#fff', textDecoration: 'none' }}>TYRES</a></li>
+                            <li><a href="/products?category=Upgraded%20Forks" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED FORKS</a></li>
+                            <li><a href="/products?category=Seat%20Covers" style={{ color: '#fff', textDecoration: 'none' }}>SEAT COVERS</a></li>
                             <li><a href="/decal-builder" style={{ color: '#fff', textDecoration: 'none' }}>DECAL LAB</a></li>
                             <li><a href="#" style={{ color: '#fff', textDecoration: 'none' }}>CONTACT</a></li>
                         </ul>
