@@ -43,16 +43,16 @@ export async function ensureDb() {
         );
     `;
     const defaultImages = [
-        "/custom%201.JPG",
-        "/custom%202.JPG",
-        "/custom%203.JPG",
-        "/custom%204.JPG",
-        "/custom%205.JPG"
+        "/Custom%201.JPG",
+        "/Custom%202.JPG",
+        "/Custom%203.JPG",
+        "/Custom%204.JPG",
+        "/Custom%205.JPG"
     ];
     await sql`
         INSERT INTO site_settings (key, value)
         VALUES ('make_it_yours_images', ${JSON.stringify(defaultImages)}::jsonb)
-        ON CONFLICT (key) DO NOTHING;
+        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
     `;
 }
 
@@ -111,10 +111,10 @@ export async function getMakeItYoursImages(): Promise<string[]> {
         console.error("Failed to fetch make it yours images", e);
     }
     return [
-        "/custom%201.JPG",
-        "/custom%202.JPG",
-        "/custom%203.JPG",
-        "/custom%204.JPG",
-        "/custom%205.JPG"
+        "/Custom%201.JPG",
+        "/Custom%202.JPG",
+        "/Custom%203.JPG",
+        "/Custom%204.JPG",
+        "/Custom%205.JPG"
     ];
 }
