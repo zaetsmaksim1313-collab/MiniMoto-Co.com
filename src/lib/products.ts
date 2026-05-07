@@ -52,7 +52,7 @@ export async function ensureDb() {
     await sql`
         INSERT INTO site_settings (key, value)
         VALUES ('make_it_yours_images', ${JSON.stringify(defaultImages)}::jsonb)
-        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+        ON CONFLICT (key) DO NOTHING;
     `;
 }
 
