@@ -43,11 +43,11 @@ export async function ensureDb() {
         );
     `;
     const defaultImages = [
-        "/Custom 1.JPG",
-        "/Custom 2.JPG",
-        "/Custom 3.JPG",
-        "/Custom 4.JPG",
-        "/Custom 5.JPG"
+        "/custom 1.JPG",
+        "/custom 2.JPG",
+        "/custom 3.JPG",
+        "/custom 4.JPG",
+        "/custom 5.JPG"
     ];
     await sql`
         INSERT INTO site_settings (key, value)
@@ -111,10 +111,10 @@ export async function getMakeItYoursImages(): Promise<string[]> {
         console.error("Failed to fetch make it yours images", e);
     }
     return [
-        "/Custom 1.JPG",
-        "/Custom 2.JPG",
-        "/Custom 3.JPG",
-        "/Custom 4.JPG",
-        "/Custom 5.JPG"
+        "/custom 1.JPG",
+        "/custom 2.JPG",
+        "/custom 3.JPG",
+        "/custom 4.JPG",
+        "/custom 5.JPG"
     ];
 }
