@@ -147,6 +147,9 @@ export default function EditProductForm({ product }: { product: Product }) {
                             <select value={category} onChange={e => setCategory(e.target.value)} style={{ color: 'black', background: 'white', width: '100%', padding: '0.8rem', border: '1px solid #e1e1e1', borderRadius: '4px' }}>
                                 <option value="">Select a category</option>
                                 <option value="Bikes">Bikes</option>
+                                <option value="Emotos">Emotos</option>
+                                <option value="E Bikes">E Bikes</option>
+                                <option value="Pedal Bikes">Pedal Bikes</option>
                                 <option value="Accessories">Accessories</option>
                                 <option value="Upgrades">Upgrades</option>
                                 <option value="Upgraded Controllers">Upgraded Controllers</option>

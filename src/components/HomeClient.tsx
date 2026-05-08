@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Product } from "@/lib/products";
 import MakeItYoursSection from "./MakeItYoursSection";
 
-export default function HomeClient({ featuredProducts, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
+export default function HomeClient({ featuredProducts, ebikes, pedalBikes, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], ebikes?: Product[], pedalBikes?: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     const [scrollY, setScrollY] = useState(0);
 
     useEffect(() => {
@@ -43,10 +43,10 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                 <div className="container">
                     <div className="emotos-header">
                         <h2>EMOTOS</h2>
-                        <Link href="/products" className="shop-all-link">SHOP ALL</Link>
+                        <Link href="/products?category=Emotos" className="shop-all-link">SHOP ALL</Link>
                     </div>
                     <div className="emotos-grid">
-                        {featuredProducts.map((p) => (
+                        {featuredProducts && featuredProducts.length > 0 ? featuredProducts.map((p) => (
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
@@ -62,7 +62,65 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                                     </div>
                                 </Link>
                             </div>
-                        ))}
+                        )) : <p style={{opacity: 0.5}}>No emotos added yet.</p>}
+                    </div>
+                </div>
+            </section>
+
+            {/* E-BIKES Section */}
+            <section className="featured-section emotos-section">
+                <div className="container">
+                    <div className="emotos-header">
+                        <h2>E BIKES</h2>
+                        <Link href="/products?category=E Bikes" className="shop-all-link">SHOP ALL</Link>
+                    </div>
+                    <div className="emotos-grid">
+                        {ebikes && ebikes.length > 0 ? ebikes.map((p) => (
+                            <div key={p.id} className="emoto-card">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="emoto-image-container">
+                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                    <div className="emoto-info">
+                                        <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                        <div className="emoto-price">
+                                            <span>${p.price.toFixed(2)}</span>
+                                            {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        )) : <p style={{opacity: 0.5}}>No e-bikes added yet.</p>}
+                    </div>
+                </div>
+            </section>
+
+            {/* PEDAL BIKES Section */}
+            <section className="featured-section emotos-section">
+                <div className="container">
+                    <div className="emotos-header">
+                        <h2>PEDAL BIKES</h2>
+                        <Link href="/products?category=Pedal Bikes" className="shop-all-link">SHOP ALL</Link>
+                    </div>
+                    <div className="emotos-grid">
+                        {pedalBikes && pedalBikes.length > 0 ? pedalBikes.map((p) => (
+                            <div key={p.id} className="emoto-card">
+                                <Link href={`/products/${p.id}`}>
+                                    <div className="emoto-image-container">
+                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        <img src={p.images[0]} alt={p.name} />
+                                    </div>
+                                    <div className="emoto-info">
+                                        <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                        <div className="emoto-price">
+                                            <span>${p.price.toFixed(2)}</span>
+                                            {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        )) : <p style={{opacity: 0.5}}>No pedal bikes added yet.</p>}
                     </div>
                 </div>
             </section>
@@ -486,6 +544,9 @@ export default function HomeClient({ featuredProducts, accessories, allProducts,
                     <div className="footer-links">
                         <h4>Explore</h4>
                         <Link href="/products">All Bikes</Link>
+                        <Link href="/products?category=Emotos">Emotos</Link>
+                        <Link href="/products?category=E%20Bikes">E Bikes</Link>
+                        <Link href="/products?category=Pedal%20Bikes">Pedal Bikes</Link>
                         <Link href="/products?category=accessories">Accessories</Link>
                         <Link href="/products?category=Upgrades">Upgrades</Link>
                         <Link href="/products?category=Upgraded Controllers">Upgraded Controllers</Link>
