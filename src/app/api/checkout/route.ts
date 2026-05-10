@@ -12,15 +12,18 @@ export async function POST(req: Request) {
 
     // Convert items to Stripe format
     const line_items = items.map((item: any) => {
+      const desc = Object.values(item.selectedOptions || {}).join(' / ');
+      const productData: any = { name: item.name };
+      if (desc.trim()) {
+        productData.description = desc;
+      }
+
       // In a real production app, prices should be validated against a database
       // Here we trust the client for simplicity of the custom implementation
       return {
         price_data: {
           currency: 'usd',
-          product_data: {
-            name: item.name,
-            description: Object.values(item.selectedOptions || {}).join(' / '),
-          },
+          product_data: productData,
           unit_amount: Math.round(item.price * 100), // Stripe expects cents
         },
         quantity: item.quantity,
