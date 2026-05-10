@@ -50,7 +50,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
-                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
                                         <img src={p.images[0]} alt={p.name} />
                                     </div>
                                     <div className="emoto-info">
@@ -79,7 +79,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
-                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
                                         <img src={p.images[0]} alt={p.name} />
                                     </div>
                                     <div className="emoto-info">
@@ -108,7 +108,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
-                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
                                         <img src={p.images[0]} alt={p.name} />
                                     </div>
                                     <div className="emoto-info">
@@ -137,7 +137,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
-                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
                                         <img src={p.images[0]} alt={p.name} />
                                     </div>
                                     <div className="emoto-info">
@@ -166,7 +166,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
-                                        <span className="badge-sold-out">SOLD OUT</span>
+                                        {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
                                         <img src={p.images[0]} alt={p.name} />
                                     </div>
                                     <div className="emoto-info">
