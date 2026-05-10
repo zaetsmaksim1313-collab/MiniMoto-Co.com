@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout`,
       metadata: {
-        customerInfo: JSON.stringify(customer),
+        customerInfo: JSON.stringify(customer || {}),
       },
       // Optionally pre-fill the customer's email from the shipping form
       customer_email: customer?.email,

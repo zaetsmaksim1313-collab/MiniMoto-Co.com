@@ -172,6 +172,7 @@ export default function EditProductForm({ product }: { product: Product }) {
                                 <option value="Tyres">Tyres</option>
                                 <option value="Upgraded Forks">Upgraded Forks</option>
                                 <option value="Seat Covers">Seat Covers</option>
+                                <option value="Upgraded Batteries">Upgraded Batteries</option>
                             </select>
                         </div>
                     </div>

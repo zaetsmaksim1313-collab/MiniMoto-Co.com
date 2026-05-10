@@ -102,11 +102,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             if (data.url) {
                 window.location.href = data.url;
             } else {
-                alert('Error creating checkout session');
+                alert('Error creating checkout session: ' + (data.error || 'Unknown error'));
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            alert('Failed to initiate checkout');
+            alert('Failed to initiate checkout: ' + e.message);
         }
     };
 
