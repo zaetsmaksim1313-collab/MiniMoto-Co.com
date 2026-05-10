@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { updateProduct } from '../../actions';
 import { useRouter } from 'next/navigation';
 import { Product, ProductOption } from '@/lib/products';
@@ -15,6 +15,22 @@ export default function EditProductForm({ product }: { product: Product }) {
     const [options, setOptions] = useState<ProductOption[]>(product.options || []);
     const [isSaving, setIsSaving] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
+    const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+    // Fetch all products to copy options from
+    useEffect(() => {
+        fetch('/api/products').then(res => res.json()).then(data => setAllProducts(data));
+    }, []);
+
+    const handleCopyOptions = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const sourceId = e.target.value;
+        if (!sourceId) return;
+        const sourceProduct = allProducts.find(p => p.id === sourceId);
+        if (sourceProduct && sourceProduct.options) {
+            setOptions(sourceProduct.options);
+        }
+        e.target.value = ""; // Reset dropdown
+    };
 
     const processImageFile = (file: File) => {
         if (!file.type.startsWith('image/')) return;
@@ -191,7 +207,15 @@ export default function EditProductForm({ product }: { product: Product }) {
                 <div className="admin-card">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                         <label style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Options</label>
-                        <button type="button" onClick={addOption} className="btn-admin" style={{ background: '#f1f1f1', border: 'none' }}>+ Add Option</button>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <select onChange={handleCopyOptions} style={{ padding: '0.6rem', border: '1px solid #ccc', borderRadius: '4px', background: 'white', color: 'black' }} title="Copy options from another product">
+                                <option value="">Copy options from...</option>
+                                {allProducts.filter(p => p.id !== product.id).map(p => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                            <button type="button" onClick={addOption} className="btn-admin" style={{ background: '#f1f1f1', border: 'none' }}>+ Add Option</button>
+                        </div>
                     </div>
                     
                     {options.length === 0 && <p style={{ color: '#666', margin: 0 }}>This product does not have any options like size or color.</p>}
