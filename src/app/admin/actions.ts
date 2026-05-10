@@ -1,7 +1,7 @@
 'use server';
 
 import { getProductById, ensureDb } from '@/lib/products';
-import { sql } from '@vercel/postgres';
+import { sql } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export async function addProduct(formData: FormData) {
