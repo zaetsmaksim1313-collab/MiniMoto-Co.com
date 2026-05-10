@@ -77,6 +77,39 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         alert('Added to cart!');
     };
 
+    const handleBuyNow = async () => {
+        const cartOptions: { [key: string]: string } = {};
+        Object.keys(selectedOptions).forEach(key => {
+            const val = selectedOptions[key];
+            cartOptions[key] = Array.isArray(val) ? val.join(', ') : val;
+        });
+
+        const item = {
+            productId: product.id,
+            name: product.name,
+            price: totalPrice,
+            quantity: quantity,
+            selectedOptions: cartOptions
+        };
+
+        try {
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: [item] })
+            });
+            const data = await res.json();
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Error creating checkout session');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Failed to initiate checkout');
+        }
+    };
+
     return (
         <div className="product-page">
             <div className="split-layout">
@@ -227,7 +260,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                                 <input type="number" value={quantity} readOnly />
                                 <button type="button" onClick={() => setQuantity(quantity + 1)}>+</button>
                             </div>
-                            <button className="btn-add" onClick={handleAddToCart}>Add to cart</button>
+                            <button className="btn-add" onClick={handleAddToCart} style={{ background: 'transparent', border: '1px solid #444', color: '#fff' }}>Add to cart</button>
+                            <button className="btn-add" onClick={handleBuyNow} style={{ background: '#fff', color: '#000' }}>Buy now</button>
                         </div>
                     </div>
                 </div>
