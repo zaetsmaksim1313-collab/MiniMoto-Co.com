@@ -115,20 +115,14 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <div className="split-layout">
                 {/* Left Side: Scrollable Image Collage */}
                 <div className="left-panel">
-                    <img src={product.images[0]} className="full-image" alt={product.name} />
-                    {product.images.length > 1 && (
-                        <div className="thumbnail-grid">
-                            {product.images.slice(1).map((img, idx) => (
-                                <img 
-                                    key={idx} 
-                                    src={img} 
-                                    className="thumb active"
-                                    style={{ opacity: 1, cursor: 'default' }}
-                                    alt={`${product.name} thumbnail ${idx}`} 
-                                />
-                            ))}
-                        </div>
-                    )}
+                    {product.images.map((img, idx) => (
+                        <img 
+                            key={idx}
+                            src={img} 
+                            className="full-image" 
+                            alt={`${product.name} image ${idx + 1}`} 
+                        />
+                    ))}
                 </div>
 
                 {/* Right Side: Informational Content */}
@@ -312,19 +306,6 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 .full-image {
                     width: 100%;
                     height: auto;
-                    display: block;
-                }
-
-                .thumbnail-grid {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 0px; /* seamless edge to edge matching the collage */
-                }
-
-                .thumb {
-                    width: 100%;
-                    aspect-ratio: 1/1;
-                    object-fit: cover;
                     display: block;
                 }
 

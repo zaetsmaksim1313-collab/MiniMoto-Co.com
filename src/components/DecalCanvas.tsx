@@ -29,6 +29,7 @@ export default function DecalCanvas() {
     const [numberInput, setNumberInput] = useState('1');
     const [selectedFont, setSelectedFont] = useState(FONTS[0]);
     const [selectedColor, setSelectedColor] = useState('#000000');
+    const [logoColor, setLogoColor] = useState('#000000');
     
     // Drag Engine State
     const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -242,7 +243,7 @@ export default function DecalCanvas() {
                     content: logoPath,
                     x: 90,
                     y: 200,
-                    color: selectedColor,
+                    color: logoColor,
                     width: defaultWidth,
                     rotation: 0,
                     isBgBlack
@@ -432,6 +433,23 @@ export default function DecalCanvas() {
 
                     <div className="tool-group">
                         <h3>4. Add Custom Logos</h3>
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem' }}>Logo Color:</label>
+                            <div className="template-toggle">
+                                <button 
+                                    className={`btn-template ${logoColor === '#000000' ? 'active' : ''}`}
+                                    onClick={() => setLogoColor('#000000')}
+                                >
+                                    Black Logo
+                                </button>
+                                <button 
+                                    className={`btn-template ${logoColor === '#ffffff' ? 'active' : ''}`}
+                                    onClick={() => setLogoColor('#ffffff')}
+                                >
+                                    White Logo
+                                </button>
+                            </div>
+                        </div>
                         <div className="sponsor-list">
                             {logosList.map(logo => (
                                 <button 
@@ -443,7 +461,7 @@ export default function DecalCanvas() {
                                 </button>
                             ))}
                         </div>
-                        <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos invert to white if the color picker is set to white (#ffffff).</p>
+                        <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos color matches selection to contrast against plate background.</p>
                     </div>
 
                     <div className="checkout-footer">
