@@ -20,6 +20,7 @@ export interface Product {
     category: string;
     options: ProductOption[];
     status: 'Active' | 'Draft' | 'Archived';
+    sortOrder?: number;
 }
 
 export async function ensureDb() {
@@ -33,9 +34,16 @@ export async function ensureDb() {
             images JSONB,
             category VARCHAR(255),
             options JSONB,
-            status VARCHAR(50)
+            status VARCHAR(50),
+            sort_order INT DEFAULT 0
         );
     `;
+    // Add sort_order column safely if it didn't exist previously
+    try {
+        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS sort_order INT DEFAULT 0;`;
+    } catch(e) {
+        // ignore if exists
+    }
     await sql`
         CREATE TABLE IF NOT EXISTS site_settings (
             key VARCHAR(255) PRIMARY KEY,
@@ -59,7 +67,7 @@ export async function ensureDb() {
 export async function getProducts(): Promise<Product[]> {
     try {
         await ensureDb();
-        const { rows } = await sql`SELECT * FROM products ORDER BY name ASC`;
+        const { rows } = await sql`SELECT * FROM products ORDER BY sort_order ASC, name ASC`;
         return rows.map((row: any) => ({
             id: row.id,
             name: row.name,
@@ -70,6 +78,7 @@ export async function getProducts(): Promise<Product[]> {
             category: row.category,
             options: row.options,
             status: row.status,
+            sortOrder: row.sort_order || 0,
         }));
     } catch (e) {
         console.error("Database not set up or failed to fetch products:", e);

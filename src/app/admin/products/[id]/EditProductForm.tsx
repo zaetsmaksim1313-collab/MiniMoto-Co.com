@@ -5,6 +5,12 @@ import { updateProduct } from '../../actions';
 import { useRouter } from 'next/navigation';
 import { Product, ProductOption } from '@/lib/products';
 
+const COLOR_PRESETS = [
+    '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', 
+    '#ffff00', '#ff00ff', '#00ffff', '#808080', '#ffa500', 
+    '#800080', '#008000', '#000080', '#800000', '#008080'
+];
+
 export default function EditProductForm({ product }: { product: Product }) {
     const router = useRouter();
     const [name, setName] = useState(product.name);
@@ -245,12 +251,28 @@ export default function EditProductForm({ product }: { product: Product }) {
                                 <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #eee' }}>
                                     <label style={{ fontSize: '0.9rem', color: '#444', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>Option Values</label>
                                     {opt.values.map((val: any, valIndex: number) => (
-                                        <div key={valIndex} style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', alignItems: 'center' }}>
+                                        <div key={valIndex} style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'flex-start' }}>
                                             {opt.type === 'color' && (
-                                                <input type="color" value={val.colorHex || '#000000'} onChange={e => updateOptionValue(optIndex, valIndex, 'colorHex', e.target.value)} style={{ width: '40px', height: '40px', border: 'none', padding: 0, cursor: 'pointer', borderRadius: '4px' }} title="Pick Color" />
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                                    <input type="color" value={val.colorHex || '#000000'} onChange={e => updateOptionValue(optIndex, valIndex, 'colorHex', e.target.value)} style={{ width: '40px', height: '40px', border: 'none', padding: 0, cursor: 'pointer', borderRadius: '4px' }} title="Pick Color" />
+                                                    <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', width: '85px' }}>
+                                                        {COLOR_PRESETS.map(preset => (
+                                                            <div key={preset} onClick={() => updateOptionValue(optIndex, valIndex, 'colorHex', preset)} style={{ width: '15px', height: '15px', backgroundColor: preset, cursor: 'pointer', border: '1px solid #ccc', borderRadius: '2px' }} title={preset} />
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             )}
-                                            <input type="text" placeholder="Value (e.g. Red)" value={val.value} onChange={e => updateOptionValue(optIndex, valIndex, 'value', e.target.value)} style={{ flex: 2, padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
-                                            <input type="number" placeholder="Price Modifier (+)" value={val.priceModifier} onChange={e => updateOptionValue(optIndex, valIndex, 'priceModifier', Number(e.target.value))} style={{ flex: 1, padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
+                                            <div style={{ flex: 2 }}>
+                                                <input type="text" placeholder="Value (e.g. Red)" value={val.value} onChange={e => updateOptionValue(optIndex, valIndex, 'value', e.target.value)} style={{ width: '100%', padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <input type="number" placeholder="Price Modifier (+)" value={val.priceModifier} onChange={e => updateOptionValue(optIndex, valIndex, 'priceModifier', Number(e.target.value))} style={{ width: '100%', padding: '0.5rem', border: '1px solid #e1e1e1', borderRadius: '4px' }} />
+                                            </div>
+                                            <button type="button" onClick={() => {
+                                                const newOptions = [...options];
+                                                newOptions[optIndex].values = newOptions[optIndex].values.filter((_: any, i: number) => i !== valIndex);
+                                                setOptions(newOptions);
+                                            }} style={{ padding: '0.5rem', background: '#fee', color: '#e33', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>X</button>
                                         </div>
                                     ))}
                                     <button type="button" onClick={() => addOptionValue(optIndex)} className="btn-admin" style={{ border: '1px solid #ccc', background: 'white', marginTop: '0.5rem' }}>+ Add Value</button>

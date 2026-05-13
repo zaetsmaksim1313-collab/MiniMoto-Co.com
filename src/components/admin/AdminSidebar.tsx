@@ -7,6 +7,7 @@ const menuItems = [
     { name: 'Home', href: '/admin', icon: '🏠' },
     { name: 'Orders', href: '/admin/orders', icon: '📦' },
     { name: 'Products', href: '/admin/products', icon: '🏷️' },
+    { name: 'Categories', href: '/admin/categories', icon: '🗂️' },
     { name: 'Finance', href: '/admin/finance', icon: '💰' },
     { name: 'Analytics', href: '/admin/analytics', icon: '📊' },
     { name: 'Settings', href: '/admin/settings', icon: '⚙️' },

@@ -335,10 +335,6 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     display: flex;
                     justify-content: center;
                     padding: 4rem 2rem;
-                    height: 100vh;
-                    position: sticky;
-                    top: 0;
-                    overflow-y: auto;
                 }
 
                 .content-wrapper {

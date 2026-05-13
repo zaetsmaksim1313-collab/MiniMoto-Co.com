@@ -108,3 +108,22 @@ export async function updateMakeItYoursImages(images: string[]) {
         return { success: false, error: e.message };
     }
 }
+
+export async function updateProductOrder(updates: { id: string, sort_order: number }[]) {
+    await ensureDb();
+    try {
+        // Execute sequentially to update order safely
+        for (const update of updates) {
+            await sql`
+                UPDATE products 
+                SET sort_order = ${update.sort_order}
+                WHERE id = ${update.id}
+            `;
+        }
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        console.error("Failed to update product order:", e);
+        return { success: false, error: e.message };
+    }
+}
