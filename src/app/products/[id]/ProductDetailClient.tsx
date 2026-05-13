@@ -115,14 +115,21 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <div className="split-layout">
                 {/* Left Side: Scrollable Image Collage */}
                 <div className="left-panel">
-                    {product.images.map((img, idx) => (
-                        <img 
-                            key={idx}
-                            src={img} 
-                            className="full-image" 
-                            alt={`${product.name} image ${idx + 1}`} 
-                        />
-                    ))}
+                    {product.images.length > 0 && (
+                        <img src={product.images[0]} className="full-image" alt={product.name} />
+                    )}
+                    {product.images.length > 1 && (
+                        <div className="thumbnail-grid">
+                            {product.images.slice(1).map((img, idx) => (
+                                <img 
+                                    key={idx} 
+                                    src={img} 
+                                    className="thumb"
+                                    alt={`${product.name} thumbnail ${idx}`} 
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Side: Informational Content */}
@@ -270,21 +277,20 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 }
 
                 .split-layout {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    display: flex;
                     width: 100vw;
-                    min-height: 100vh;
+                    max-width: 1600px;
+                    margin: 0 auto;
                 }
 
                 @media (max-width: 900px) {
                     .split-layout {
-                        grid-template-columns: 1fr;
+                        flex-direction: column;
                     }
                 }
 
                 .left-panel {
-                    height: 100vh;
-                    overflow-y: auto;
+                    flex: 1.2;
                     background: #111;
                     display: flex;
                     flex-direction: column;
@@ -309,13 +315,30 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     display: block;
                 }
 
+                .thumbnail-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0px; /* seamless edge to edge matching the collage */
+                }
+
+                .thumb {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
+                    display: block;
+                }
+
                 .right-panel {
+                    flex: 1;
                     background: #000;
                     color: #fff;
                     display: flex;
                     justify-content: center;
                     padding: 4rem 2rem;
-                    min-height: 100vh;
+                    height: 100vh;
+                    position: sticky;
+                    top: 0;
+                    overflow-y: auto;
                 }
 
                 .content-wrapper {

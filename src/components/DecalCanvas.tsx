@@ -41,15 +41,15 @@ export default function DecalCanvas() {
     const [masks, setMasks] = useState<Record<string, string>>({});
 
     const logosList = [
-        { src: '/ALPLINE%20STARS%20LOGO.png', key: 'Alpinestars', width: 100 },
-        { src: '/CHI%20LOGO.png', key: 'CHI', width: 80 },
-        { src: '/EXT%20LOGO.png', key: 'EXT Racing', width: 120 },
-        { src: '/FOX%20LOGO.png', key: 'Fox', width: 100 },
-        { src: '/MONSTER%20LOGO.png', key: 'Monster Energy', width: 120 },
-        { src: '/PRICKLY%20LOGO%202.png', key: 'Prickly 2', width: 100 },
-        { src: '/PRICKLY%20LOGO.png', key: 'Prickly', width: 100 },
-        { src: '/THRILL%20SEEKERS%20LOGO.png', key: 'Thrill Seekers', width: 120 },
-        { src: '/W9%20LOGO.png', key: 'W9', width: 80 },
+        { src: '/ALPLINE%20STARS%20LOGO.png', key: 'Alpinestars', width: 60 },
+        { src: '/CHI%20LOGO.png', key: 'CHI', width: 50 },
+        { src: '/EXT%20LOGO.png', key: 'EXT Racing', width: 70 },
+        { src: '/FOX%20LOGO.png', key: 'Fox', width: 60 },
+        { src: '/MONSTER%20LOGO.png', key: 'Monster Energy', width: 70 },
+        { src: '/PRICKLY%20LOGO%202.png', key: 'Prickly 2', width: 60 },
+        { src: '/PRICKLY%20LOGO.png', key: 'Prickly', width: 60 },
+        { src: '/THRILL%20SEEKERS%20LOGO.png', key: 'Thrill Seekers', width: 70 },
+        { src: '/W9%20LOGO.png', key: 'W9', width: 50 },
     ];
 
     // Process images into pure solid masks
@@ -351,7 +351,9 @@ export default function DecalCanvas() {
                                             alt="Custom Logo" 
                                             style={{ 
                                                 width: `${item.width}px`,
-                                                filter: (item.isBgBlack ? item.color !== '#ffffff' : item.color === '#ffffff') ? 'invert(1)' : 'none',
+                                                filter: (item.isBgBlack ? item.color !== '#ffffff' : item.color === '#ffffff') 
+                                                    ? 'invert(1) grayscale(100%) contrast(1000%)' 
+                                                    : 'grayscale(100%) contrast(1000%)',
                                                 mixBlendMode: item.color === '#ffffff' ? 'screen' : 'multiply',
                                                 pointerEvents: 'none'
                                             }} 
