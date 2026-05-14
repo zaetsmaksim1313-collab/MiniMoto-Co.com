@@ -138,7 +138,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                         <h1 className="product-title">{product.name}</h1>
                         
                         <div className="price-area">
-                            <span className="current-price">${totalPrice.toFixed(2)}</span>
+                            <span className="current-price">${product.price.toFixed(2)}</span>
                         </div>
 
                         {product.compareAtPrice && (
@@ -261,8 +261,12 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                                 <input type="number" value={quantity} readOnly />
                                 <button type="button" onClick={() => setQuantity(quantity + 1)}>+</button>
                             </div>
-                            <button className="btn-add" onClick={handleAddToCart} style={{ background: 'transparent', border: '1px solid #444', color: '#fff' }}>Add to cart</button>
-                            <button className="btn-add" onClick={handleBuyNow} style={{ background: '#fff', color: '#000' }}>Buy now</button>
+                            <button className="btn-add" onClick={handleAddToCart} style={{ background: 'transparent', border: '1px solid #444', color: '#fff' }}>
+                                Add to cart {totalPrice > product.price ? `($${totalPrice.toFixed(2)})` : ''}
+                            </button>
+                            <button className="btn-add" onClick={handleBuyNow} style={{ background: '#fff', color: '#000' }}>
+                                Buy now {totalPrice > product.price ? `($${totalPrice.toFixed(2)})` : ''}
+                            </button>
                         </div>
                     </div>
                 </div>
