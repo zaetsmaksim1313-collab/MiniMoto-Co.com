@@ -16,59 +16,81 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             <h1 className="section-title">
                 {category ? category.toUpperCase() : 'ALL'} <span style={{ color: 'var(--accent-color)' }}>{category ? '' : 'PRODUCTS'}</span>
             </h1>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '6rem',
-                maxWidth: '800px',
-                margin: '0 auto'
-            }}>
+            <style>{`
+                .product-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 1rem;
+                    width: 100%;
+                }
+                .product-item {
+                    display: flex;
+                    flex-direction: column;
+                    text-decoration: none;
+                    color: inherit;
+                }
+                .product-image-container {
+                    position: relative;
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    overflow: hidden;
+                    background: #f5f5f5;
+                    margin-bottom: 0.75rem;
+                }
+                .product-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                .sold-out-badge {
+                    position: absolute;
+                    top: 8px;
+                    right: 8px;
+                    background: black;
+                    color: white;
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    padding: 4px 8px;
+                    text-transform: uppercase;
+                }
+                @media (max-width: 1024px) {
+                    .product-grid { grid-template-columns: repeat(3, 1fr); }
+                }
+                @media (max-width: 768px) {
+                    .product-grid { grid-template-columns: repeat(2, 1fr); }
+                }
+                @media (max-width: 480px) {
+                    .product-grid { grid-template-columns: repeat(1, 1fr); gap: 2rem; }
+                }
+            `}</style>
+            <div className="product-grid">
                 {products.map(product => (
-                    <div key={product.id} className="product-catalog-item" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <div style={{ padding: '0 0.25rem', textAlign: 'center', marginBottom: '1rem' }}>
-                            <h3 style={{ fontSize: '2rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{product.name}</h3>
-                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center' }}>
-                                <p style={{ color: '#333', fontSize: '1.2rem', fontWeight: 'bold' }}>${Number(product.price).toFixed(2)}</p>
+                    <a href={`/products/${product.id}`} key={product.id} className="product-item">
+                        <div className="product-image-container">
+                            {product.images && product.images.length > 0 && (
+                                <img 
+                                    src={product.images[0]} 
+                                    alt={product.name}
+                                    className="product-image"
+                                />
+                            )}
+                            {product.status === 'Draft' && (
+                                <div className="sold-out-badge">
+                                    SOLD OUT
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                            <h3 style={{ fontSize: '0.85rem', fontWeight: '900', textTransform: 'uppercase', margin: 0, letterSpacing: '0.02em' }}>{product.name}</h3>
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <p style={{ color: '#333', fontSize: '0.85rem', margin: 0 }}>${Number(product.price).toFixed(2)}</p>
                                 {product.compareAtPrice && (
-                                    <p style={{ color: '#999', fontSize: '1.2rem', textDecoration: 'line-through' }}>${Number(product.compareAtPrice).toFixed(2)}</p>
+                                    <p style={{ color: '#999', fontSize: '0.85rem', textDecoration: 'line-through', margin: 0 }}>${Number(product.compareAtPrice).toFixed(2)}</p>
                                 )}
                             </div>
                         </div>
-                        
-                        {/* Display ALL images straight down */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
-                            {product.images.map((img, idx) => (
-                                <img 
-                                    key={idx}
-                                    src={img} 
-                                    alt={`${product.name} photo ${idx + 1}`}
-                                    style={{ width: '100%', height: 'auto', display: 'block' }} 
-                                />
-                            ))}
-                        </div>
-
-                        {/* Example placeholder for out of stock logic if status was used for inventory */}
-                        {product.status === 'Draft' && (
-                            <div style={{ alignSelf: 'center', background: 'black', color: 'white', padding: '8px 16px', fontSize: '1rem', fontWeight: 'bold', marginTop: '1rem' }}>
-                                SOLD OUT
-                            </div>
-                        )}
-                        {product.status !== 'Draft' && (
-                            <a href={`/products/${product.id}`} style={{ 
-                                display: 'inline-block', 
-                                padding: '1.2rem', 
-                                background: 'black', 
-                                color: 'white', 
-                                textDecoration: 'none', 
-                                textAlign: 'center', 
-                                fontWeight: 'bold',
-                                fontSize: '1.1rem',
-                                marginTop: '1rem'
-                            }}>
-                                BUILD YOURS / BUY NOW
-                            </a>
-                        )}
-                    </div>
+                    </a>
                 ))}
             </div>
         </div>
