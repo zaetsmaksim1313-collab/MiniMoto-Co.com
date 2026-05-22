@@ -30,6 +30,7 @@ export default function DecalCanvas() {
     const [selectedFont, setSelectedFont] = useState(FONTS[0]);
     const [selectedColor, setSelectedColor] = useState('#000000');
     const [logoColor, setLogoColor] = useState('#000000');
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     
     // Drag Engine State
     const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -41,15 +42,15 @@ export default function DecalCanvas() {
     const [masks, setMasks] = useState<Record<string, string>>({});
 
     const logosList = [
-        { src: '/ALPLINE%20STARS%20LOGO.png', key: 'Alpinestars', width: 60 },
-        { src: '/CHI%20LOGO.png', key: 'CHI', width: 50 },
-        { src: '/EXT%20LOGO.png', key: 'EXT Racing', width: 70 },
-        { src: '/FOX%20LOGO.png', key: 'Fox', width: 60 },
-        { src: '/MONSTER%20LOGO.png', key: 'Monster Energy', width: 70 },
-        { src: '/PRICKLY%20LOGO%202.png', key: 'Prickly 2', width: 60 },
-        { src: '/PRICKLY%20LOGO.png', key: 'Prickly', width: 60 },
-        { src: '/THRILL%20SEEKERS%20LOGO.png', key: 'Thrill Seekers', width: 70 },
-        { src: '/W9%20LOGO.png', key: 'W9', width: 50 },
+        { src: '/ALPLINE%20STARS%20LOGO.png', key: 'Alpinestars', width: 35 },
+        { src: '/CHI%20LOGO.png', key: 'CHI', width: 30 },
+        { src: '/EXT%20LOGO.png', key: 'EXT Racing', width: 40 },
+        { src: '/FOX%20LOGO.png', key: 'Fox', width: 35 },
+        { src: '/MONSTER%20LOGO.png', key: 'Monster Energy', width: 40 },
+        { src: '/PRICKLY%20LOGO%202.png', key: 'Prickly 2', width: 35 },
+        { src: '/PRICKLY%20LOGO.png', key: 'Prickly', width: 35 },
+        { src: '/THRILL%20SEEKERS%20LOGO.png', key: 'Thrill Seekers', width: 40 },
+        { src: '/W9%20LOGO.png', key: 'W9', width: 30 },
     ];
 
     // Process images into pure solid masks
@@ -198,8 +199,9 @@ export default function DecalCanvas() {
     // Add Functions
     const addNumber = () => {
         if (!numberInput.trim()) return;
+        const newItemId = 'item_' + Date.now();
         setItems(prev => [...prev, {
-            id: 'item_' + Date.now(),
+            id: newItemId,
             type: 'text',
             content: numberInput,
             x: 100,
@@ -209,11 +211,13 @@ export default function DecalCanvas() {
             fontSize: 120,
             rotation: 0
         }]);
+        setSelectedItemId(newItemId);
     };
 
     const addSponsor = (sponsorName: string) => {
+        const newItemId = 'item_' + Date.now();
         setItems(prev => [...prev, {
-            id: 'item_' + Date.now(),
+            id: newItemId,
             type: 'sponsor',
             content: sponsorName,
             x: 120,
@@ -222,6 +226,7 @@ export default function DecalCanvas() {
             fontSize: 24,
             rotation: 0
         }]);
+        setSelectedItemId(newItemId);
     };
 
     const addLogo = (logoPath: string, defaultWidth: number) => {
@@ -237,8 +242,9 @@ export default function DecalCanvas() {
                 const luminance = data[0]*0.299 + data[1]*0.587 + data[2]*0.114;
                 const isBgBlack = luminance < 128;
                 
+                const newItemId = 'item_' + Date.now();
                 setItems(prev => [...prev, {
-                    id: 'item_' + Date.now(),
+                    id: newItemId,
                     type: 'image',
                     content: logoPath,
                     x: 90,
@@ -248,6 +254,7 @@ export default function DecalCanvas() {
                     rotation: 0,
                     isBgBlack
                 }]);
+                setSelectedItemId(newItemId);
             }
         };
         img.src = logoPath;
@@ -255,6 +262,9 @@ export default function DecalCanvas() {
 
     const deleteItem = (id: string) => {
         setItems(prev => prev.filter(item => item.id !== id));
+        if (selectedItemId === id) {
+            setSelectedItemId(null);
+        }
     };
 
     // --- Drag & Drop Engine (Touch & Mouse Support) ---
@@ -324,7 +334,7 @@ export default function DecalCanvas() {
                             {items.map(item => (
                                 <div
                                     key={item.id}
-                                    className="canvas-node"
+                                    className={`canvas-node ${selectedItemId === item.id ? 'selected' : ''}`}
                                     style={{
                                         left: item.x,
                                         top: item.y,
@@ -334,10 +344,16 @@ export default function DecalCanvas() {
                                         transform: `rotate(${item.rotation || 0}deg)`,
                                         fontWeight: item.type === 'text' ? 900 : 700,
                                         cursor: draggingId === item.id ? 'grabbing' : 'grab',
-                                        border: draggingId === item.id ? '1px dashed #000' : 'none',
-                                        padding: draggingId === item.id ? '4px' : '0'
+                                        border: selectedItemId === item.id ? '1.5px solid #1a73e8' : (draggingId === item.id ? '1px dashed #666' : 'none'),
+                                        padding: '4px',
+                                        borderRadius: '4px',
+                                        boxShadow: selectedItemId === item.id ? '0 0 8px rgba(26, 115, 232, 0.4)' : 'none',
+                                        zIndex: selectedItemId === item.id ? 100 : 1
                                     }}
-                                    onPointerDown={(e) => handlePointerDown(item.id, e)}
+                                    onPointerDown={(e) => {
+                                        handlePointerDown(item.id, e);
+                                        setSelectedItemId(item.id);
+                                    }}
                                     onPointerMove={handlePointerMove}
                                     onPointerUp={handlePointerUp}
                                     onPointerCancel={handlePointerUp}
@@ -465,6 +481,120 @@ export default function DecalCanvas() {
                         </div>
                         <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#666' }}>Note: Logos color matches selection to contrast against plate background.</p>
                     </div>
+
+                    {selectedItemId && (
+                        <div className="tool-group selected-item-controls">
+                            <h3>5. Adjust Selected Item</h3>
+                            {(() => {
+                                const item = items.find(i => i.id === selectedItemId);
+                                if (!item) return null;
+                                return (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                        <div style={{ fontSize: '0.85rem', color: '#555', fontWeight: 600 }}>
+                                            Type: <span style={{ textTransform: 'capitalize', color: '#1a73e8' }}>{item.type === 'image' ? 'Logo' : item.type}</span>
+                                        </div>
+                                        {item.type === 'image' && (
+                                            <div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.25rem' }}>
+                                                    <span>Size (Width)</span>
+                                                    <span>{item.width}px</span>
+                                                </div>
+                                                <input 
+                                                    type="range" 
+                                                    min="15" 
+                                                    max="200" 
+                                                    value={item.width || 35} 
+                                                    onChange={(e) => {
+                                                        const val = parseInt(e.target.value);
+                                                        setItems(prev => prev.map(i => i.id === selectedItemId ? { ...i, width: val } : i));
+                                                    }}
+                                                    className="slider"
+                                                    style={{ width: '100%', cursor: 'pointer' }}
+                                                />
+                                            </div>
+                                        )}
+                                        {item.type === 'text' && (
+                                            <div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.25rem' }}>
+                                                    <span>Font Size</span>
+                                                    <span>{item.fontSize}px</span>
+                                                </div>
+                                                <input 
+                                                    type="range" 
+                                                    min="20" 
+                                                    max="200" 
+                                                    value={item.fontSize || 120} 
+                                                    onChange={(e) => {
+                                                        const val = parseInt(e.target.value);
+                                                        setItems(prev => prev.map(i => i.id === selectedItemId ? { ...i, fontSize: val } : i));
+                                                    }}
+                                                    className="slider"
+                                                    style={{ width: '100%', cursor: 'pointer' }}
+                                                />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.25rem' }}>
+                                                <span>Rotation</span>
+                                                <span>{item.rotation || 0}°</span>
+                                            </div>
+                                            <input 
+                                                type="range" 
+                                                min="-180" 
+                                                max="180" 
+                                                value={item.rotation || 0} 
+                                                onChange={(e) => {
+                                                    const val = parseInt(e.target.value);
+                                                    setItems(prev => prev.map(i => i.id === selectedItemId ? { ...i, rotation: val } : i));
+                                                }}
+                                                className="slider"
+                                                style={{ width: '100%', cursor: 'pointer' }}
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                            <button 
+                                                className="btn-danger" 
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px',
+                                                    background: '#ff4b2b',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer',
+                                                    fontSize: '0.9rem'
+                                                }}
+                                                onClick={() => {
+                                                    deleteItem(selectedItemId);
+                                                    setSelectedItemId(null);
+                                                }}
+                                            >
+                                                Delete Item
+                                            </button>
+                                            <button 
+                                                className="btn-secondary" 
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px',
+                                                    background: '#f4f4f5',
+                                                    color: '#333',
+                                                    border: '1px solid #ddd',
+                                                    borderRadius: '6px',
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer',
+                                                    fontSize: '0.9rem'
+                                                }}
+                                                onClick={() => setSelectedItemId(null)}
+                                            >
+                                                Deselect
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+                        </div>
+                    )}
 
                     <div className="checkout-footer">
                         <div className="price-summary">

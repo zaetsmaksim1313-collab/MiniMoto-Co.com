@@ -44,7 +44,7 @@ export default function CheckoutPage() {
                     price: item.price,
                     selectedOptions: item.selectedOptions
                 })),
-                total: totalPrice
+                total: totalPrice + 8
             });
 
             if (res.success) {
@@ -138,7 +138,7 @@ export default function CheckoutPage() {
                                         <div className="method-row">
                                             <input type="radio" defaultChecked />
                                             <span>Standard Shipping</span>
-                                            <span className="price">Free</span>
+                                            <span className="price">$8.00</span>
                                         </div>
                                     </div>
 
@@ -162,7 +162,7 @@ export default function CheckoutPage() {
                                         </div>
                                         <div className="summary-row">
                                             <span className="label">Method</span>
-                                            <span className="value">Standard · Free</span>
+                                            <span className="value">Standard · $8.00</span>
                                         </div>
                                     </div>
 
@@ -214,11 +214,11 @@ export default function CheckoutPage() {
                             </div>
                             <div className="cost-row">
                                 <span>Shipping</span>
-                                <span>Free</span>
+                                <span>$8.00</span>
                             </div>
                             <div className="total-row">
                                 <span>Total</span>
-                                <span className="final-price">USD ${totalPrice.toFixed(2)}</span>
+                                <span className="final-price">USD ${(totalPrice + 8).toFixed(2)}</span>
                             </div>
                         </div>
                     </aside>

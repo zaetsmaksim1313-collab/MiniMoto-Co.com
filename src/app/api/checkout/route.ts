@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           shipping_rate_data: {
             type: 'fixed_amount',
             fixed_amount: {
-              amount: 600, // $6.00 in cents
+              amount: 800, // $8.00 in cents
               currency: 'usd',
             },
             display_name: 'Standard Shipping',
