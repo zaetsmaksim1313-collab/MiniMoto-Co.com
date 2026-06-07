@@ -74,7 +74,8 @@ export async function fetchAllOrders(): Promise<Order[]> {
                     email: customerDetails?.email || customerMetadata.email || 'No email',
                     address: customerDetails?.address?.line1 || customerMetadata.address || '',
                     city: customerDetails?.address?.city || customerMetadata.city || '',
-                    zipCode: customerDetails?.address?.postal_code || customerMetadata.zipCode || ''
+                    zipCode: customerDetails?.address?.postal_code || customerMetadata.zipCode || '',
+                    country: customerDetails?.address?.country || customerMetadata.country || 'US'
                 },
                 items: session.line_items?.data.map((item) => ({
                     productId: item.price?.product?.toString() || item.id,

@@ -5,6 +5,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { placeOrder } from "@/app/admin/order-actions";
 
+const getShippingCost = (country: string) => {
+    if (country === 'US') return 8;
+    if (country === 'CA') return 12;
+    return 20; // International
+};
+
 export default function CheckoutPage() {
     const { cart, totalPrice, clearCart } = useCart();
     const [step, setStep] = useState(1); // 1: Info, 2: Shipping, 3: Payment
@@ -16,13 +22,21 @@ export default function CheckoutPage() {
         lastName: '',
         address: '',
         city: '',
-        zipCode: ''
+        zipCode: '',
+        country: 'US'
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    const shippingCost = getShippingCost(formData.country);
+    const shippingLabel = formData.country === 'US' 
+        ? 'Standard US Shipping' 
+        : formData.country === 'CA' 
+            ? 'Canada Shipping' 
+            : 'International Shipping';
 
     const handleNext = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,6 +50,7 @@ export default function CheckoutPage() {
                     address: formData.address,
                     city: formData.city,
                     zipCode: formData.zipCode,
+                    country: formData.country,
                 },
                 items: cart.map(item => ({
                     productId: item.id,
@@ -44,7 +59,7 @@ export default function CheckoutPage() {
                     price: item.price,
                     selectedOptions: item.selectedOptions
                 })),
-                total: totalPrice + 8
+                total: totalPrice + shippingCost
             });
 
             if (res.success) {
@@ -103,6 +118,41 @@ export default function CheckoutPage() {
 
                                     <h3 style={{ marginTop: '2rem' }}>Shipping address</h3>
                                     <div className="form-grid">
+                                        <select 
+                                            name="country" 
+                                            value={formData.country} 
+                                            onChange={handleInputChange} 
+                                            style={{ 
+                                                gridColumn: 'span 2', 
+                                                padding: '12px', 
+                                                border: '1px solid #d9d9d9', 
+                                                borderRadius: '4px', 
+                                                fontSize: '0.9rem', 
+                                                background: '#fff',
+                                                color: '#333',
+                                                marginBottom: '8px' 
+                                            }} 
+                                            required
+                                        >
+                                            <option value="US">United States</option>
+                                            <option value="CA">Canada</option>
+                                            <option value="GB">United Kingdom</option>
+                                            <option value="AU">Australia</option>
+                                            <option value="NZ">New Zealand</option>
+                                            <option value="DE">Germany</option>
+                                            <option value="FR">France</option>
+                                            <option value="IT">Italy</option>
+                                            <option value="ES">Spain</option>
+                                            <option value="NL">Netherlands</option>
+                                            <option value="IE">Ireland</option>
+                                            <option value="JP">Japan</option>
+                                            <option value="KR">South Korea</option>
+                                            <option value="SG">Singapore</option>
+                                            <option value="HK">Hong Kong</option>
+                                            <option value="MX">Mexico</option>
+                                            <option value="BR">Brazil</option>
+                                            <option value="ZA">South Africa</option>
+                                        </select>
                                         <input name="firstName" value={formData.firstName} onChange={handleInputChange} placeholder="First name" required />
                                         <input name="lastName" value={formData.lastName} onChange={handleInputChange} placeholder="Last name" required />
                                         <input name="address" value={formData.address} onChange={handleInputChange} placeholder="Address" style={{ gridColumn: 'span 2' }} required />
@@ -123,12 +173,12 @@ export default function CheckoutPage() {
                                     <div className="summary-box">
                                         <div className="summary-row">
                                             <span className="label">Contact</span>
-                                            <span className="value">user@example.com</span>
+                                            <span className="value">{formData.email}</span>
                                             <button type="button" onClick={() => setStep(1)}>Change</button>
                                         </div>
                                         <div className="summary-row">
                                             <span className="label">Ship to</span>
-                                            <span className="value">123 Street, NY, 10001</span>
+                                            <span className="value">{formData.address}, {formData.city}, {formData.zipCode}, {formData.country}</span>
                                             <button type="button" onClick={() => setStep(1)}>Change</button>
                                         </div>
                                     </div>
@@ -137,8 +187,8 @@ export default function CheckoutPage() {
                                     <div className="method-box">
                                         <div className="method-row">
                                             <input type="radio" defaultChecked />
-                                            <span>Standard Shipping</span>
-                                            <span className="price">$8.00</span>
+                                            <span>{shippingLabel}</span>
+                                            <span className="price">${shippingCost.toFixed(2)}</span>
                                         </div>
                                     </div>
 
@@ -154,15 +204,15 @@ export default function CheckoutPage() {
                                     <div className="summary-box">
                                         <div className="summary-row">
                                             <span className="label">Contact</span>
-                                            <span className="value">user@example.com</span>
+                                            <span className="value">{formData.email}</span>
                                         </div>
                                         <div className="summary-row">
                                             <span className="label">Ship to</span>
-                                            <span className="value">123 Street, NY, 10001</span>
+                                            <span className="value">{formData.address}, {formData.city}, {formData.zipCode}, {formData.country}</span>
                                         </div>
                                         <div className="summary-row">
                                             <span className="label">Method</span>
-                                            <span className="value">Standard · $8.00</span>
+                                            <span className="value">{shippingLabel} · ${shippingCost.toFixed(2)}</span>
                                         </div>
                                     </div>
 
@@ -214,11 +264,11 @@ export default function CheckoutPage() {
                             </div>
                             <div className="cost-row">
                                 <span>Shipping</span>
-                                <span>$8.00</span>
+                                <span>${shippingCost.toFixed(2)}</span>
                             </div>
                             <div className="total-row">
                                 <span>Total</span>
-                                <span className="final-price">USD ${(totalPrice + 8).toFixed(2)}</span>
+                                <span className="final-price">USD ${(totalPrice + shippingCost).toFixed(2)}</span>
                             </div>
                         </div>
                     </aside>

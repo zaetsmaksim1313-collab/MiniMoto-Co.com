@@ -23,7 +23,7 @@ const PLATE_COLORS = ['#ffffff', '#000000'];
 export default function DecalCanvas() {
     const [items, setItems] = useState<CanvasItem[]>([]);
     const [plateColor, setPlateColor] = useState('#000000');
-    const [template, setTemplate] = useState<'ODI' | 'MotoCutz'>('ODI');
+    const [template, setTemplate] = useState<'MotoCutz'>('MotoCutz');
     
     // Add Tool State
     const [numberInput, setNumberInput] = useState('1');
@@ -193,7 +193,6 @@ export default function DecalCanvas() {
         };
 
         generateSilhouette('/MOTOCUTZ%20DECAL.png', 'MotoCutz');
-        generateSilhouette('/ODI%20DECAL.png', 'ODI');
     }, []);
 
     // Add Functions
@@ -240,7 +239,17 @@ export default function DecalCanvas() {
                 ctx.drawImage(img, 0, 0, 1, 1);
                 const data = ctx.getImageData(0, 0, 1, 1).data;
                 const luminance = data[0]*0.299 + data[1]*0.587 + data[2]*0.114;
-                const isBgBlack = luminance < 128;
+                let isBgBlack = luminance < 128;
+                
+                // Swap/invert isBgBlack for specific logos requested by the user
+                const pathUpper = logoPath.toUpperCase();
+                const isSpecial = pathUpper.includes('PRICKLY') || 
+                                  pathUpper.includes('ALPLINE') || 
+                                  pathUpper.includes('THRILL') || 
+                                  pathUpper.includes('MONSTER');
+                if (isSpecial) {
+                    isBgBlack = !isBgBlack;
+                }
                 
                 const newItemId = 'item_' + Date.now();
                 setItems(prev => [...prev, {
@@ -394,16 +403,7 @@ export default function DecalCanvas() {
                     <div className="tool-group">
                         <h3>1. Plate Template</h3>
                         <div className="template-toggle">
-                            <button 
-                                className={`btn-template ${template === 'ODI' ? 'active' : ''}`}
-                                onClick={() => setTemplate('ODI')}
-                            >
-                                ODI Plate
-                            </button>
-                            <button 
-                                className={`btn-template ${template === 'MotoCutz' ? 'active' : ''}`}
-                                onClick={() => setTemplate('MotoCutz')}
-                            >
+                            <button className="btn-template active">
                                 MotoCutz Plate
                             </button>
                         </div>

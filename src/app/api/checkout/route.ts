@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       line_items,
       mode: 'payment',
       shipping_address_collection: {
-        allowed_countries: ['US'],
+        allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ', 'IE', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'DK', 'SE', 'NO', 'FI', 'JP', 'KR', 'SG', 'HK', 'MX', 'BR', 'ZA'],
       },
       shipping_options: [
         {
@@ -46,10 +46,38 @@ export async function POST(req: Request) {
               amount: 800, // $8.00 in cents
               currency: 'usd',
             },
-            display_name: 'Standard Shipping',
+            display_name: 'Standard US Shipping',
             delivery_estimate: {
               minimum: { unit: 'business_day', value: 3 },
               maximum: { unit: 'business_day', value: 7 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 1200, // $12.00 in cents
+              currency: 'usd',
+            },
+            display_name: 'Canada Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 6 },
+              maximum: { unit: 'business_day', value: 12 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 2000, // $20.00 in cents
+              currency: 'usd',
+            },
+            display_name: 'International Shipping (Rest of World)',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 7 },
+              maximum: { unit: 'business_day', value: 21 },
             },
           },
         },

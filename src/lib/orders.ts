@@ -19,6 +19,7 @@ export interface Order {
         address: string;
         city: string;
         zipCode: string;
+        country?: string;
     };
     items: OrderItem[];
     total: number;
