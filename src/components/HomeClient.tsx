@@ -630,7 +630,9 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                         <Link href="/products">All Bikes</Link>
                         <Link href="/products?category=Emotos">Emotos</Link>
                         <Link href="/products?category=E%20Bikes">E Bikes</Link>
+                        <Link href="/products?category=E%20Scooters">E Scooters</Link>
                         <Link href="/products?category=Pedal%20Bikes">Pedal Bikes</Link>
+                        <Link href="/products?category=Prebuilts">Prebuilts</Link>
                         <Link href="/products?category=accessories">Accessories</Link>
                         <Link href="/products?category=Upgrades">Upgrades</Link>
                         <Link href="/products?category=Upgraded Controllers">Upgraded Controllers</Link>

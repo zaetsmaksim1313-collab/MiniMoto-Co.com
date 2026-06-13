@@ -114,6 +114,16 @@ export default function NewProductPage() {
         setOptions(newOptions);
     };
 
+    const moveOption = (index: number, direction: 'up' | 'down') => {
+        const newOptions = [...options];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newOptions.length) return;
+        const temp = newOptions[index];
+        newOptions[index] = newOptions[targetIndex];
+        newOptions[targetIndex] = temp;
+        setOptions(newOptions);
+    };
+
     const addOptionValue = (optIndex: number) => {
         const newOptions = [...options];
         newOptions[optIndex].values.push({ value: '', priceModifier: 0 });
@@ -179,7 +189,9 @@ export default function NewProductPage() {
                                 <option value="Bikes">Bikes</option>
                                 <option value="Emotos">Emotos</option>
                                 <option value="E Bikes">E Bikes</option>
+                                <option value="E Scooters">E Scooters</option>
                                 <option value="Pedal Bikes">Pedal Bikes</option>
+                                <option value="Prebuilts">Prebuilts</option>
                                 <option value="Accessories">Accessories</option>
                                 <option value="Upgrades">Upgrades</option>
                                 <option value="Upgraded Controllers">Upgraded Controllers</option>
@@ -244,7 +256,7 @@ export default function NewProductPage() {
                     
                     {options.map((opt, optIndex) => (
                         <div key={optIndex} style={{ borderTop: '1px solid #eee', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
-                            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-end' }}>
                                 <div style={{ flex: 2 }}>
                                     <label style={{ fontSize: '0.9rem', color: '#444' }}>Option Name</label>
                                     <input type="text" value={opt.name} onChange={e => updateOption(optIndex, 'name', e.target.value)} style={{ width: '100%', padding: '0.6rem', border: '1px solid #e1e1e1', borderRadius: '4px', marginTop: '4px' }} placeholder="e.g. Color" />
@@ -259,7 +271,11 @@ export default function NewProductPage() {
                                         <option value="textbox">Textbox</option>
                                     </select>
                                 </div>
-                                <button type="button" onClick={() => setOptions(options.filter((_, i) => i !== optIndex))} style={{ alignSelf: 'flex-end', padding: '0.6rem', background: '#fee', color: '#e33', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Delete</button>
+                                <div style={{ display: 'flex', gap: '4px' }}>
+                                    <button type="button" onClick={() => moveOption(optIndex, 'up')} disabled={optIndex === 0} style={{ padding: '0.6rem', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: optIndex === 0 ? 'not-allowed' : 'pointer', opacity: optIndex === 0 ? 0.3 : 1, fontWeight: 'bold' }} title="Move Up">↑</button>
+                                    <button type="button" onClick={() => moveOption(optIndex, 'down')} disabled={optIndex === options.length - 1} style={{ padding: '0.6rem', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: optIndex === options.length - 1 ? 'not-allowed' : 'pointer', opacity: optIndex === options.length - 1 ? 0.3 : 1, fontWeight: 'bold' }} title="Move Down">↓</button>
+                                </div>
+                                <button type="button" onClick={() => setOptions(options.filter((_, i) => i !== optIndex))} style={{ padding: '0.6rem', background: '#fee', color: '#e33', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Delete</button>
                             </div>
                             
                             {opt.type !== 'textbox' && (
