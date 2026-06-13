@@ -7,6 +7,7 @@ import MakeItYoursSection from "./MakeItYoursSection";
 
 export default function HomeClient({ featuredProducts, ebikes, pedalBikes, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], ebikes?: Product[], pedalBikes?: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     const [scrollY, setScrollY] = useState(0);
+    const [showAllEmotos, setShowAllEmotos] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -16,6 +17,53 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Matching logic for the 4 target bikes
+    const matchProductByName = (productName: string) => {
+        const nameLower = productName.toLowerCase();
+        if (nameLower.includes('200%') && nameLower.includes('surron') && nameLower.includes('lbx')) {
+            return '200% surron lbx';
+        }
+        if (nameLower.includes('surron') && nameLower.includes('lbx')) {
+            return 'surron lbx';
+        }
+        if (nameLower.includes('ultra bee')) {
+            return 'ultra bee';
+        }
+        if (nameLower.includes('talaria x3') || (nameLower.includes('talaria') && nameLower.includes('x3'))) {
+            return 'talaria x3';
+        }
+        return null;
+    };
+
+    const targetOrder = ['surron lbx', 'ultra bee', 'talaria x3', '200% surron lbx'];
+    const targetBikesMap: { [key: string]: Product } = {};
+    const otherBikes: Product[] = [];
+
+    featuredProducts.forEach(p => {
+        const match = matchProductByName(p.name);
+        if (match && !targetBikesMap[match]) {
+            targetBikesMap[match] = p;
+        } else {
+            otherBikes.push(p);
+        }
+    });
+
+    const initialBikes: Product[] = [];
+    targetOrder.forEach(key => {
+        if (targetBikesMap[key]) {
+            initialBikes.push(targetBikesMap[key]);
+        }
+    });
+
+    const tempOtherBikes = [...otherBikes];
+    while (initialBikes.length < 4 && tempOtherBikes.length > 0) {
+        initialBikes.push(tempOtherBikes.shift()!);
+    }
+
+    const displayedEmotos = showAllEmotos 
+        ? [...initialBikes, ...tempOtherBikes] 
+        : initialBikes;
 
     return (
         <div className="home-container">
@@ -46,7 +94,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                         <Link href="/products?category=Emotos" className="shop-all-link">SHOP ALL</Link>
                     </div>
                     <div className="emotos-grid">
-                        {featuredProducts && featuredProducts.length > 0 ? featuredProducts.map((p) => (
+                        {displayedEmotos && displayedEmotos.length > 0 ? displayedEmotos.map((p) => (
                             <div key={p.id} className="emoto-card">
                                 <Link href={`/products/${p.id}`}>
                                     <div className="emoto-image-container">
@@ -64,6 +112,17 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                             </div>
                         )) : <p style={{opacity: 0.5}}>No emotos added yet.</p>}
                     </div>
+                    {featuredProducts.length > 4 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
+                            <button 
+                                type="button"
+                                onClick={() => setShowAllEmotos(!showAllEmotos)}
+                                className="btn-more-emotos"
+                            >
+                                {showAllEmotos ? 'SHOW LESS' : 'MORE EMOTOS'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -313,6 +372,31 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
 
                 .emotos-section {
                     background: white;
+                }
+
+                .btn-more-emotos {
+                    display: inline-block;
+                    padding: 14px 36px;
+                    background: black;
+                    color: white;
+                    border: 2px solid black;
+                    border-radius: 50px;
+                    font-weight: 800;
+                    font-size: 0.9rem;
+                    letter-spacing: 0.05em;
+                    cursor: pointer;
+                    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                    text-transform: uppercase;
+                    outline: none;
+                }
+                .btn-more-emotos:hover {
+                    background: transparent;
+                    color: black;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+                }
+                .btn-more-emotos:active {
+                    transform: translateY(0);
                 }
 
                 .emotos-header {

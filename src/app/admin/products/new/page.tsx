@@ -38,6 +38,16 @@ export default function NewProductPage() {
         e.target.value = ""; // Reset dropdown
     };
 
+    const moveImage = (index: number, direction: 'left' | 'right') => {
+        const newImages = [...images];
+        const targetIndex = direction === 'left' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newImages.length) return;
+        const temp = newImages[index];
+        newImages[index] = newImages[targetIndex];
+        newImages[targetIndex] = temp;
+        setImages(newImages);
+    };
+
     const processImageFile = (file: File) => {
         if (!file.type.startsWith('image/')) return;
         const reader = new FileReader();
@@ -199,9 +209,19 @@ export default function NewProductPage() {
                         <p style={{ margin: 0, color: '#333', fontWeight: 'bold' }}>Drop images here</p>
                         <p style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem' }}>or click to select from your computer.</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                         {images.map((img, i) => (
-                            <img key={i} src={img} alt="" style={{ width: '100px', height: '100px', objectFit: 'cover', border: '1px solid #eee', borderRadius: '4px' }} />
+                            <div key={i} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                                <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+                                    <img src={img} alt="" style={{ width: '100px', height: '100px', objectFit: 'cover', border: '1px solid #eee', borderRadius: '4px' }} />
+                                    <button type="button" onClick={() => setImages(images.filter((_, idx) => idx !== i))} style={{ position: 'absolute', top: -5, right: -5, background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>X</button>
+                                    {i === 0 && <span style={{ position: 'absolute', bottom: 4, left: 4, background: 'rgba(0,0,0,0.7)', color: '#ffd700', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold', border: '1px solid #ffd700' }}>⭐ Main</span>}
+                                </div>
+                                <div style={{ display: 'flex', gap: '4px', width: '100%' }}>
+                                    <button type="button" onClick={() => moveImage(i, 'left')} disabled={i === 0} style={{ flex: 1, padding: '4px 0', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: i === 0 ? 'not-allowed' : 'pointer', fontSize: '12px', opacity: i === 0 ? 0.3 : 1, display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#000', fontWeight: 'bold' }}>←</button>
+                                    <button type="button" onClick={() => moveImage(i, 'right')} disabled={i === images.length - 1} style={{ flex: 1, padding: '4px 0', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: i === images.length - 1 ? 'not-allowed' : 'pointer', fontSize: '12px', opacity: i === images.length - 1 ? 0.3 : 1, display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#000', fontWeight: 'bold' }}>→</button>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
