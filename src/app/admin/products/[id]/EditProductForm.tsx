@@ -8,7 +8,8 @@ import { Product, ProductOption } from '@/lib/products';
 const COLOR_PRESETS = [
     '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', 
     '#ffff00', '#ff00ff', '#00ffff', '#808080', '#ffa500', 
-    '#800080', '#008000', '#000080', '#800000', '#008080'
+    '#800080', '#008000', '#000080', '#800000', '#008080',
+    '#ff69b4'
 ];
 
 export default function EditProductForm({ product }: { product: Product }) {
