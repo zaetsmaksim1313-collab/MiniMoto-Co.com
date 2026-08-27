@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useConfiguratorStore } from '@/lib/configuratorStore';
-import * as THREE from 'three';
 
 export default function BikeModel() {
   const {
@@ -14,73 +13,6 @@ export default function BikeModel() {
     shvftworkBars
   } = useConfiguratorStore();
 
-  // Materials
-  const frameMaterial = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(frameColor.hex),
-    roughness: 0.15,
-    metalness: 0.2,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.05,
-  });
-
-  const blackMetalMat = new THREE.MeshStandardMaterial({
-    color: '#1a1a1a',
-    roughness: 0.5,
-    metalness: 0.8,
-  });
-
-  const tireMaterial = new THREE.MeshStandardMaterial({
-    color: '#151515',
-    roughness: 0.9,
-    metalness: 0.1,
-  });
-
-  const chromeMaterial = new THREE.MeshStandardMaterial({
-    color: '#dddddd',
-    roughness: 0.1,
-    metalness: 0.9,
-  });
-
-  const carbonFiberMaterial = new THREE.MeshStandardMaterial({
-    color: '#282828',
-    roughness: 0.4,
-    metalness: 0.3,
-  });
-
-  // Upgrade Materials
-  const chiBatteryMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#a00000', // Crimson battery accent
-    roughness: 0.2,
-    metalness: 0.8,
-    clearcoat: 0.8,
-  });
-
-  const ebmxControllerMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#7209b7', // CNC purple anodized
-    roughness: 0.15,
-    metalness: 0.9,
-    clearcoat: 0.5,
-  });
-
-  const kashimaForkMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#e7a93a', // Fox 40 Kashima Gold
-    roughness: 0.1,
-    metalness: 0.9,
-    clearcoat: 0.8,
-  });
-
-  const foxOrangeMaterial = new THREE.MeshStandardMaterial({
-    color: '#ff6b35', // Fox Racing Orange
-    roughness: 0.3,
-    metalness: 0.2,
-  });
-
-  const shvftworkBarsMaterial = new THREE.MeshPhysicalMaterial({
-    color: '#00b4d8', // Anodized Blue
-    roughness: 0.15,
-    metalness: 0.9,
-  });
-
   return (
     <group position={[0, -0.4, 0]}>
       {/* ---------------- PLINTH / DISPLAY PAD ---------------- */}
@@ -91,7 +23,7 @@ export default function BikeModel() {
       
       {/* Plinth Border Outline */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.088, 0]}>
-        <ringGeometry args={[1.5, 1.52, 4]} /> {/* Stylized display border */}
+        <ringGeometry args={[1.5, 1.52, 4]} />
         <meshBasicMaterial color="#333338" />
       </mesh>
 
@@ -134,26 +66,50 @@ export default function BikeModel() {
           {/* Main Frame diagonal left */}
           <mesh position={[-0.06, 0.2, 0.1]} rotation={[0.4, 0, -0.1]} castShadow>
             <boxGeometry args={[0.04, 0.12, 0.6]} />
-            <primitive object={frameMaterial} attach="material" />
+            <meshPhysicalMaterial 
+              color={frameColor.hex}
+              roughness={0.15}
+              metalness={0.2}
+              clearcoat={1.0}
+              clearcoatRoughness={0.05}
+            />
           </mesh>
           {/* Main Frame diagonal right */}
           <mesh position={[0.06, 0.2, 0.1]} rotation={[-0.4, 0, -0.1]} castShadow>
             <boxGeometry args={[0.04, 0.12, 0.6]} />
-            <primitive object={frameMaterial} attach="material" />
+            <meshPhysicalMaterial 
+              color={frameColor.hex}
+              roughness={0.15}
+              metalness={0.2}
+              clearcoat={1.0}
+              clearcoatRoughness={0.05}
+            />
           </mesh>
           {/* Bottom bracket motor cradle */}
           <mesh position={[0, -0.08, 0]} castShadow>
             <boxGeometry args={[0.15, 0.15, 0.2]} />
-            <primitive object={frameMaterial} attach="material" />
+            <meshPhysicalMaterial 
+              color={frameColor.hex}
+              roughness={0.15}
+              metalness={0.2}
+              clearcoat={1.0}
+              clearcoatRoughness={0.05}
+            />
           </mesh>
           {/* Headtube */}
           <mesh position={[0, 0.45, 0.45]} rotation={[0.4, 0, 0]} castShadow>
             <cylinderGeometry args={[0.04, 0.04, 0.22]} />
-            <primitive object={frameMaterial} attach="material" />
+            <meshPhysicalMaterial 
+              color={frameColor.hex}
+              roughness={0.15}
+              metalness={0.2}
+              clearcoat={1.0}
+              clearcoatRoughness={0.05}
+            />
           </mesh>
         </group>
 
-        {/* ----- Swingarm (Rear suspension arm, black or matching frame) ----- */}
+        {/* ----- Swingarm ----- */}
         <group position={[0, -0.05, -0.1]}>
           {/* Left swingarm beam */}
           <mesh position={[-0.07, 0.02, -0.38]} rotation={[-0.05, 0.08, 0]} castShadow>
@@ -189,55 +145,50 @@ export default function BikeModel() {
         {/* ----- Battery Slot ----- */}
         <group position={[0, 0.18, 0.08]} rotation={[0.45, 0, 0]}>
           {chiBattery ? (
-            /* Upgraded Chi Battery - Larger, with glowing red/crimson power cells styling */
+            /* Upgraded Chi Battery - Crimson design */
             <group>
               <mesh castShadow>
                 <boxGeometry args={[0.13, 0.36, 0.22]} />
-                <primitive object={chiBatteryMaterial} attach="material" />
+                <meshPhysicalMaterial color="#a00000" roughness={0.2} metalness={0.8} clearcoat={0.8} />
               </mesh>
               <mesh position={[0, 0, 0.115]} castShadow>
                 <boxGeometry args={[0.1, 0.32, 0.01]} />
                 <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.9} />
               </mesh>
-              {/* Battery text logo badge */}
-              <mesh position={[0, 0.05, 0.121]} rotation={[0, 0, 0]}>
+              <mesh position={[0, 0.05, 0.121]}>
                 <boxGeometry args={[0.06, 0.03, 0.005]} />
                 <meshBasicMaterial color="#ffffff" />
               </mesh>
             </group>
           ) : (
-            /* Stock Sur-ron Battery - Standard Carbon Black/Dark grey cover */
+            /* Stock Sur-ron Battery - Carbon Black */
             <mesh castShadow>
               <boxGeometry args={[0.12, 0.32, 0.2]} />
-              <primitive object={carbonFiberMaterial} attach="material" />
+              <meshStandardMaterial color="#282828" roughness={0.4} metalness={0.3} />
             </mesh>
           )}
         </group>
 
-        {/* ----- Controller (Front-mounted) ----- */}
+        {/* ----- Controller ----- */}
         <group position={[0, 0.25, 0.25]} rotation={[0.45, 0, 0]}>
           {ebmxController ? (
-            /* CNC Purple anodized controller with cooling heatsink fins */
+            /* CNC Purple anodized controller */
             <group>
-              {/* Main Controller Body */}
               <mesh castShadow>
                 <boxGeometry args={[0.11, 0.16, 0.09]} />
-                <primitive object={ebmxControllerMaterial} attach="material" />
+                <meshPhysicalMaterial color="#7209b7" roughness={0.15} metalness={0.9} clearcoat={0.5} />
               </mesh>
-              {/* Fin 1 */}
               <mesh position={[-0.04, 0, 0.05]} castShadow>
                 <boxGeometry args={[0.01, 0.14, 0.02]} />
-                <primitive object={ebmxControllerMaterial} attach="material" />
+                <meshPhysicalMaterial color="#7209b7" roughness={0.15} metalness={0.9} clearcoat={0.5} />
               </mesh>
-              {/* Fin 2 */}
               <mesh position={[0, 0, 0.05]} castShadow>
                 <boxGeometry args={[0.01, 0.14, 0.02]} />
-                <primitive object={ebmxControllerMaterial} attach="material" />
+                <meshPhysicalMaterial color="#7209b7" roughness={0.15} metalness={0.9} clearcoat={0.5} />
               </mesh>
-              {/* Fin 3 */}
               <mesh position={[0.04, 0, 0.05]} castShadow>
                 <boxGeometry args={[0.01, 0.14, 0.02]} />
-                <primitive object={ebmxControllerMaterial} attach="material" />
+                <meshPhysicalMaterial color="#7209b7" roughness={0.15} metalness={0.9} clearcoat={0.5} />
               </mesh>
             </group>
           ) : (
@@ -251,28 +202,24 @@ export default function BikeModel() {
 
         {/* ----- Motor & Cover ----- */}
         <group position={[0, -0.1, -0.02]}>
-          {/* Main circular motor housing */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.09, 0.09, 0.15]} />
             <meshStandardMaterial color="#2d3130" roughness={0.4} metalness={0.7} />
           </mesh>
-          {/* Motor Skid Plate / Guard */}
           {motorCover && (
             <mesh position={[0, -0.04, 0.03]} rotation={[-0.3, 0, 0]} castShadow>
               <boxGeometry args={[0.14, 0.02, 0.22]} />
-              <primitive object={chromeMaterial} attach="material" />
+              <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
             </mesh>
           )}
         </group>
 
-        {/* ----- Suspension Spring (Rear shock) ----- */}
+        {/* ----- Suspension Spring ----- */}
         <group position={[0, 0.08, -0.13]} rotation={[0.5, 0, 0]}>
-          {/* Shock damper cylinder */}
           <mesh castShadow>
             <cylinderGeometry args={[0.015, 0.015, 0.18]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
-          {/* Spring Coil rings */}
           <mesh position={[0, 0, 0]} castShadow>
             <torusGeometry args={[0.025, 0.008, 8, 16]} />
             <meshStandardMaterial color="#a00000" roughness={0.3} />
@@ -289,12 +236,10 @@ export default function BikeModel() {
 
         {/* ----- Front Fork Assembly ----- */}
         <group position={[0, 0.2, 0.38]} rotation={[-0.4, 0, 0]}>
-          {/* Upper Triple Clamp */}
           <mesh position={[0, 0.28, 0]} castShadow>
             <boxGeometry args={[0.18, 0.02, 0.08]} />
             <meshStandardMaterial color="#080808" roughness={0.4} />
           </mesh>
-          {/* Lower Triple Clamp */}
           <mesh position={[0, 0.15, 0]} castShadow>
             <boxGeometry args={[0.18, 0.02, 0.08]} />
             <meshStandardMaterial color="#080808" roughness={0.4} />
@@ -303,25 +248,41 @@ export default function BikeModel() {
           {/* Left fork leg */}
           <mesh position={[-0.075, 0, 0]} castShadow>
             <cylinderGeometry args={[0.02, 0.02, 0.62]} />
-            <primitive object={fox40 ? foxOrangeMaterial : blackMetalMat} attach="material" />
+            {fox40 ? (
+              <meshStandardMaterial color="#ff6b35" roughness={0.3} metalness={0.2} />
+            ) : (
+              <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
+            )}
           </mesh>
           {/* Right fork leg */}
           <mesh position={[0.075, 0, 0]} castShadow>
             <cylinderGeometry args={[0.02, 0.02, 0.62]} />
-            <primitive object={fox40 ? foxOrangeMaterial : blackMetalMat} attach="material" />
+            {fox40 ? (
+              <meshStandardMaterial color="#ff6b35" roughness={0.3} metalness={0.2} />
+            ) : (
+              <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
+            )}
           </mesh>
 
-          {/* Kashima Stanchions (Inner fork tubes) sliding down */}
+          {/* Kashima Stanchions */}
           <mesh position={[-0.075, -0.28, 0]} castShadow>
             <cylinderGeometry args={[0.016, 0.016, 0.36]} />
-            <primitive object={fox40 ? kashimaForkMaterial : chromeMaterial} attach="material" />
+            {fox40 ? (
+              <meshPhysicalMaterial color="#e7a93a" roughness={0.1} metalness={0.9} clearcoat={0.8} />
+            ) : (
+              <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
+            )}
           </mesh>
           <mesh position={[0.075, -0.28, 0]} castShadow>
             <cylinderGeometry args={[0.016, 0.016, 0.36]} />
-            <primitive object={fox40 ? kashimaForkMaterial : chromeMaterial} attach="material" />
+            {fox40 ? (
+              <meshPhysicalMaterial color="#e7a93a" roughness={0.1} metalness={0.9} clearcoat={0.8} />
+            ) : (
+              <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
+            )}
           </mesh>
           
-          {/* Number Plate / Front Shield */}
+          {/* Number Plate */}
           <mesh position={[0, 0.18, 0.05]} rotation={[0.05, 0, 0]} castShadow>
             <boxGeometry args={[0.14, 0.16, 0.01]} />
             <meshStandardMaterial color="#111111" roughness={0.8} />
@@ -330,15 +291,17 @@ export default function BikeModel() {
 
         {/* ----- Handlebars ----- */}
         <group position={[0, 0.52, 0.33]} rotation={[-0.05, 0, 0]}>
-          {/* Riser Stem */}
           <mesh position={[0, -0.02, 0]} castShadow>
             <boxGeometry args={[0.04, 0.06, 0.04]} />
             <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
           </mesh>
-          {/* Main Handlebar Tube */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.014, 0.014, 0.72]} />
-            <primitive object={shvftworkBars ? shvftworkBarsMaterial : blackMetalMat} attach="material" />
+            {shvftworkBars ? (
+              <meshPhysicalMaterial color="#00b4d8" roughness={0.15} metalness={0.9} />
+            ) : (
+              <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
+            )}
           </mesh>
           {/* Left Grip */}
           <mesh position={[-0.32, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
@@ -357,27 +320,27 @@ export default function BikeModel() {
           {/* Tire */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <torusGeometry args={[0.33, 0.048, 12, 32]} />
-            <primitive object={tireMaterial} attach="material" />
+            <meshStandardMaterial color="#151515" roughness={0.9} metalness={0.1} />
           </mesh>
           {/* Rim */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <torusGeometry args={[0.29, 0.015, 8, 32]} />
-            <primitive object={blackMetalMat} attach="material" />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
           </mesh>
           {/* Front Hub */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.03, 0.03, 0.09]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
           {/* Brake Rotor */}
           <mesh position={[0.035, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.11, 0.11, 0.005]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
           {/* Axle Pin */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.012, 0.012, 0.16]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
         </group>
 
@@ -386,32 +349,32 @@ export default function BikeModel() {
           {/* Tire */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <torusGeometry args={[0.33, 0.052, 12, 32]} />
-            <primitive object={tireMaterial} attach="material" />
+            <meshStandardMaterial color="#151515" roughness={0.9} metalness={0.1} />
           </mesh>
           {/* Rim */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <torusGeometry args={[0.29, 0.015, 8, 32]} />
-            <primitive object={blackMetalMat} attach="material" />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
           </mesh>
           {/* Rear Hub */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.038, 0.038, 0.11]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
-          {/* Large rear drive sprocket */}
+          {/* sprocket */}
           <mesh position={[-0.03, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.14, 0.14, 0.006]} />
-            <primitive object={blackMetalMat} attach="material" />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.8} />
           </mesh>
           {/* Brake Rotor */}
           <mesh position={[0.035, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.1, 0.1, 0.005]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
           {/* Axle Pin */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.012, 0.012, 0.18]} />
-            <primitive object={chromeMaterial} attach="material" />
+            <meshStandardMaterial color="#dddddd" roughness={0.1} metalness={0.9} />
           </mesh>
         </group>
 
