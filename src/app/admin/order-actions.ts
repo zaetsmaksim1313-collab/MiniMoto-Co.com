@@ -3,6 +3,25 @@
 import { saveOrder, Order, getOrders } from '@/lib/orders';
 import { revalidatePath } from 'next/cache';
 import Stripe from 'stripe';
+import fs from 'fs';
+import path from 'path';
+
+export async function saveDecalImageAction(base64Data: string, fileName: string): Promise<string> {
+    try {
+        const base64Image = base64Data.replace(/^data:image\/png;base64,/, "");
+        const dirPath = path.join(process.cwd(), 'public/orders');
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+        }
+        const filePath = path.join(dirPath, fileName);
+        fs.writeFileSync(filePath, base64Image, 'base64');
+        return `/orders/${fileName}`;
+    } catch (e) {
+        console.error("Failed to save decal image:", e);
+        return "";
+    }
+}
+
 
 export async function placeOrder(orderData: Omit<Order, 'id' | 'date' | 'status' | 'paymentStatus'>) {
     const newOrder: Order = {

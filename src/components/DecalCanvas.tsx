@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect, PointerEvent as ReactPointerEvent } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
+import { saveDecalImageAction } from '@/app/admin/order-actions';
 
 interface CanvasItem {
     id: string;
@@ -21,6 +23,8 @@ const FONTS = ['Impact', 'Arial', 'Courier New', 'Bebas Neue', 'Trebuchet MS'];
 const PLATE_COLORS = ['#ffffff', '#000000'];
 
 export default function DecalCanvas() {
+    const { addToCart } = useCart();
+    const [isSaving, setIsSaving] = useState(false);
     const [items, setItems] = useState<CanvasItem[]>([]);
     const [plateColor, setPlateColor] = useState('#000000');
     const [template, setTemplate] = useState<'MotoCutz'>('MotoCutz');
@@ -306,13 +310,186 @@ export default function DecalCanvas() {
         e.currentTarget.releasePointerCapture(e.pointerId);
     };
 
-    const handleSaveAsJSON = () => {
-        const designObject = {
-            basePlateColor: plateColor,
-            canvasItems: items
-        };
-        console.log("FINAL DECAL JSON TO SAVE/ORDER:", designObject);
-        alert("Plate Design Saved! Check developer console to see the JSON serialization output that will be attached to checkout.");
+    const exportDecalToImage = async (): Promise<string> => {
+        return new Promise((resolve) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 640;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                resolve('');
+                return;
+            }
+
+            const maskImg = new Image();
+            maskImg.onload = () => {
+                // Draw background filled with plateColor, masked to the silhouette
+                ctx.drawImage(maskImg, 0, 0, 640, 640);
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.fillStyle = plateColor;
+                ctx.fillRect(0, 0, 640, 640);
+                
+                ctx.globalCompositeOperation = 'source-over';
+                const scale = 640 / 320;
+
+                let loadedImagesCount = 0;
+                const imageItems = items.filter(item => item.type === 'image');
+                
+                const drawTextAndRemainingItems = () => {
+                    items.forEach(item => {
+                        if (item.type === 'text') {
+                            ctx.save();
+                            ctx.fillStyle = item.color;
+                            ctx.font = `bold ${item.fontSize ? item.fontSize * scale : 120}px ${item.fontFamily || 'sans-serif'}`;
+                            ctx.textBaseline = 'top';
+                            
+                            const tx = item.x * scale;
+                            const ty = item.y * scale;
+                            
+                            ctx.translate(tx, ty);
+                            if (item.rotation) {
+                                ctx.rotate((item.rotation * Math.PI) / 180);
+                            }
+                            ctx.fillText(item.content, 0, 0);
+                            ctx.restore();
+                        } else if (item.type === 'sponsor') {
+                            ctx.save();
+                            ctx.fillStyle = 'black';
+                            const w = 120 * scale;
+                            const h = 28 * scale;
+                            const tx = item.x * scale;
+                            const ty = item.y * scale;
+                            ctx.translate(tx, ty);
+                            if (item.rotation) {
+                                ctx.rotate((item.rotation * Math.PI) / 180);
+                            }
+                            
+                            ctx.beginPath();
+                            ctx.roundRect(0, 0, w, h, 6 * scale);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = 'white';
+                            ctx.font = `bold ${13 * scale}px sans-serif`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(item.content, w / 2, h / 2);
+                            ctx.restore();
+                        }
+                    });
+                    
+                    resolve(canvas.toDataURL('image/png'));
+                };
+
+                if (imageItems.length === 0) {
+                    drawTextAndRemainingItems();
+                } else {
+                    imageItems.forEach(item => {
+                        const img = new Image();
+                        img.onload = () => {
+                            ctx.save();
+                            const tx = item.x * scale;
+                            const ty = item.y * scale;
+                            const w = (item.width || 35) * scale;
+                            const h = w * (img.height / img.width);
+                            
+                            ctx.translate(tx, ty);
+                            if (item.rotation) {
+                                ctx.rotate((item.rotation * Math.PI) / 180);
+                            }
+
+                            const logoCanvas = document.createElement('canvas');
+                            logoCanvas.width = img.width;
+                            logoCanvas.height = img.height;
+                            const lCtx = logoCanvas.getContext('2d');
+                            if (lCtx) {
+                                lCtx.drawImage(img, 0, 0);
+                                const lData = lCtx.getImageData(0, 0, logoCanvas.width, logoCanvas.height);
+                                const d = lData.data;
+                                
+                                const isWhite = item.color === '#ffffff';
+                                for (let i = 0; i < d.length; i += 4) {
+                                    if (d[i+3] > 30) {
+                                        if (isWhite) {
+                                            d[i] = 255;
+                                            d[i+1] = 255;
+                                            d[i+2] = 255;
+                                        } else {
+                                            d[i] = 0;
+                                            d[i+1] = 0;
+                                            d[i+2] = 0;
+                                        }
+                                    }
+                                }
+                                lCtx.putImageData(lData, 0, 0);
+                                ctx.drawImage(logoCanvas, 0, 0, w, h);
+                            } else {
+                                ctx.drawImage(img, 0, 0, w, h);
+                            }
+                            
+                            ctx.restore();
+                            
+                            loadedImagesCount++;
+                            if (loadedImagesCount === imageItems.length) {
+                                drawTextAndRemainingItems();
+                            }
+                        };
+                        img.onerror = () => {
+                            loadedImagesCount++;
+                            if (loadedImagesCount === imageItems.length) {
+                                drawTextAndRemainingItems();
+                            }
+                        };
+                        img.src = item.content;
+                    });
+                }
+            };
+            maskImg.onerror = () => {
+                ctx.fillStyle = plateColor;
+                ctx.fillRect(0, 0, 640, 640);
+                resolve(canvas.toDataURL('image/png'));
+            };
+            maskImg.src = masks[template] || '/MOTOCUTZ DECAL.png';
+        });
+    };
+
+    const handleSaveAndAddToCart = async () => {
+        setIsSaving(true);
+        try {
+            const base64Data = await exportDecalToImage();
+            if (!base64Data) {
+                alert("Failed to capture decal design. Please try again.");
+                setIsSaving(false);
+                return;
+            }
+
+            const fileName = `decal_${Date.now()}_${Math.floor(Math.random() * 1000)}.png`;
+            const imagePath = await saveDecalImageAction(base64Data, fileName);
+            if (!imagePath) {
+                alert("Failed to save decal design on the server. Please try again.");
+                setIsSaving(false);
+                return;
+            }
+
+            const selectedOptions = {
+                "Plate Color": plateColor === '#000000' ? 'Black' : 'White',
+                "Number": items.find(i => i.type === 'text')?.content || 'None',
+                "Decal Image": imagePath,
+            };
+
+            addToCart({
+                id: `custom-decal-${Date.now()}`, // unique ID per custom decal so people can buy multiple different decals
+                name: 'Custom Front Plate Decal',
+                price: 5.00,
+                images: [imagePath]
+            }, selectedOptions);
+
+            alert("Custom Front Plate Decal added to cart!");
+        } catch (e) {
+            console.error(e);
+            alert("An error occurred while saving your design.");
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -599,9 +776,15 @@ export default function DecalCanvas() {
                     <div className="checkout-footer">
                         <div className="price-summary">
                             <span>Custom Plate Decal</span>
-                            <span className="total-price">$49.99</span>
+                            <span className="total-price">$5.00</span>
                         </div>
-                        <button className="btn-save" onClick={handleSaveAsJSON}>Save & Add to Cart</button>
+                        <button 
+                            className="btn-save" 
+                            onClick={handleSaveAndAddToCart}
+                            disabled={isSaving}
+                        >
+                            {isSaving ? "Saving Design..." : "Save & Add to Cart"}
+                        </button>
                     </div>
                 </section>
             </main>

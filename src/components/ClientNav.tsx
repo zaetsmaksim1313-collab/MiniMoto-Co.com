@@ -53,6 +53,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                                     <li><a href="/products?category=Upgraded%20Batteries" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED BATTERIES</a></li>
                                 </ul>
                             </li>
+                            <li><a href="/building-lab" style={{ color: '#fff', textDecoration: 'none' }}>BUILDING LAB</a></li>
                             <li><a href="/decal-builder" style={{ color: '#fff', textDecoration: 'none' }}>DECAL LAB</a></li>
                             <li><a href="/products?category=Prebuilts" style={{ color: '#fff', textDecoration: 'none' }}>PREBUILTS</a></li>
                         </ul>

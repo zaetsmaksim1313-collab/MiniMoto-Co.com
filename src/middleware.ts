@@ -4,6 +4,18 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Allow if cookie 'site_unlocked' is present, or if '?unlock=true' is in query params
+  const hasUnlockCookie = request.cookies.get('site_unlocked')?.value === 'true';
+  const hasUnlockParam = request.nextUrl.searchParams.get('unlock') === 'true';
+
+  if (hasUnlockCookie || hasUnlockParam) {
+    const response = NextResponse.next();
+    if (hasUnlockParam) {
+      response.cookies.set('site_unlocked', 'true', { path: '/' });
+    }
+    return response;
+  }
+
   // Allow admin pages, API routes, and static assets
   if (
     pathname.startsWith('/admin') ||
@@ -135,7 +147,7 @@ export function middleware(request: NextRequest) {
     <body>
       <div class="card">
         <span class="brand-badge">Mini Moto Co</span>
-        <h1>biggest ever minimotoco reopening august 1st <span class="emoji">😉</span></h1>
+        <h1>biggest ever minimotoco reopening soon <span class="emoji">😉</span></h1>
         <ul>
           <li>tons of new bikes</li>
           <li>most upgrades of any company</li>
