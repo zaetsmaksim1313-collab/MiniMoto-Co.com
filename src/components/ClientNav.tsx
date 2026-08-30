@@ -43,17 +43,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                                     <li><a href="/products?category=Pedal%20Bikes" style={{ color: '#fff', textDecoration: 'none' }}>PEDAL BIKES</a></li>
                                 </ul>
                             </li>
-                            <li className="nav-dropdown-parent" style={{ position: 'relative', padding: '1rem 0', margin: '-1rem 0' }}>
-                                <a href="/products?category=Upgrades" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADES</a>
-                                <ul className="nav-dropdown" style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: '#000', listStyle: 'none', padding: '1rem', margin: 0, display: 'none', flexDirection: 'column', gap: '1rem', border: '1px solid #333', minWidth: '200px', zIndex: 1000 }}>
-                                    <li><a href="/products?category=Upgraded%20Controllers" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED CONTROLLERS</a></li>
-                                    <li><a href="/products?category=Tyres" style={{ color: '#fff', textDecoration: 'none' }}>TYRES</a></li>
-                                    <li><a href="/products?category=Upgraded%20Forks" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED FORKS</a></li>
-                                    <li><a href="/products?category=Seat%20Covers" style={{ color: '#fff', textDecoration: 'none' }}>SEAT COVERS</a></li>
-                                    <li><a href="/products?category=Upgraded%20Batteries" style={{ color: '#fff', textDecoration: 'none' }}>UPGRADED BATTERIES</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="/building-lab" style={{ color: '#fff', textDecoration: 'none' }}>BUILDING LAB</a></li>
+
                             <li><a href="/decal-builder" style={{ color: '#fff', textDecoration: 'none' }}>DECAL LAB</a></li>
                             <li><a href="/products?category=Prebuilts" style={{ color: '#fff', textDecoration: 'none' }}>PREBUILTS</a></li>
                         </ul>
