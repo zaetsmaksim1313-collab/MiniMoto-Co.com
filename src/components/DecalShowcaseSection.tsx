@@ -3,11 +3,6 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 
-interface DecalPair {
-    designer: string;
-    printed: string;
-}
-
 interface DecalShowcaseSectionProps {
     images?: any[];
 }
@@ -15,39 +10,36 @@ interface DecalShowcaseSectionProps {
 export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
     const rawList = images.map(item => (typeof item === 'string' ? item : ''));
 
-    // Fallback sample pairs if not yet populated in DB
-    const defaultPairs: DecalPair[] = [
-        { designer: "/custom 1.JPG", printed: "/custom 2.JPG" },
-        { designer: "/custom 3.JPG", printed: "/custom 4.JPG" },
-        { designer: "/custom 5.JPG", printed: "/custom 1.JPG" },
-        { designer: "/custom 2.JPG", printed: "/custom 3.JPG" }
-    ];
+    // Fallback sample photos
+    const defaultDesigner = ["/custom 1.JPG", "/custom 3.JPG", "/custom 5.JPG", "/custom 2.JPG"];
+    const defaultPrinted = ["/custom 2.JPG", "/custom 4.JPG", "/custom 1.JPG", "/custom 3.JPG"];
 
-    const pairs: DecalPair[] = [];
+    // Match the 4 designer photos and the 4 printed bike photos from the user's uploaded images
+    let designerPhotos: string[] = [];
+    let printedPhotos: string[] = [];
+
     if (rawList.length >= 8) {
-        pairs.push(
-            { designer: rawList[0] || defaultPairs[0].designer, printed: rawList[1] || defaultPairs[0].printed },
-            { designer: rawList[2] || defaultPairs[1].designer, printed: rawList[3] || defaultPairs[1].printed },
-            { designer: rawList[4] || defaultPairs[2].designer, printed: rawList[5] || defaultPairs[2].printed },
-            { designer: rawList[6] || defaultPairs[3].designer, printed: rawList[7] || defaultPairs[3].printed }
-        );
-    } else if (rawList.length >= 2) {
-        for (let i = 0; i < 4; i++) {
-            pairs.push({
-                designer: rawList[i * 2] || defaultPairs[i].designer,
-                printed: rawList[i * 2 + 1] || defaultPairs[i].printed,
-            });
-        }
+        // If uploaded in [d1, d2, p1, p2, p3, d3, d4, p4] order from admin
+        designerPhotos = [
+            rawList[0] || defaultDesigner[0],
+            rawList[1] || defaultDesigner[1],
+            rawList[5] || rawList[2] || defaultDesigner[2],
+            rawList[6] || rawList[3] || defaultDesigner[3],
+        ];
+        printedPhotos = [
+            rawList[2] || defaultPrinted[0],
+            rawList[3] || defaultPrinted[1],
+            rawList[4] || defaultPrinted[2],
+            rawList[7] || defaultPrinted[3],
+        ];
     } else {
-        pairs.push(...defaultPairs);
+        designerPhotos = defaultDesigner;
+        printedPhotos = defaultPrinted;
     }
 
-    const [activeIdx, setActiveIdx] = useState(0);
     const [sliderPos, setSliderPos] = useState(50); // percentage 0 - 100
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
-
-    const currentPair = pairs[activeIdx] || defaultPairs[0];
 
     const handleMove = (clientX: number) => {
         if (!containerRef.current) return;
@@ -69,16 +61,6 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
         }
     };
 
-    const prevBuild = () => {
-        setActiveIdx((prev) => (prev === 0 ? pairs.length - 1 : prev - 1));
-        setSliderPos(50);
-    };
-
-    const nextBuild = () => {
-        setActiveIdx((prev) => (prev === pairs.length - 1 ? 0 : prev + 1));
-        setSliderPos(50);
-    };
-
     return (
         <section className="decal-showcase-section">
             <div className="container decal-showcase-inner">
@@ -95,109 +77,75 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     </p>
                 </div>
 
-                {/* ── SINGLE UNIFIED MASTER COMPARISON SLIDER ── */}
-                <div className="master-slider-container">
-                    {/* Top Side Labels */}
-                    <div className="slider-side-headers">
-                        <div className="side-label side-left">
-                            <span className="dot dot-left" />
+                {/* ── UNIFIED 4-BUILD SLIDER COMPARISON CONTAINER ── */}
+                <div className="showcase-slider-wrapper">
+                    {/* Header Side Labels */}
+                    <div className="slider-top-labels">
+                        <div className="label-side left">
+                            <span className="dot dot-dark" />
                             <strong>IN THE DESIGNER</strong>
                         </div>
-                        <div className="side-hint">← Drag center handle to compare →</div>
-                        <div className="side-label side-right">
+                        <div className="label-instruction">
+                            ← Drag center slider to reveal printed bikes →
+                        </div>
+                        <div className="label-side right">
                             <strong>PRINTED OUT</strong>
-                            <span className="dot dot-right" />
+                            <span className="dot dot-gray" />
                         </div>
                     </div>
 
-                    {/* Interactive Comparison Stage */}
+                    {/* Interactive 4-Card Wipe Viewport */}
                     <div
                         ref={containerRef}
-                        className="master-compare-viewport"
+                        className="multi-compare-viewport"
                         onMouseDown={() => setIsDragging(true)}
                         onMouseUp={() => setIsDragging(false)}
                         onMouseLeave={() => setIsDragging(false)}
                         onMouseMove={handleMouseMove}
                         onTouchMove={handleTouchMove}
                     >
-                        {/* RIGHT LAYER: PRINTED OUT (On Bike) */}
-                        <div className="compare-layer layer-printed">
-                            <img
-                                src={currentPair.printed}
-                                alt="Printed Out On Bike"
-                                className="compare-photo"
-                            />
-                            <div className="corner-tag tag-right">PRINTED OUT</div>
+                        {/* UNDER LAYER: 4 PRINTED ON BIKE PHOTOS */}
+                        <div className="multi-grid-layer printed-layer">
+                            {printedPhotos.map((imgUrl, idx) => (
+                                <div key={idx} className="square-photo-card">
+                                    <img
+                                        src={imgUrl}
+                                        alt={`Printed Bike ${idx + 1}`}
+                                        className="square-img printed-img"
+                                    />
+                                </div>
+                            ))}
                         </div>
 
-                        {/* LEFT LAYER: IN THE DESIGNER (Decal Graphic) */}
+                        {/* TOP LAYER: 4 IN THE DESIGNER PHOTOS (CLIPPED BY SLIDER) */}
                         <div
-                            className="compare-layer layer-designer"
+                            className="multi-grid-layer designer-layer"
                             style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
                         >
-                            <img
-                                src={currentPair.designer}
-                                alt="In The Designer Decal"
-                                className="compare-photo designer-photo"
-                            />
-                            <div className="corner-tag tag-left">IN THE DESIGNER</div>
+                            {designerPhotos.map((imgUrl, idx) => (
+                                <div key={idx} className="square-photo-card designer-card">
+                                    <img
+                                        src={imgUrl}
+                                        alt={`Designer Decal ${idx + 1}`}
+                                        className="square-img designer-img"
+                                    />
+                                </div>
+                            ))}
                         </div>
 
-                        {/* Interactive Center Draggable Handle */}
+                        {/* ONE SINGLE BIG DRAGGABLE SLIDER DIVIDER */}
                         <div
-                            className="slider-handle-divider"
+                            className="master-slider-bar"
                             style={{ left: `${sliderPos}%` }}
                         >
-                            <div className="divider-bar" />
-                            <div className="drag-knob">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <div className="bar-line" />
+                            <div className="bar-handle">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="15 18 9 12 15 6" />
                                     <polyline points="9 18 15 12 9 6" />
                                 </svg>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Build Switcher Row */}
-                    <div className="build-switcher-row">
-                        <button
-                            type="button"
-                            onClick={prevBuild}
-                            className="nav-arrow-btn"
-                            title="Previous Build"
-                        >
-                            ←
-                        </button>
-
-                        <div className="build-thumbs-track">
-                            {pairs.map((p, idx) => (
-                                <div
-                                    key={idx}
-                                    onClick={() => {
-                                        setActiveIdx(idx);
-                                        setSliderPos(50);
-                                    }}
-                                    className={`build-thumb-card ${activeIdx === idx ? 'thumb-active' : ''}`}
-                                >
-                                    <div className="thumb-split">
-                                        <img src={p.designer} alt={`Design ${idx + 1}`} className="thumb-img-left" />
-                                        <img src={p.printed} alt={`Printed ${idx + 1}`} className="thumb-img-right" />
-                                    </div>
-                                    <span className="thumb-label">
-                                        {activeIdx === idx ? 'Viewing' : `Custom ${idx + 1}`}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={nextBuild}
-                            className="nav-arrow-btn"
-                            title="Next Build"
-                        >
-                            →
-                        </button>
                     </div>
                 </div>
 
@@ -276,44 +224,37 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     color: #000000;
                 }
 
-                /* Master Slider Stage */
-                .master-slider-container {
+                /* Showcase Slider Container */
+                .showcase-slider-wrapper {
                     width: 100%;
-                    max-width: 920px;
+                    max-width: 1240px;
                     display: flex;
                     flex-direction: column;
-                    gap: 1.2rem;
+                    gap: 1rem;
                 }
 
-                .slider-side-headers {
+                .slider-top-labels {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     padding: 0 0.5rem;
                 }
 
-                .side-label {
+                .label-side {
                     display: inline-flex;
                     align-items: center;
                     gap: 0.5rem;
-                    font-size: 0.82rem;
+                    font-size: 0.85rem;
                     font-weight: 800;
                     letter-spacing: 0.08em;
                     text-transform: uppercase;
-                }
-
-                .side-left {
                     color: #000000;
                 }
 
-                .side-right {
-                    color: #000000;
-                }
-
-                .side-hint {
-                    font-size: 0.75rem;
-                    color: #a1a1aa;
+                .label-instruction {
+                    font-size: 0.78rem;
                     font-weight: 600;
+                    color: #71717a;
                 }
 
                 .dot {
@@ -322,203 +263,110 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     border-radius: 50%;
                 }
 
-                .dot-left {
+                .dot-dark {
                     background: #000000;
                 }
 
-                .dot-right {
+                .dot-gray {
                     background: #71717a;
                 }
 
-                /* Viewport */
-                .master-compare-viewport {
+                /* Multi-Card Comparison Viewport */
+                .multi-compare-viewport {
                     position: relative;
-                    aspect-ratio: 16 / 10;
-                    min-height: 380px;
                     width: 100%;
-                    background: #f4f4f5;
+                    background: #ffffff;
                     border-radius: 20px;
                     overflow: hidden;
                     border: 2px solid #18181b;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
                     cursor: ew-resize;
                     user-select: none;
                     touch-action: none;
                 }
 
-                .compare-layer {
-                    position: absolute;
-                    inset: 0;
+                .multi-grid-layer {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 1.25rem;
+                    padding: 1.25rem;
                     width: 100%;
-                    height: 100%;
+                    background: #ffffff;
                 }
 
-                .compare-photo {
+                .designer-layer {
+                    position: absolute;
+                    inset: 0;
+                    background: #ffffff;
+                }
+
+                .square-photo-card {
+                    position: relative;
+                    aspect-ratio: 1 / 1;
+                    width: 100%;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    background: #f4f4f5;
+                    border: 1.5px solid #e4e4e7;
+                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+                }
+
+                .designer-card {
+                    background: #ffffff;
+                }
+
+                .square-img {
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
                     display: block;
                     image-rendering: -webkit-optimize-contrast;
                 }
 
-                .designer-photo {
-                    background: #fcfcfc;
+                .printed-img {
+                    object-fit: cover;
+                }
+
+                .designer-img {
                     object-fit: contain;
                     padding: 4%;
                 }
 
-                .corner-tag {
-                    position: absolute;
-                    bottom: 16px;
-                    padding: 6px 14px;
-                    border-radius: 8px;
-                    font-size: 0.72rem;
-                    font-weight: 900;
-                    letter-spacing: 0.08em;
-                    text-transform: uppercase;
-                    pointer-events: none;
-                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-                }
-
-                .tag-left {
-                    left: 16px;
-                    background: #000000;
-                    color: #ffffff;
-                }
-
-                .tag-right {
-                    right: 16px;
-                    background: #ffffff;
-                    color: #000000;
-                }
-
-                /* Center Draggable Slider Line */
-                .slider-handle-divider {
+                /* Master Slider Center Divider */
+                .master-slider-bar {
                     position: absolute;
                     top: 0;
                     bottom: 0;
-                    width: 3px;
+                    width: 4px;
                     transform: translateX(-50%);
                     pointer-events: none;
-                    z-index: 30;
+                    z-index: 40;
                 }
 
-                .divider-bar {
+                .bar-line {
                     position: absolute;
                     top: 0;
                     bottom: 0;
                     left: 0;
-                    width: 3px;
+                    width: 4px;
                     background: #ffffff;
-                    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
                 }
 
-                .drag-knob {
+                .bar-handle {
                     position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
-                    width: 44px;
-                    height: 44px;
+                    width: 48px;
+                    height: 48px;
                     background: #ffffff;
                     color: #000000;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-                    border: 2.5px solid #000000;
-                }
-
-                /* Thumbnail Switcher Track */
-                .build-switcher-row {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                    margin-top: 0.5rem;
-                }
-
-                .nav-arrow-btn {
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 50%;
-                    background: #f4f4f5;
-                    border: 1.5px solid #e4e4e7;
-                    font-size: 1.2rem;
-                    font-weight: 800;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.2s ease;
-                    flex-shrink: 0;
-                }
-
-                .nav-arrow-btn:hover {
-                    background: #000000;
-                    color: #ffffff;
-                    border-color: #000000;
-                }
-
-                .build-thumbs-track {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 0.8rem;
-                    flex: 1;
-                }
-
-                .build-thumb-card {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 0.4rem;
-                    padding: 6px;
-                    border-radius: 12px;
-                    background: #f4f4f5;
-                    border: 2px solid transparent;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                }
-
-                .build-thumb-card:hover {
-                    border-color: #a1a1aa;
-                }
-
-                .build-thumb-card.thumb-active {
-                    background: #ffffff;
-                    border-color: #000000;
-                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-                }
-
-                .thumb-split {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    width: 100%;
-                    aspect-ratio: 2 / 1;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    border: 1px solid #e4e4e7;
-                }
-
-                .thumb-img-left {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    background: #fff;
-                    padding: 2px;
-                }
-
-                .thumb-img-right {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
-                .thumb-label {
-                    font-size: 0.7rem;
-                    font-weight: 800;
-                    color: #18181b;
-                    letter-spacing: 0.04em;
+                    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+                    border: 3px solid #000000;
                 }
 
                 /* Big Bottom Action Button */
@@ -552,17 +400,18 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
                 }
 
-                @media (max-width: 650px) {
-                    .master-compare-viewport {
-                        aspect-ratio: 1 / 1;
-                        min-height: auto;
+                @media (max-width: 950px) {
+                    .multi-grid-layer {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 1rem;
+                        padding: 1rem;
                     }
-                    .side-hint {
+                    .label-instruction {
                         display: none;
                     }
-                    .build-thumbs-track {
-                        grid-template-columns: repeat(2, 1fr);
-                    }
+                }
+
+                @media (max-width: 550px) {
                     .btn-make-your-own {
                         width: 100%;
                         padding: 18px 30px;
