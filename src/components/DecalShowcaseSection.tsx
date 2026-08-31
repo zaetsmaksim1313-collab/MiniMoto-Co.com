@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 interface DecalShowcaseSectionProps {
@@ -38,24 +38,50 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const handleMove = (clientX: number) => {
+    const updateSlider = useCallback((clientX: number) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
         const x = clientX - rect.left;
         const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
         setSliderPos(percent);
-    };
+    }, []);
 
-    const handleTouchMove = (e: React.TouchEvent) => {
-        if (e.touches.length > 0) {
-            handleMove(e.touches[0].clientX);
-        }
-    };
+    // Global drag event listeners so dragging is buttery smooth across the whole screen
+    useEffect(() => {
+        const handleGlobalMove = (e: MouseEvent) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            updateSlider(e.clientX);
+        };
 
-    const handleMouseMove = (e: React.MouseEvent) => {
+        const handleGlobalTouchMove = (e: TouchEvent) => {
+            if (!isDragging || e.touches.length === 0) return;
+            updateSlider(e.touches[0].clientX);
+        };
+
+        const handleGlobalEnd = () => {
+            setIsDragging(false);
+        };
+
         if (isDragging) {
-            handleMove(e.clientX);
+            window.addEventListener('mousemove', handleGlobalMove, { passive: false });
+            window.addEventListener('mouseup', handleGlobalEnd);
+            window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+            window.addEventListener('touchend', handleGlobalEnd);
         }
+
+        return () => {
+            window.removeEventListener('mousemove', handleGlobalMove);
+            window.removeEventListener('mouseup', handleGlobalEnd);
+            window.removeEventListener('touchmove', handleGlobalTouchMove);
+            window.removeEventListener('touchend', handleGlobalEnd);
+        };
+    }, [isDragging, updateSlider]);
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+        updateSlider(e.clientX);
     };
 
     return (
@@ -95,11 +121,8 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     <div
                         ref={containerRef}
                         className="stacked-compare-viewport"
-                        onMouseDown={() => setIsDragging(true)}
-                        onMouseUp={() => setIsDragging(false)}
-                        onMouseLeave={() => setIsDragging(false)}
-                        onMouseMove={handleMouseMove}
-                        onTouchMove={handleTouchMove}
+                        onPointerDown={handlePointerDown}
+                        style={{ cursor: isDragging ? 'grabbing' : 'ew-resize' }}
                     >
                         {/* UNDER LAYER: 2 STACKED PRINTED BIKE PHOTOS */}
                         <div className="stacked-layer bikes-layer">
@@ -108,6 +131,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                                     src={bike1}
                                     alt="Printed Bike Build 1"
                                     className="stacked-img bike-img"
+                                    draggable={false}
                                 />
                             </div>
                             <div className="stacked-card card-bottom">
@@ -115,6 +139,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                                     src={bike2}
                                     alt="Printed Bike Build 2"
                                     className="stacked-img bike-img"
+                                    draggable={false}
                                 />
                             </div>
                         </div>
@@ -129,6 +154,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                                     src={decal1}
                                     alt="Designer Decal 1"
                                     className="stacked-img decal-img"
+                                    draggable={false}
                                 />
                             </div>
                             <div className="stacked-card card-bottom decal-card">
@@ -136,6 +162,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                                     src={decal2}
                                     alt="Designer Decal 2"
                                     className="stacked-img decal-img"
+                                    draggable={false}
                                 />
                             </div>
                         </div>
@@ -288,8 +315,8 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     overflow: hidden;
                     border: 2px solid #18181b;
                     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.12);
-                    cursor: ew-resize;
                     user-select: none;
+                    -webkit-user-select: none;
                     touch-action: none;
                 }
 
@@ -305,6 +332,9 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     gap: 1.5rem;
                     padding: 2rem;
                     background: #ffffff;
+                    pointer-events: none;
+                    user-select: none;
+                    -webkit-user-select: none;
                 }
 
                 .decals-layer {
@@ -320,7 +350,9 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     background: #f4f4f5;
                     border: 1.5px solid #e4e4e7;
                     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
-                    transition: transform 0.3s ease;
+                    pointer-events: none;
+                    user-select: none;
+                    -webkit-user-select: none;
                 }
 
                 /* Staggered overlapping stack */
@@ -343,6 +375,10 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     height: 100%;
                     display: block;
                     image-rendering: -webkit-optimize-contrast;
+                    pointer-events: none;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -webkit-user-drag: none;
                 }
 
                 .bike-img {
@@ -375,7 +411,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
                 }
 
-                .bar-handle {
+                .drag-knob {
                     position: absolute;
                     top: 50%;
                     left: 50%;
