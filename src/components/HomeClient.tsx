@@ -304,26 +304,27 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                     object-fit: cover;
                     object-position: center 48%;
                     display: block;
+                    filter: brightness(1.08) contrast(1.05) saturate(1.06);
                 }
 
-                /* Dark radial + linear combo overlay with rich contrast */
+                /* Luminous overlay with clear center for maximum photo clarity */
                 .hero-overlay {
                     position: absolute;
                     inset: 0;
                     background:
-                        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%),
-                        linear-gradient(to top, rgba(8,8,10,0.95) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.60) 100%);
+                        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.55) 100%),
+                        linear-gradient(to bottom, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.22) 75%, rgba(0,0,0,0.55) 100%);
                     z-index: 1;
                 }
 
-                /* Seamless fade into the dark Decal Lab showcase section below */
+                /* Seamless fade into the bright white Decal Lab section below */
                 .hero-bottom-fade {
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    height: 160px;
-                    background: linear-gradient(to bottom, transparent, #08080a);
+                    height: 180px;
+                    background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 60%, #ffffff 100%);
                     z-index: 2;
                 }
 

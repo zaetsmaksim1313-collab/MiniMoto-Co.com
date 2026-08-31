@@ -56,23 +56,11 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
             <style jsx>{`
                 .decal-showcase-section {
                     position: relative;
-                    background: #08080a;
-                    color: #ffffff;
+                    background: #ffffff;
+                    color: #000000;
                     padding: 6.5rem 0 6rem 0;
-                    border-bottom: 1px solid #1c1c22;
+                    border-bottom: 1px solid #e4e4e7;
                     overflow: hidden;
-                }
-
-                .decal-showcase-section::before {
-                    content: '';
-                    position: absolute;
-                    top: -150px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 700px;
-                    height: 350px;
-                    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-                    pointer-events: none;
                 }
 
                 .decal-showcase-inner {
@@ -95,19 +83,19 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     display: inline-flex;
                     align-items: center;
                     gap: 0.5rem;
-                    background: rgba(255, 255, 255, 0.06);
-                    border: 1px solid rgba(255, 255, 255, 0.16);
+                    background: #f4f4f5;
+                    border: 1px solid #e4e4e7;
                     border-radius: 999px;
                     padding: 6px 18px;
                     font-size: 0.72rem;
                     font-weight: 800;
                     letter-spacing: 0.14em;
                     text-transform: uppercase;
-                    color: #d4d4d8;
+                    color: #18181b;
                 }
 
                 .badge-sparkle {
-                    color: #ffffff;
+                    color: #000000;
                 }
 
                 .decal-title {
@@ -117,21 +105,19 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     text-transform: uppercase;
                     line-height: 1.05;
                     margin: 0;
-                    background: linear-gradient(180deg, #ffffff 0%, #d1d1d6 60%, #8e8e93 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                    color: #000000;
                 }
 
                 .decal-description {
                     font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-                    color: rgba(255, 255, 255, 0.75);
+                    color: #52525b;
                     line-height: 1.65;
                     max-width: 680px;
                     margin: 0;
                 }
 
                 .decal-description strong {
-                    color: #ffffff;
+                    color: #000000;
                 }
 
                 .decal-cta-wrapper {
@@ -143,8 +129,8 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     align-items: center;
                     gap: 0.6rem;
                     padding: 16px 42px;
-                    background: #ffffff;
-                    color: #000000;
+                    background: #000000;
+                    color: #ffffff;
                     border-radius: 999px;
                     font-weight: 900;
                     font-size: 1rem;
@@ -152,13 +138,13 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     text-transform: uppercase;
                     text-decoration: none;
                     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-                    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
                 }
 
                 .btn-decal-lab:hover {
-                    background: #e4e4e7;
+                    background: #27272a;
                     transform: translateY(-3px) scale(1.02);
-                    box-shadow: 0 14px 40px rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
                 }
 
                 /* Photo Grid */
@@ -171,18 +157,18 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
 
                 .decal-gallery-card {
                     position: relative;
-                    border-radius: 12px;
+                    border-radius: 14px;
                     overflow: hidden;
-                    background: #121216;
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+                    background: #f4f4f5;
+                    border: 1px solid #e4e4e7;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
                     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
                 }
 
                 .decal-gallery-card:hover {
                     transform: translateY(-6px);
-                    border-color: rgba(255, 255, 255, 0.28);
-                    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+                    border-color: #18181b;
+                    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
                 }
 
                 .card-image-wrap {
@@ -206,7 +192,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                 .card-overlay {
                     position: absolute;
                     inset: 0;
-                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0,0,0,0.05) 60%, transparent 100%);
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
@@ -219,12 +205,12 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     font-size: 0.7rem;
                     font-weight: 800;
                     letter-spacing: 0.1em;
-                    background: rgba(255, 255, 255, 0.15);
+                    background: rgba(255, 255, 255, 0.90);
+                    color: #000000;
                     backdrop-filter: blur(8px);
                     padding: 4px 10px;
                     border-radius: 6px;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    color: #fff;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
                 }
 
                 .card-cta {
