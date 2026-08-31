@@ -1,30 +1,368 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 
+interface DecalPair {
+    designer: string;
+    printed: string;
+    title?: string;
+}
+
 interface DecalShowcaseSectionProps {
-    images?: string[];
+    images?: (string | DecalPair)[];
+}
+
+function BeforeAfterCard({ designerImg, printedImg, title, index }: { designerImg: string; printedImg: string; title: string; index: number }) {
+    const [sliderPos, setSliderPos] = useState(50); // percentage 0 - 100
+    const [isDragging, setIsDragging] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleMove = (clientX: number) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const percent = Math.max(5, Math.min(95, (x / rect.width) * 100));
+        setSliderPos(percent);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (e.touches.length > 0) {
+            handleMove(e.touches[0].clientX);
+        }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (isDragging) {
+            handleMove(e.clientX);
+        }
+    };
+
+    return (
+        <div className="decal-compare-card">
+            <div className="card-header-bar">
+                <span className="build-badge">BUILD #{index + 1}</span>
+                <div className="card-pill-labels">
+                    <span className={`pill-label ${sliderPos > 50 ? 'active' : ''}`}>IN THE DESIGNER</span>
+                    <span className="pill-dot">↔</span>
+                    <span className={`pill-label ${sliderPos <= 50 ? 'active' : ''}`}>PRINTED OUT</span>
+                </div>
+            </div>
+
+            {/* Interactive Before/After viewport */}
+            <div
+                ref={containerRef}
+                className="compare-viewport"
+                onMouseDown={() => setIsDragging(true)}
+                onMouseUp={() => setIsDragging(false)}
+                onMouseLeave={() => setIsDragging(false)}
+                onMouseMove={handleMouseMove}
+                onTouchMove={handleTouchMove}
+            >
+                {/* AFTER image: Printed Out (Bottom layer) */}
+                <div className="img-layer printed-layer">
+                    <img
+                        src={printedImg}
+                        alt={`Printed Build #${index + 1}`}
+                        className="compare-img"
+                    />
+                    <span className="floating-badge badge-right">PRINTED OUT</span>
+                </div>
+
+                {/* BEFORE image: In the Designer (Top layer, clipped) */}
+                <div
+                    className="img-layer designer-layer"
+                    style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
+                >
+                    <img
+                        src={designerImg}
+                        alt={`In The Designer #${index + 1}`}
+                        className="compare-img designer-img"
+                    />
+                    <span className="floating-badge badge-left">IN THE DESIGNER</span>
+                </div>
+
+                {/* Interactive Slider Divider Handle */}
+                <div
+                    className="slider-divider"
+                    style={{ left: `${sliderPos}%` }}
+                >
+                    <div className="divider-line" />
+                    <div className="divider-handle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            {/* Quick Toggle Controls */}
+            <div className="card-quick-toggles">
+                <button
+                    type="button"
+                    className={`toggle-btn ${sliderPos >= 90 ? 'btn-active' : ''}`}
+                    onClick={() => setSliderPos(95)}
+                >
+                    In Designer
+                </button>
+                <button
+                    type="button"
+                    className={`toggle-btn ${sliderPos === 50 ? 'btn-active' : ''}`}
+                    onClick={() => setSliderPos(50)}
+                >
+                    Split View
+                </button>
+                <button
+                    type="button"
+                    className={`toggle-btn ${sliderPos <= 10 ? 'btn-active' : ''}`}
+                    onClick={() => setSliderPos(5)}
+                >
+                    Printed Out
+                </button>
+            </div>
+
+            <style jsx>{`
+                .decal-compare-card {
+                    background: #ffffff;
+                    border: 1.5px solid #e4e4e7;
+                    border-radius: 18px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+                    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .decal-compare-card:hover {
+                    border-color: #18181b;
+                    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+                    transform: translateY(-4px);
+                }
+
+                .card-header-bar {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 1.25rem;
+                    background: #fafafa;
+                    border-bottom: 1px solid #f4f4f5;
+                }
+
+                .build-badge {
+                    font-size: 0.72rem;
+                    font-weight: 900;
+                    letter-spacing: 0.08em;
+                    color: #000000;
+                }
+
+                .card-pill-labels {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 0.06em;
+                }
+
+                .pill-label {
+                    color: #a1a1aa;
+                    transition: color 0.2s ease;
+                }
+
+                .pill-label.active {
+                    color: #000000;
+                }
+
+                .pill-dot {
+                    color: #d4d4d8;
+                    font-size: 0.75rem;
+                }
+
+                /* Viewport */
+                .compare-viewport {
+                    position: relative;
+                    aspect-ratio: 1 / 1;
+                    width: 100%;
+                    background: #f4f4f5;
+                    overflow: hidden;
+                    cursor: ew-resize;
+                    user-select: none;
+                    touch-action: none;
+                }
+
+                .img-layer {
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .compare-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    image-rendering: -webkit-optimize-contrast;
+                }
+
+                .designer-img {
+                    background: #fdfdfd;
+                    object-fit: contain;
+                    padding: 4%;
+                }
+
+                .floating-badge {
+                    position: absolute;
+                    bottom: 12px;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    pointer-events: none;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+                }
+
+                .badge-left {
+                    left: 12px;
+                    background: #000000;
+                    color: #ffffff;
+                }
+
+                .badge-right {
+                    right: 12px;
+                    background: #ffffff;
+                    color: #000000;
+                }
+
+                /* Slider divider line and handle */
+                .slider-divider {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    width: 2px;
+                    transform: translateX(-50%);
+                    pointer-events: none;
+                    z-index: 20;
+                }
+
+                .divider-line {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 2px;
+                    background: #ffffff;
+                    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+                }
+
+                .divider-handle {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 34px;
+                    height: 34px;
+                    background: #ffffff;
+                    color: #000000;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+                    border: 2px solid #000000;
+                }
+
+                /* Quick Toggles */
+                .card-quick-toggles {
+                    display: flex;
+                    padding: 0.75rem 1rem;
+                    background: #ffffff;
+                    gap: 0.5rem;
+                    border-top: 1px solid #f4f4f5;
+                }
+
+                .toggle-btn {
+                    flex: 1;
+                    padding: 6px 0;
+                    background: #f4f4f5;
+                    color: #71717a;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .toggle-btn:hover {
+                    background: #e4e4e7;
+                    color: #18181b;
+                }
+
+                .toggle-btn.btn-active {
+                    background: #000000;
+                    color: #ffffff;
+                }
+            `}</style>
+        </div>
+    );
 }
 
 export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
-    const displayImages = images && images.length > 0 ? images : [
-        "/custom 1.JPG",
-        "/custom 2.JPG",
-        "/custom 3.JPG",
-        "/custom 4.JPG",
-        "/custom 5.JPG"
+    // Parse the 4 Before & After pairs
+    // If structured objects exist, use them; otherwise pair from array of 8 images
+    const rawList = images.map(item => (typeof item === 'string' ? item : ''));
+
+    // Default fallback pairs if not yet populated
+    const defaultPairs: DecalPair[] = [
+        {
+            designer: rawList[0] || "/custom 1.JPG",
+            printed: rawList[2] || rawList[1] || "/custom 2.JPG",
+            title: "Custom Decal Build #1",
+        },
+        {
+            designer: rawList[1] || rawList[2] || "/custom 3.JPG",
+            printed: rawList[3] || "/custom 4.JPG",
+            title: "Custom Decal Build #2",
+        },
+        {
+            designer: rawList[5] || rawList[4] || "/custom 5.JPG",
+            printed: rawList[4] || rawList[5] || "/custom 1.JPG",
+            title: "Custom Decal Build #3",
+        },
+        {
+            designer: rawList[6] || "/custom 2.JPG",
+            printed: rawList[7] || "/custom 3.JPG",
+            title: "Custom Decal Build #4",
+        }
     ];
 
-    // Scattered rotation and offset classes for an organic editorial look
-    const scatterStyles = [
-        { rot: '-2.5deg', y: '0px', delay: '0s' },
-        { rot: '2deg', y: '-14px', delay: '0.4s' },
-        { rot: '-1.8deg', y: '8px', delay: '0.8s' },
-        { rot: '2.5deg', y: '-8px', delay: '0.2s' },
-        { rot: '-3deg', y: '12px', delay: '0.6s' },
-        { rot: '1.5deg', y: '-10px', delay: '1s' },
-    ];
+    // Build the 4 pairs smartly
+    const pairs: DecalPair[] = [];
+    if (rawList.length >= 8) {
+        // 4 designer + 4 printed
+        pairs.push(
+            { designer: rawList[0], printed: rawList[2] || rawList[1], title: "Build #1" },
+            { designer: rawList[1], printed: rawList[3] || rawList[4], title: "Build #2" },
+            { designer: rawList[5] || rawList[4], printed: rawList[4] || rawList[5], title: "Build #3" },
+            { designer: rawList[6], printed: rawList[7], title: "Build #4" }
+        );
+    } else if (rawList.length >= 4) {
+        for (let i = 0; i < 4; i++) {
+            pairs.push({
+                designer: rawList[i] || defaultPairs[i].designer,
+                printed: rawList[i + 4] || rawList[i + 1] || defaultPairs[i].printed,
+                title: `Build #${i + 1}`,
+            });
+        }
+    } else {
+        pairs.push(...defaultPairs);
+    }
 
     return (
         <section className="decal-showcase-section">
@@ -38,30 +376,21 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                         BUILD YOUR 1/1 CUSTOM DECAL
                     </h2>
                     <p className="decal-description">
-                        Personalize your front plate with custom racing numbers, your rider name, sponsor logos, and tailored colorways. Designed live in our 2D Decal Lab and precision-printed for only <strong>$5.00</strong>.
+                        From your live digital design to race-ready reality. Drag the slider on any build below to compare the design <strong>In the Designer</strong> vs <strong>Printed Out</strong> on the bike.
                     </p>
                 </div>
 
-                {/* Scattered Square Photo Gallery */}
-                <div className="decal-gallery-scattered">
-                    {displayImages.map((imgUrl, idx) => {
-                        const style = scatterStyles[idx % scatterStyles.length];
-                        return (
-                            <div
-                                key={idx}
-                                className="decal-card-scattered"
-                                style={{
-                                    '--init-rot': style.rot,
-                                    '--init-y': style.y,
-                                    '--anim-delay': style.delay,
-                                } as React.CSSProperties}
-                            >
-                                <div className="card-square-wrap">
-                                    <img src={imgUrl} alt={`Custom Decal ${idx + 1}`} className="card-square-img" />
-                                </div>
-                            </div>
-                        );
-                    })}
+                {/* 4 Before & After Interactive Sliders */}
+                <div className="decal-pairs-grid">
+                    {pairs.slice(0, 4).map((pair, idx) => (
+                        <BeforeAfterCard
+                            key={idx}
+                            index={idx}
+                            title={pair.title || `Build #${idx + 1}`}
+                            designerImg={pair.designer}
+                            printedImg={pair.printed}
+                        />
+                    ))}
                 </div>
 
                 {/* Big Bottom Action Button */}
@@ -86,7 +415,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 4rem;
+                    gap: 3.5rem;
                 }
 
                 .decal-header-block {
@@ -139,66 +468,27 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     color: #000000;
                 }
 
-                /* Scattered Square Grid */
-                .decal-gallery-scattered {
+                /* 4-Item Grid */
+                .decal-pairs-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                    gap: 2.2rem;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 1.5rem;
                     width: 100%;
-                    max-width: 1180px;
-                    padding: 1rem 0;
+                    max-width: 1280px;
                 }
 
-                .decal-card-scattered {
-                    position: relative;
-                    transform: translateY(var(--init-y, 0px)) rotate(var(--init-rot, 0deg));
-                    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-                    animation: floatCard 4s ease-in-out infinite alternate;
-                    animation-delay: var(--anim-delay, 0s);
-                }
-
-                @keyframes floatCard {
-                    0% {
-                        transform: translateY(var(--init-y, 0px)) rotate(var(--init-rot, 0deg));
-                    }
-                    100% {
-                        transform: translateY(calc(var(--init-y, 0px) - 8px)) rotate(calc(var(--init-rot, 0deg) + 0.8deg));
+                @media (max-width: 1100px) {
+                    .decal-pairs-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 1.5rem;
                     }
                 }
 
-                .decal-card-scattered:hover {
-                    animation-play-state: paused;
-                    transform: translateY(-12px) scale(1.04) rotate(0deg) !important;
-                    z-index: 10;
-                }
-
-                .card-square-wrap {
-                    position: relative;
-                    aspect-ratio: 1 / 1;
-                    width: 100%;
-                    border-radius: 16px;
-                    overflow: hidden;
-                    background: #f4f4f5;
-                    border: 1.5px solid #e4e4e7;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-                    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-                }
-
-                .decal-card-scattered:hover .card-square-wrap {
-                    border-color: #000000;
-                    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.16);
-                }
-
-                .card-square-img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    display: block;
-                    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-                }
-
-                .decal-card-scattered:hover .card-square-img {
-                    transform: scale(1.06);
+                @media (max-width: 600px) {
+                    .decal-pairs-grid {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
                 }
 
                 /* Big Bottom CTA Button */
@@ -232,18 +522,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
                 }
 
-                @media (max-width: 900px) {
-                    .decal-gallery-scattered {
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 1.5rem;
-                    }
-                }
-
                 @media (max-width: 550px) {
-                    .decal-gallery-scattered {
-                        grid-template-columns: 1fr;
-                        gap: 1.2rem;
-                    }
                     .btn-make-your-own {
                         width: 100%;
                         padding: 18px 30px;
