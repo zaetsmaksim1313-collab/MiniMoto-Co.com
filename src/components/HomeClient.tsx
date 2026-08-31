@@ -122,6 +122,39 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
             {/* ── 1/1 CUSTOM DECAL LAB SHOWCASE SECTION ────────────────────── */}
             <DecalShowcaseSection images={makeItYoursImages} />
 
+            {/* MINI MOTOS Section */}
+            {allProducts && allProducts.some(p => p.category?.toLowerCase() === 'mini motos' || p.category?.toLowerCase() === 'mini moto') && (
+                <section className="featured-section emotos-section">
+                    <div className="container">
+                        <div className="emotos-header">
+                            <h2>MINI MOTOS</h2>
+                            <Link href="/products?category=Mini%20Motos" className="shop-all-link">SHOP ALL</Link>
+                        </div>
+                        <div className="emotos-grid">
+                            {allProducts
+                                .filter(p => p.category?.toLowerCase() === 'mini motos' || p.category?.toLowerCase() === 'mini moto')
+                                .map((p) => (
+                                    <div key={p.id} className="emoto-card">
+                                        <Link href={`/products/${p.id}`}>
+                                            <div className="emoto-image-container">
+                                                {p.status === 'Draft' && <span className="badge-sold-out">SOLD OUT</span>}
+                                                <img src={p.images[0]} alt={p.name} />
+                                            </div>
+                                            <div className="emoto-info">
+                                                <h3 className="emoto-name">{p.name.toUpperCase()}</h3>
+                                                <div className="emoto-price">
+                                                    <span>${p.price.toFixed(2)}</span>
+                                                    {p.compareAtPrice && <span className="compare-price">${p.compareAtPrice.toFixed(2)}</span>}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* EMOTOS Section */}
             <section className="featured-section emotos-section">
                 <div className="container">

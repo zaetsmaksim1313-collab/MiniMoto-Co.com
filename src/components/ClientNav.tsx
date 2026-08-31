@@ -120,6 +120,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                             <li className="nav-dropdown-parent" style={{ position: 'relative', padding: '1rem 0', margin: '-1rem 0' }}>
                                 <a href="#" onClick={(e) => e.preventDefault()} style={{ color: '#fff', textDecoration: 'none' }}>MINI MOTOS</a>
                                 <ul className="nav-dropdown" style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: '#000', listStyle: 'none', padding: '1rem', margin: 0, display: 'none', flexDirection: 'column', gap: '1rem', border: '1px solid #333', minWidth: '200px', zIndex: 1000, borderRadius: '8px' }}>
+                                    <li><Link href="/products?category=Mini%20Motos" style={{ color: '#fff', textDecoration: 'none' }}>MINI MOTOS</Link></li>
                                     <li><Link href="/products?category=Emotos" style={{ color: '#fff', textDecoration: 'none' }}>EMOTOS</Link></li>
                                     <li><Link href="/products?category=E%20Bikes" style={{ color: '#fff', textDecoration: 'none' }}>E BIKES</Link></li>
                                     <li><Link href="/products?category=E%20Scooters" style={{ color: '#fff', textDecoration: 'none' }}>E SCOOTERS</Link></li>
@@ -164,6 +165,7 @@ export default function ClientNav({ children }: { children: React.ReactNode }) {
                             </div>
                             {motosDropdownOpen && (
                                 <div className="mobile-subnav">
+                                    <Link href="/products?category=Mini%20Motos" onClick={closeMobileMenu}>• MINI MOTOS</Link>
                                     <Link href="/products?category=Emotos" onClick={closeMobileMenu}>• EMOTOS</Link>
                                     <Link href="/products?category=E%20Bikes" onClick={closeMobileMenu}>• E BIKES</Link>
                                     <Link href="/products?category=E%20Scooters" onClick={closeMobileMenu}>• E SCOOTERS</Link>
