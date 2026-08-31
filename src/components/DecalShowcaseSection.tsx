@@ -460,25 +460,58 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                 }
 
                 @media (max-width: 650px) {
-                    .stacked-compare-viewport {
-                        height: 520px;
+                    .decal-showcase-section {
+                        padding: 4.5rem 0 4rem 0;
                     }
-                    .stacked-card {
-                        width: 240px;
+                    .decal-showcase-inner {
+                        gap: 2.5rem;
+                        padding: 0 1rem;
                     }
-                    .card-top {
-                        transform: rotate(-2deg) translateX(-10px);
+                    .decal-title {
+                        font-size: clamp(1.8rem, 8vw, 2.8rem);
                     }
-                    .card-bottom {
-                        transform: rotate(2deg) translateX(10px) translateY(-18px);
+                    .decal-description {
+                        font-size: 0.92rem;
+                        padding: 0 0.5rem;
+                    }
+                    .stacked-slider-wrapper {
+                        gap: 0.8rem;
+                    }
+                    .slider-top-labels {
+                        padding: 0 0.25rem;
+                    }
+                    .label-side {
+                        font-size: 0.75rem;
                     }
                     .label-instruction {
                         display: none;
                     }
+                    .stacked-compare-viewport {
+                        height: clamp(440px, 62vh, 540px);
+                        border-radius: 18px;
+                    }
+                    .stacked-layer {
+                        padding: 1.2rem 0.5rem;
+                        gap: 0.8rem;
+                    }
+                    .stacked-card {
+                        width: min(260px, 72vw);
+                        border-radius: 14px;
+                    }
+                    .card-top {
+                        transform: rotate(-2deg) translateX(-8px);
+                    }
+                    .card-bottom {
+                        transform: rotate(2deg) translateX(8px) translateY(-14px);
+                    }
+                    .drag-knob {
+                        width: 42px;
+                        height: 42px;
+                    }
                     .btn-make-your-own {
                         width: 100%;
-                        padding: 18px 30px;
-                        font-size: 1rem;
+                        padding: 16px 24px;
+                        font-size: 0.95rem;
                     }
                 }
             `}</style>
