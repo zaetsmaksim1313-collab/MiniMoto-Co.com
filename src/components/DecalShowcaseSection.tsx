@@ -8,7 +8,7 @@ interface DecalShowcaseSectionProps {
 }
 
 export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
-    const displayImages = images.length > 0 ? images : [
+    const displayImages = images && images.length > 0 ? images : [
         "/custom 1.JPG",
         "/custom 2.JPG",
         "/custom 3.JPG",
@@ -22,7 +22,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                 {/* Header Block */}
                 <div className="decal-header-block">
                     <div className="decal-badge">
-                        <span className="badge-sparkle">✦</span> 1-OF-1 BESPOKE MOTORSPORT LAB
+                        <span className="badge-sparkle">✦</span> 1-OF-1 BESPOKE DECAL LAB
                     </div>
                     <h2 className="decal-title">
                         BUILD YOUR 1/1 CUSTOM DECAL
@@ -39,7 +39,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
 
                 {/* Showcase Photo Grid */}
                 <div className="decal-gallery-grid">
-                    {displayImages.slice(0, 6).map((imgUrl, idx) => (
+                    {displayImages.map((imgUrl, idx) => (
                         <div key={idx} className={`decal-gallery-card card-${idx}`}>
                             <div className="card-image-wrap">
                                 <img src={imgUrl} alt={`Custom Decal Build ${idx + 1}`} className="card-img" />
@@ -51,33 +51,6 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                         </div>
                     ))}
                 </div>
-
-                {/* Subfooter banner inside section */}
-                <div className="decal-trust-bar">
-                    <div className="trust-item">
-                        <span className="trust-icon">⚡</span>
-                        <div>
-                            <strong>Instant Live Preview</strong>
-                            <p>Real-time visual editor</p>
-                        </div>
-                    </div>
-                    <div className="trust-divider" />
-                    <div className="trust-item">
-                        <span className="trust-icon">🏁</span>
-                        <div>
-                            <strong>Race-Grade Vinyl</strong>
-                            <p>High-tack &amp; weatherproof</p>
-                        </div>
-                    </div>
-                    <div className="trust-divider" />
-                    <div className="trust-item">
-                        <span className="trust-icon">✨</span>
-                        <div>
-                            <strong>Direct Order Print</strong>
-                            <p>Sent straight to production</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <style jsx>{`
@@ -85,7 +58,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     position: relative;
                     background: #08080a;
                     color: #ffffff;
-                    padding: 6.5rem 0 5.5rem 0;
+                    padding: 6.5rem 0 6rem 0;
                     border-bottom: 1px solid #1c1c22;
                     overflow: hidden;
                 }
@@ -261,61 +234,9 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     letter-spacing: 0.05em;
                 }
 
-                /* Trust Bar */
-                .decal-trust-bar {
-                    display: flex;
-                    justify-content: space-around;
-                    align-items: center;
-                    width: 100%;
-                    max-width: 960px;
-                    padding: 1.8rem 2.5rem;
-                    background: rgba(255, 255, 255, 0.03);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    border-radius: 16px;
-                    backdrop-filter: blur(12px);
-                }
-
-                .trust-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-
-                .trust-icon {
-                    font-size: 1.8rem;
-                }
-
-                .trust-item strong {
-                    display: block;
-                    font-size: 0.95rem;
-                    font-weight: 800;
-                    letter-spacing: 0.02em;
-                }
-
-                .trust-item p {
-                    margin: 2px 0 0 0;
-                    font-size: 0.8rem;
-                    color: rgba(255, 255, 255, 0.55);
-                }
-
-                .trust-divider {
-                    width: 1px;
-                    height: 40px;
-                    background: rgba(255, 255, 255, 0.1);
-                }
-
                 @media (max-width: 900px) {
                     .decal-gallery-grid {
                         grid-template-columns: repeat(2, 1fr);
-                    }
-                    .decal-trust-bar {
-                        flex-direction: column;
-                        gap: 1.5rem;
-                        align-items: flex-start;
-                        padding: 1.5rem;
-                    }
-                    .trust-divider {
-                        display: none;
                     }
                 }
 

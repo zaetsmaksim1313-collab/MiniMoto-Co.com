@@ -98,13 +98,15 @@ export async function updateMakeItYoursImages(images: string[]) {
     await ensureDb();
     try {
         await sql`
-            UPDATE site_settings 
-            SET value = ${JSON.stringify(images)}::jsonb 
-            WHERE key = 'make_it_yours_images'
+            INSERT INTO site_settings (key, value) 
+            VALUES ('make_it_yours_images', ${JSON.stringify(images)}::jsonb)
+            ON CONFLICT (key) DO UPDATE 
+            SET value = ${JSON.stringify(images)}::jsonb
         `;
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (e: any) {
+        console.error("Failed to update decal showcase images:", e);
         return { success: false, error: e.message };
     }
 }
