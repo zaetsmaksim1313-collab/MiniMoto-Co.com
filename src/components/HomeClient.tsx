@@ -389,9 +389,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                 }
 
                 .hero-amp {
-                    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 40%, #9ca3af 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                    color: #ffffff;
                     font-style: italic;
                     padding: 0 0.05em;
                 }
