@@ -36,12 +36,14 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
 
     const [pairs, setPairs] = useState<BuildPair[]>(getInitialPairs());
     const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
     const [activeUploadSlot, setActiveUploadSlot] = useState<{ buildIdx: number; type: 'designer' | 'printed' } | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleSave = async () => {
         setStatus('saving');
-        // Flatten into the 8-item array format [d1, d2, p1, p2, p3, d3, d4, p4] or clean sequential [d1, p1, d2, p2, d3, p3, d4, p4]
+        setErrorMessage('');
+
         const flatList: string[] = [
             pairs[0].designer,
             pairs[1].designer,
@@ -53,17 +55,40 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
             pairs[3].printed,
         ];
 
-        const result = await updateMakeItYoursImages(flatList);
-        if (result.success) {
-            setStatus('success');
-            setTimeout(() => setStatus('idle'), 2500);
-        } else {
-            console.error(result.error);
+        try {
+            // First try high-speed API route
+            const res = await fetch('/api/admin/save-showcase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ images: flatList }),
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    setStatus('success');
+                    setTimeout(() => setStatus('idle'), 3000);
+                    return;
+                }
+            }
+
+            // Fallback to server action
+            const actionRes = await updateMakeItYoursImages(flatList);
+            if (actionRes.success) {
+                setStatus('success');
+                setTimeout(() => setStatus('idle'), 3000);
+            } else {
+                throw new Error(actionRes.error || 'Server error saving images');
+            }
+        } catch (e: any) {
+            console.error("Save error:", e);
             setStatus('error');
-            setTimeout(() => setStatus('idle'), 4000);
+            setErrorMessage(e.message || 'Failed to save. Please try again.');
+            setTimeout(() => setStatus('idle'), 5000);
         }
     };
 
+    // Client-side smart compression for instant uploads
     const processImageFile = (file: File, buildIdx: number, type: 'designer' | 'printed') => {
         if (!file.type.startsWith('image/')) return;
         const reader = new FileReader();
@@ -73,7 +98,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const MAX_DIMENSION = 2000; // High resolution
+                const MAX_DIMENSION = 1000; // Optimal web resolution (~70KB per photo)
 
                 if (width > height && width > MAX_DIMENSION) {
                     height *= MAX_DIMENSION / width;
@@ -83,12 +108,17 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                     height = MAX_DIMENSION;
                 }
 
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = Math.round(width);
+                canvas.height = Math.round(height);
                 const ctx = canvas.getContext('2d');
-                ctx?.drawImage(img, 0, 0, width, height);
+                if (ctx) {
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                }
 
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                // Crisp, lightweight JPEG compression
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
                 setPairs(prev => {
                     const next = [...prev];
                     next[buildIdx] = {
@@ -391,7 +421,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                 )}
                 {status === 'error' && (
                     <span style={{ color: '#dc2626', fontSize: '0.95rem', fontWeight: 700 }}>
-                        ✕ Error saving. Please try again.
+                        ✕ {errorMessage || 'Error saving. Please try again.'}
                     </span>
                 )}
             </div>
