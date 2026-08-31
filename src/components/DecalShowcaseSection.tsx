@@ -314,49 +314,45 @@ function BeforeAfterCard({ designerImg, printedImg, title, index }: { designerIm
 }
 
 export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
-    // Parse the 4 Before & After pairs
-    // If structured objects exist, use them; otherwise pair from array of 8 images
     const rawList = images.map(item => (typeof item === 'string' ? item : ''));
 
-    // Default fallback pairs if not yet populated
+    // Default fallback sample pairs if nothing in DB yet
     const defaultPairs: DecalPair[] = [
         {
-            designer: rawList[0] || "/custom 1.JPG",
-            printed: rawList[2] || rawList[1] || "/custom 2.JPG",
-            title: "Custom Decal Build #1",
+            designer: "/custom 1.JPG",
+            printed: "/custom 2.JPG",
+            title: "Custom Build #1",
         },
         {
-            designer: rawList[1] || rawList[2] || "/custom 3.JPG",
-            printed: rawList[3] || "/custom 4.JPG",
-            title: "Custom Decal Build #2",
+            designer: "/custom 3.JPG",
+            printed: "/custom 4.JPG",
+            title: "Custom Build #2",
         },
         {
-            designer: rawList[5] || rawList[4] || "/custom 5.JPG",
-            printed: rawList[4] || rawList[5] || "/custom 1.JPG",
-            title: "Custom Decal Build #3",
+            designer: "/custom 5.JPG",
+            printed: "/custom 1.JPG",
+            title: "Custom Build #3",
         },
         {
-            designer: rawList[6] || "/custom 2.JPG",
-            printed: rawList[7] || "/custom 3.JPG",
-            title: "Custom Decal Build #4",
+            designer: "/custom 2.JPG",
+            printed: "/custom 3.JPG",
+            title: "Custom Build #4",
         }
     ];
 
-    // Build the 4 pairs smartly
     const pairs: DecalPair[] = [];
     if (rawList.length >= 8) {
-        // 4 designer + 4 printed
         pairs.push(
-            { designer: rawList[0], printed: rawList[2] || rawList[1], title: "Build #1" },
-            { designer: rawList[1], printed: rawList[3] || rawList[4], title: "Build #2" },
-            { designer: rawList[5] || rawList[4], printed: rawList[4] || rawList[5], title: "Build #3" },
-            { designer: rawList[6], printed: rawList[7], title: "Build #4" }
+            { designer: rawList[0] || defaultPairs[0].designer, printed: rawList[1] || defaultPairs[0].printed, title: "Build #1" },
+            { designer: rawList[2] || defaultPairs[1].designer, printed: rawList[3] || defaultPairs[1].printed, title: "Build #2" },
+            { designer: rawList[4] || defaultPairs[2].designer, printed: rawList[5] || defaultPairs[2].printed, title: "Build #3" },
+            { designer: rawList[6] || defaultPairs[3].designer, printed: rawList[7] || defaultPairs[3].printed, title: "Build #4" }
         );
-    } else if (rawList.length >= 4) {
+    } else if (rawList.length >= 2) {
         for (let i = 0; i < 4; i++) {
             pairs.push({
-                designer: rawList[i] || defaultPairs[i].designer,
-                printed: rawList[i + 4] || rawList[i + 1] || defaultPairs[i].printed,
+                designer: rawList[i * 2] || defaultPairs[i].designer,
+                printed: rawList[i * 2 + 1] || defaultPairs[i].printed,
                 title: `Build #${i + 1}`,
             });
         }

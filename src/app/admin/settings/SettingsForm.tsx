@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { updateMakeItYoursImages } from '../actions';
 
 interface BuildPair {
@@ -8,8 +9,10 @@ interface BuildPair {
     printed: string;
 }
 
-export default function SettingsForm({ initialImages }: { initialImages: string[] }) {
-    // Convert flat initialImages to 4 pairs
+export default function SettingsForm({ initialImages }: { initialImages: any[] }) {
+    const router = useRouter();
+
+    // Parse initial images into 4 pairs cleanly
     const getInitialPairs = (): BuildPair[] => {
         const pairs: BuildPair[] = [
             { designer: '', printed: '' },
@@ -18,17 +21,33 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
             { designer: '', printed: '' },
         ];
 
-        if (initialImages && initialImages.length >= 8) {
-            pairs[0] = { designer: initialImages[0] || '', printed: initialImages[2] || initialImages[1] || '' };
-            pairs[1] = { designer: initialImages[1] || '', printed: initialImages[3] || initialImages[4] || '' };
-            pairs[2] = { designer: initialImages[5] || initialImages[4] || '', printed: initialImages[4] || initialImages[5] || '' };
-            pairs[3] = { designer: initialImages[6] || '', printed: initialImages[7] || '' };
-        } else if (initialImages) {
+        if (!initialImages || !Array.isArray(initialImages) || initialImages.length === 0) {
+            return pairs;
+        }
+
+        // Case 1: Structured pair objects
+        if (typeof initialImages[0] === 'object' && initialImages[0] !== null) {
             for (let i = 0; i < 4; i++) {
-                pairs[i] = {
-                    designer: initialImages[i] || '',
-                    printed: initialImages[i + 4] || '',
-                };
+                if (initialImages[i]) {
+                    pairs[i] = {
+                        designer: initialImages[i].designer || '',
+                        printed: initialImages[i].printed || '',
+                    };
+                }
+            }
+            return pairs;
+        }
+
+        // Case 2: Sequential paired array [d0, p0, d1, p1, d2, p2, d3, p3]
+        if (initialImages.length >= 8) {
+            // Check if user uploaded in alternate or block format
+            pairs[0] = { designer: initialImages[0] || '', printed: initialImages[1] || '' };
+            pairs[1] = { designer: initialImages[2] || '', printed: initialImages[3] || '' };
+            pairs[2] = { designer: initialImages[4] || '', printed: initialImages[5] || '' };
+            pairs[3] = { designer: initialImages[6] || '', printed: initialImages[7] || '' };
+        } else {
+            for (let i = 0; i < Math.min(initialImages.length, 4); i++) {
+                pairs[i].designer = initialImages[i] || '';
             }
         }
         return pairs;
@@ -44,19 +63,20 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
         setStatus('saving');
         setErrorMessage('');
 
+        // Store sequential paired array [d0, p0, d1, p1, d2, p2, d3, p3]
         const flatList: string[] = [
-            pairs[0].designer,
-            pairs[1].designer,
-            pairs[0].printed,
-            pairs[1].printed,
-            pairs[2].printed,
-            pairs[2].designer,
-            pairs[3].designer,
-            pairs[3].printed,
+            pairs[0].designer || '',
+            pairs[0].printed || '',
+            pairs[1].designer || '',
+            pairs[1].printed || '',
+            pairs[2].designer || '',
+            pairs[2].printed || '',
+            pairs[3].designer || '',
+            pairs[3].printed || '',
         ];
 
         try {
-            // First try high-speed API route
+            // High speed API route
             const res = await fetch('/api/admin/save-showcase', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -67,6 +87,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                 const data = await res.json();
                 if (data.success) {
                     setStatus('success');
+                    router.refresh();
                     setTimeout(() => setStatus('idle'), 3000);
                     return;
                 }
@@ -76,6 +97,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
             const actionRes = await updateMakeItYoursImages(flatList);
             if (actionRes.success) {
                 setStatus('success');
+                router.refresh();
                 setTimeout(() => setStatus('idle'), 3000);
             } else {
                 throw new Error(actionRes.error || 'Server error saving images');
@@ -88,7 +110,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
         }
     };
 
-    // Client-side smart compression for instant uploads
+    // Client-side smart compression for fast uploads
     const processImageFile = (file: File, buildIdx: number, type: 'designer' | 'printed') => {
         if (!file.type.startsWith('image/')) return;
         const reader = new FileReader();
@@ -98,7 +120,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const MAX_DIMENSION = 1000; // Optimal web resolution (~70KB per photo)
+                const MAX_DIMENSION = 900; // Optimal retina resolution (~60KB per photo)
 
                 if (width > height && width > MAX_DIMENSION) {
                     height *= MAX_DIMENSION / width;
@@ -117,8 +139,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 }
 
-                // Crisp, lightweight JPEG compression
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
                 setPairs(prev => {
                     const next = [...prev];
                     next[buildIdx] = {
@@ -186,7 +207,7 @@ export default function SettingsForm({ initialImages }: { initialImages: string[
                 color: '#3f3f46',
                 lineHeight: 1.5,
             }}>
-                <strong>💡 4 Before &amp; After Comparison Builds:</strong> Each build pairs an <em>"In The Designer"</em> digital decal image with the corresponding <em>"Printed Out"</em> physical bike photo. Customers can drag an interactive slider to compare both!
+                <strong>💡 4 Before &amp; After Comparison Builds:</strong> Each build pairs an <em>"In The Designer"</em> digital decal image with the corresponding <em>"Printed Out"</em> physical bike photo.
             </div>
 
             {/* 4 Build Pairs Grid */}

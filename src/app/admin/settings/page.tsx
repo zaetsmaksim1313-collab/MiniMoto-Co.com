@@ -1,6 +1,9 @@
 import { getMakeItYoursImages } from "@/lib/products";
 import SettingsForm from "./SettingsForm";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function SettingsPage() {
     const images = await getMakeItYoursImages();
 
@@ -13,7 +16,7 @@ export default async function SettingsPage() {
             <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                 <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', marginTop: 0 }}>1/1 Custom Decal Lab &amp; Builds Showcase (Homepage)</h2>
                 <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '1.5rem' }}>
-                    Upload, switch, reorder, or remove photos displayed in the second section of the homepage ("Build Your 1/1 Custom Decal").
+                    Upload, switch, or replace photos for the 4 Before &amp; After comparison builds displayed on the homepage.
                 </p>
 
                 <SettingsForm initialImages={images} />
