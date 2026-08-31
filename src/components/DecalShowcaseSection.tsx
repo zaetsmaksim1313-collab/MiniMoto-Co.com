@@ -10,31 +10,28 @@ interface DecalShowcaseSectionProps {
 export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
     const rawList = images.map(item => (typeof item === 'string' ? item : ''));
 
-    // Fallback sample photos
-    const defaultDesigner = ["/custom 1.JPG", "/custom 3.JPG", "/custom 5.JPG", "/custom 2.JPG"];
-    const defaultPrinted = ["/custom 2.JPG", "/custom 4.JPG", "/custom 1.JPG", "/custom 3.JPG"];
+    // 2 Decal designs and 2 corresponding Bike photos
+    const defaultDecals = ["/custom 1.JPG", "/custom 3.JPG"];
+    const defaultBikes = ["/custom 2.JPG", "/custom 4.JPG"];
 
-    // Match the 4 designer photos and the 4 printed bike photos from the user's uploaded images
-    let designerPhotos: string[] = [];
-    let printedPhotos: string[] = [];
+    let decal1 = defaultDecals[0];
+    let decal2 = defaultDecals[1];
+    let bike1 = defaultBikes[0];
+    let bike2 = defaultBikes[1];
 
     if (rawList.length >= 8) {
-        // If uploaded in [d1, d2, p1, p2, p3, d3, d4, p4] order from admin
-        designerPhotos = [
-            rawList[0] || defaultDesigner[0],
-            rawList[1] || defaultDesigner[1],
-            rawList[5] || rawList[2] || defaultDesigner[2],
-            rawList[6] || rawList[3] || defaultDesigner[3],
-        ];
-        printedPhotos = [
-            rawList[2] || defaultPrinted[0],
-            rawList[3] || defaultPrinted[1],
-            rawList[4] || defaultPrinted[2],
-            rawList[7] || defaultPrinted[3],
-        ];
-    } else {
-        designerPhotos = defaultDesigner;
-        printedPhotos = defaultPrinted;
+        decal1 = rawList[0] || defaultDecals[0];
+        bike1 = rawList[2] || defaultBikes[0];
+        decal2 = rawList[1] || defaultDecals[1];
+        bike2 = rawList[3] || defaultBikes[1];
+    } else if (rawList.length >= 4) {
+        decal1 = rawList[0] || defaultDecals[0];
+        bike1 = rawList[1] || defaultBikes[0];
+        decal2 = rawList[2] || defaultDecals[1];
+        bike2 = rawList[3] || defaultBikes[1];
+    } else if (rawList.length >= 2) {
+        decal1 = rawList[0] || defaultDecals[0];
+        bike1 = rawList[1] || defaultBikes[0];
     }
 
     const [sliderPos, setSliderPos] = useState(50); // percentage 0 - 100
@@ -77,8 +74,8 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     </p>
                 </div>
 
-                {/* ── UNIFIED 4-BUILD SLIDER COMPARISON CONTAINER ── */}
-                <div className="showcase-slider-wrapper">
+                {/* ── UNIFIED 2-BUILD STACKED SLIDER SHOWCASE ── */}
+                <div className="stacked-slider-wrapper">
                     {/* Header Side Labels */}
                     <div className="slider-top-labels">
                         <div className="label-side left">
@@ -86,7 +83,7 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                             <strong>IN THE DESIGNER</strong>
                         </div>
                         <div className="label-instruction">
-                            ← Drag center slider to reveal printed bikes →
+                            ← Drag slider to reveal printed bikes →
                         </div>
                         <div className="label-side right">
                             <strong>PRINTED OUT</strong>
@@ -94,43 +91,53 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                         </div>
                     </div>
 
-                    {/* Interactive 4-Card Wipe Viewport */}
+                    {/* Interactive Stacked Wipe Viewport */}
                     <div
                         ref={containerRef}
-                        className="multi-compare-viewport"
+                        className="stacked-compare-viewport"
                         onMouseDown={() => setIsDragging(true)}
                         onMouseUp={() => setIsDragging(false)}
                         onMouseLeave={() => setIsDragging(false)}
                         onMouseMove={handleMouseMove}
                         onTouchMove={handleTouchMove}
                     >
-                        {/* UNDER LAYER: 4 PRINTED ON BIKE PHOTOS */}
-                        <div className="multi-grid-layer printed-layer">
-                            {printedPhotos.map((imgUrl, idx) => (
-                                <div key={idx} className="square-photo-card">
-                                    <img
-                                        src={imgUrl}
-                                        alt={`Printed Bike ${idx + 1}`}
-                                        className="square-img printed-img"
-                                    />
-                                </div>
-                            ))}
+                        {/* UNDER LAYER: 2 STACKED PRINTED BIKE PHOTOS */}
+                        <div className="stacked-layer bikes-layer">
+                            <div className="stacked-card card-top">
+                                <img
+                                    src={bike1}
+                                    alt="Printed Bike Build 1"
+                                    className="stacked-img bike-img"
+                                />
+                            </div>
+                            <div className="stacked-card card-bottom">
+                                <img
+                                    src={bike2}
+                                    alt="Printed Bike Build 2"
+                                    className="stacked-img bike-img"
+                                />
+                            </div>
                         </div>
 
-                        {/* TOP LAYER: 4 IN THE DESIGNER PHOTOS (CLIPPED BY SLIDER) */}
+                        {/* TOP LAYER: 2 STACKED IN THE DESIGNER DECALS (CLIPPED BY SLIDER) */}
                         <div
-                            className="multi-grid-layer designer-layer"
+                            className="stacked-layer decals-layer"
                             style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
                         >
-                            {designerPhotos.map((imgUrl, idx) => (
-                                <div key={idx} className="square-photo-card designer-card">
-                                    <img
-                                        src={imgUrl}
-                                        alt={`Designer Decal ${idx + 1}`}
-                                        className="square-img designer-img"
-                                    />
-                                </div>
-                            ))}
+                            <div className="stacked-card card-top decal-card">
+                                <img
+                                    src={decal1}
+                                    alt="Designer Decal 1"
+                                    className="stacked-img decal-img"
+                                />
+                            </div>
+                            <div className="stacked-card card-bottom decal-card">
+                                <img
+                                    src={decal2}
+                                    alt="Designer Decal 2"
+                                    className="stacked-img decal-img"
+                                />
+                            </div>
                         </div>
 
                         {/* ONE SINGLE BIG DRAGGABLE SLIDER DIVIDER */}
@@ -224,10 +231,10 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     color: #000000;
                 }
 
-                /* Showcase Slider Container */
-                .showcase-slider-wrapper {
+                /* Stacked Showcase Slider */
+                .stacked-slider-wrapper {
                     width: 100%;
-                    max-width: 1240px;
+                    max-width: 680px;
                     display: flex;
                     flex-direction: column;
                     gap: 1rem;
@@ -271,67 +278,83 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     background: #71717a;
                 }
 
-                /* Multi-Card Comparison Viewport */
-                .multi-compare-viewport {
+                /* Stacked Viewport */
+                .stacked-compare-viewport {
                     position: relative;
                     width: 100%;
+                    height: 640px;
                     background: #ffffff;
-                    border-radius: 20px;
+                    border-radius: 24px;
                     overflow: hidden;
                     border: 2px solid #18181b;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+                    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.12);
                     cursor: ew-resize;
                     user-select: none;
                     touch-action: none;
                 }
 
-                .multi-grid-layer {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 1.25rem;
-                    padding: 1.25rem;
-                    width: 100%;
-                    background: #ffffff;
-                }
-
-                .designer-layer {
+                .stacked-layer {
                     position: absolute;
                     inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1.5rem;
+                    padding: 2rem;
                     background: #ffffff;
                 }
 
-                .square-photo-card {
+                .decals-layer {
+                    z-index: 10;
+                }
+
+                .stacked-card {
                     position: relative;
+                    width: 320px;
                     aspect-ratio: 1 / 1;
-                    width: 100%;
-                    border-radius: 14px;
+                    border-radius: 18px;
                     overflow: hidden;
                     background: #f4f4f5;
                     border: 1.5px solid #e4e4e7;
-                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+                    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
+                    transition: transform 0.3s ease;
                 }
 
-                .designer-card {
+                /* Staggered overlapping stack */
+                .card-top {
+                    transform: rotate(-2.5deg) translateX(-18px);
+                    z-index: 1;
+                }
+
+                .card-bottom {
+                    transform: rotate(2.5deg) translateX(18px) translateY(-25px);
+                    z-index: 2;
+                }
+
+                .decal-card {
                     background: #ffffff;
                 }
 
-                .square-img {
+                .stacked-img {
                     width: 100%;
                     height: 100%;
                     display: block;
                     image-rendering: -webkit-optimize-contrast;
                 }
 
-                .printed-img {
+                .bike-img {
                     object-fit: cover;
                 }
 
-                .designer-img {
+                .decal-img {
                     object-fit: contain;
-                    padding: 4%;
+                    padding: 6%;
                 }
 
-                /* Master Slider Center Divider */
+                /* Master Slider Divider */
                 .master-slider-bar {
                     position: absolute;
                     top: 0;
@@ -400,18 +423,22 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
                     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
                 }
 
-                @media (max-width: 950px) {
-                    .multi-grid-layer {
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 1rem;
-                        padding: 1rem;
+                @media (max-width: 650px) {
+                    .stacked-compare-viewport {
+                        height: 520px;
+                    }
+                    .stacked-card {
+                        width: 240px;
+                    }
+                    .card-top {
+                        transform: rotate(-2deg) translateX(-10px);
+                    }
+                    .card-bottom {
+                        transform: rotate(2deg) translateX(10px) translateY(-18px);
                     }
                     .label-instruction {
                         display: none;
                     }
-                }
-
-                @media (max-width: 550px) {
                     .btn-make-your-own {
                         width: 100%;
                         padding: 18px 30px;
