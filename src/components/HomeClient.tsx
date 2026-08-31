@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/lib/products";
-import MakeItYoursSection from "./MakeItYoursSection";
+import DecalShowcaseSection from "./DecalShowcaseSection";
 
 export default function HomeClient({ featuredProducts, ebikes, pedalBikes, accessories, allProducts, makeItYoursImages }: { featuredProducts: Product[], ebikes?: Product[], pedalBikes?: Product[], accessories?: Product[], allProducts?: Product[], makeItYoursImages: string[] }) {
     const [scrollY, setScrollY] = useState(0);
@@ -70,14 +70,14 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
             {/* ── CINEMATIC HERO ─────────────────────────────────────────── */}
             <section className="hero">
                 {/* Parallax photo layer */}
-                <div className="hero-photo-wrap" style={{ transform: `translateY(${scrollY * 0.32}px)` }}>
+                <div className="hero-photo-wrap" style={{ transform: `translateY(${scrollY * 0.22}px)` }}>
                     <img src="/hero-bikes.jpg" alt="Minimoto&amp;Co bikes" className="hero-photo" />
                 </div>
 
-                {/* Multi-stop gradient overlay */}
+                {/* Multi-stop gradient overlay with clear contrast */}
                 <div className="hero-overlay" />
 
-                {/* Bottom fade to white for smooth section transition */}
+                {/* Bottom fade to dark for seamless transition into the Decal Lab section */}
                 <div className="hero-bottom-fade" />
 
                 {/* Content */}
@@ -85,7 +85,7 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                     {/* Eyebrow badge */}
                     <div className="hero-badge animate-fade-in-up">
                         <span className="hero-badge-dot" />
-                        Est. 2024 &nbsp;·&nbsp; Custom Mini Motos &nbsp;·&nbsp; USA
+                        Est. 2024 &nbsp;·&nbsp; Custom Mini Motos &nbsp;·&nbsp; 🌴 San Diego, California
                     </div>
 
                     {/* Brand name */}
@@ -100,25 +100,27 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
 
                     {/* Supporting copy */}
                     <p className="hero-sub animate-fade-in-up delay-3">
-                        Hand-built. Fully custom. The highest-quality mini electric motos on the market.
+                        Hand-built. Fully custom. The highest quality mini motos on the market.
                     </p>
 
                     {/* CTAs */}
                     <div className="hero-ctas animate-fade-in-up delay-3">
                         <Link href="/products" className="btn-hero-primary">Shop the Collection</Link>
-                        <Link href="/decal-builder" className="btn-hero-ghost">Build a Decal →</Link>
                     </div>
 
                     {/* Stat bar */}
                     <div className="hero-stats animate-fade-in-up delay-3">
                         <div className="hero-stat"><span className="stat-num">100%</span><span className="stat-label">Custom Builds</span></div>
                         <div className="hero-stat-divider" />
-                        <div className="hero-stat"><span className="stat-num">4</span><span className="stat-label">Models Available</span></div>
+                        <div className="hero-stat"><span className="stat-num">24</span><span className="stat-label">Models Available</span></div>
                         <div className="hero-stat-divider" />
                         <div className="hero-stat"><span className="stat-num">∞</span><span className="stat-label">Colorways</span></div>
                     </div>
                 </div>
             </section>
+
+            {/* ── 1/1 CUSTOM DECAL LAB SHOWCASE SECTION ────────────────────── */}
+            <DecalShowcaseSection images={makeItYoursImages} />
 
             {/* EMOTOS Section */}
             <section className="featured-section emotos-section">
@@ -281,17 +283,18 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                 .hero {
                     position: relative;
                     height: 100vh;
-                    min-height: 640px;
+                    min-height: 680px;
                     width: 100%;
                     overflow: hidden;
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     background: #000;
                 }
 
                 .hero-photo-wrap {
                     position: absolute;
-                    inset: -14% 0;
+                    inset: -5% 0;
                     will-change: transform;
                 }
 
@@ -299,112 +302,120 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    object-position: center 60%;
+                    object-position: center 48%;
                     display: block;
                 }
 
-                /* Dark radial + linear combo overlay */
+                /* Dark radial + linear combo overlay with rich contrast */
                 .hero-overlay {
                     position: absolute;
                     inset: 0;
                     background:
-                        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.62) 100%),
-                        linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.0) 55%);
+                        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%),
+                        linear-gradient(to top, rgba(8,8,10,0.95) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.60) 100%);
                     z-index: 1;
                 }
 
-                /* Seamless fade into the white product section below */
+                /* Seamless fade into the dark Decal Lab showcase section below */
                 .hero-bottom-fade {
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    height: 180px;
-                    background: linear-gradient(to bottom, transparent, #ffffff);
+                    height: 160px;
+                    background: linear-gradient(to bottom, transparent, #08080a);
                     z-index: 2;
                 }
 
                 .hero-content {
                     position: relative;
                     z-index: 3;
-                    max-width: 860px;
+                    max-width: 880px;
                     text-align: center;
                     margin: 0 auto;
                     color: white;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 1.2rem;
-                    padding-bottom: 80px;
+                    gap: 1.25rem;
+                    padding-bottom: 60px;
                 }
 
                 /* Eyebrow badge */
                 .hero-badge {
                     display: inline-flex;
                     align-items: center;
-                    gap: 0.5rem;
-                    background: rgba(255,255,255,0.10);
-                    backdrop-filter: blur(12px);
-                    -webkit-backdrop-filter: blur(12px);
-                    border: 1px solid rgba(255,255,255,0.22);
+                    gap: 0.6rem;
+                    background: rgba(15, 15, 20, 0.75);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border: 1px solid rgba(255, 255, 255, 0.28);
                     border-radius: 999px;
-                    padding: 6px 18px;
-                    font-size: 0.72rem;
-                    font-weight: 700;
+                    padding: 8px 22px;
+                    font-size: 0.78rem;
+                    font-weight: 800;
                     letter-spacing: 0.12em;
                     text-transform: uppercase;
-                    color: rgba(255,255,255,0.90);
+                    color: #ffffff;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
                 }
 
                 .hero-badge-dot {
-                    width: 6px;
-                    height: 6px;
+                    width: 7px;
+                    height: 7px;
                     border-radius: 50%;
-                    background: #ff69b4;
+                    background: #ffffff;
                     display: inline-block;
-                    box-shadow: 0 0 8px #ff69b4;
+                    box-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255,255,255,0.9);
                     animation: pulse 2s infinite;
                 }
 
                 @keyframes pulse {
                     0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.6; transform: scale(1.4); }
+                    50% { opacity: 0.6; transform: scale(1.3); }
                 }
 
                 /* Giant brand wordmark */
                 .hero-wordmark {
-                    font-size: clamp(3.2rem, 9vw, 7rem);
-                    font-weight: 900;
-                    letter-spacing: -0.03em;
-                    line-height: 1;
+                    font-size: clamp(3.4rem, 9.5vw, 7.5rem);
+                    font-weight: 950;
+                    letter-spacing: -0.035em;
+                    line-height: 0.95;
                     text-transform: uppercase;
                     margin: 0;
-                    text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+                    color: #ffffff;
+                    text-shadow: 0 4px 30px rgba(0,0,0,0.85), 0 2px 6px rgba(0,0,0,0.95);
                 }
 
                 .hero-amp {
-                    color: #ff69b4;
+                    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 40%, #9ca3af 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
                     font-style: italic;
+                    padding: 0 0.05em;
                 }
 
                 /* Slogan */
                 .hero-slogan {
-                    font-size: clamp(1.3rem, 3.5vw, 2rem);
+                    font-size: clamp(1.4rem, 4vw, 2.2rem);
                     font-style: italic;
-                    font-weight: 300;
-                    letter-spacing: 0.01em;
+                    font-weight: 800;
+                    letter-spacing: -0.01em;
+                    text-transform: uppercase;
                     margin: 0;
-                    opacity: 0.92;
+                    color: #ffffff;
+                    text-shadow: 0 3px 20px rgba(0,0,0,0.9);
                 }
 
                 /* Sub-copy */
                 .hero-sub {
-                    font-size: clamp(0.85rem, 2vw, 1.05rem);
-                    font-weight: 400;
-                    color: rgba(255,255,255,0.72);
-                    max-width: 520px;
-                    line-height: 1.65;
+                    font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+                    font-weight: 500;
+                    color: rgba(255, 255, 255, 0.94);
+                    max-width: 580px;
+                    line-height: 1.6;
                     margin: 0;
+                    text-shadow: 0 2px 14px rgba(0,0,0,0.9);
                 }
 
                 /* CTA buttons */
@@ -413,65 +424,43 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                     gap: 1rem;
                     flex-wrap: wrap;
                     justify-content: center;
-                    margin-top: 0.4rem;
+                    margin-top: 0.5rem;
                 }
 
                 .btn-hero-primary {
                     display: inline-block;
-                    padding: 15px 36px;
-                    background: #fff;
-                    color: #000;
+                    padding: 18px 46px;
+                    background: #ffffff;
+                    color: #000000;
                     border-radius: 999px;
-                    font-weight: 800;
-                    font-size: 0.95rem;
-                    letter-spacing: 0.04em;
+                    font-weight: 900;
+                    font-size: 1rem;
+                    letter-spacing: 0.06em;
                     text-decoration: none;
                     text-transform: uppercase;
-                    transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
-                    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+                    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                    box-shadow: 0 10px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.3);
                 }
 
                 .btn-hero-primary:hover {
-                    background: #ff69b4;
-                    color: #fff;
-                    transform: translateY(-3px);
-                    box-shadow: 0 14px 36px rgba(255,105,180,0.4);
-                }
-
-                .btn-hero-ghost {
-                    display: inline-block;
-                    padding: 15px 36px;
-                    background: transparent;
-                    color: #fff;
-                    border: 1.5px solid rgba(255,255,255,0.55);
-                    border-radius: 999px;
-                    font-weight: 700;
-                    font-size: 0.95rem;
-                    letter-spacing: 0.04em;
-                    text-decoration: none;
-                    text-transform: uppercase;
-                    backdrop-filter: blur(8px);
-                    transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
-                }
-
-                .btn-hero-ghost:hover {
-                    background: rgba(255,255,255,0.15);
-                    border-color: #fff;
-                    transform: translateY(-3px);
+                    background: #e4e4e7;
+                    transform: translateY(-3px) scale(1.02);
+                    box-shadow: 0 16px 45px rgba(255,255,255,0.35);
                 }
 
                 /* Stat bar */
                 .hero-stats {
                     display: flex;
                     align-items: center;
-                    gap: 2rem;
-                    margin-top: 0.6rem;
-                    padding: 16px 28px;
-                    background: rgba(255,255,255,0.08);
-                    backdrop-filter: blur(14px);
-                    -webkit-backdrop-filter: blur(14px);
-                    border: 1px solid rgba(255,255,255,0.15);
-                    border-radius: 16px;
+                    gap: 2.2rem;
+                    margin-top: 0.8rem;
+                    padding: 16px 32px;
+                    background: rgba(15, 15, 20, 0.65);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                    border: 1px solid rgba(255, 255, 255, 0.20);
+                    border-radius: 18px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
                 }
 
                 .hero-stat {
@@ -482,29 +471,29 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                 }
 
                 .stat-num {
-                    font-size: 1.55rem;
+                    font-size: 1.6rem;
                     font-weight: 900;
                     letter-spacing: -0.02em;
-                    color: #fff;
+                    color: #ffffff;
                 }
 
                 .stat-label {
-                    font-size: 0.65rem;
-                    font-weight: 600;
+                    font-size: 0.68rem;
+                    font-weight: 700;
                     text-transform: uppercase;
-                    letter-spacing: 0.08em;
-                    color: rgba(255,255,255,0.55);
+                    letter-spacing: 0.1em;
+                    color: rgba(255, 255, 255, 0.65);
                 }
 
                 .hero-stat-divider {
                     width: 1px;
-                    height: 36px;
-                    background: rgba(255,255,255,0.18);
+                    height: 38px;
+                    background: rgba(255, 255, 255, 0.20);
                 }
 
                 /* Animations */
                 .animate-fade-in-up {
-                    animation: fadeInUp 0.8s cubic-bezier(0.25,1,0.5,1) both;
+                    animation: fadeInUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
                 }
                 .delay-1 { animation-delay: 0.15s; }
                 .delay-2 { animation-delay: 0.28s; }
@@ -517,9 +506,9 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
 
                 @media (max-width: 600px) {
                     .hero-stats { gap: 1.2rem; padding: 12px 18px; }
-                    .stat-num { font-size: 1.2rem; }
-                    .hero-ctas { flex-direction: column; align-items: center; }
-                    .btn-hero-primary, .btn-hero-ghost { width: 100%; text-align: center; }
+                    .stat-num { font-size: 1.25rem; }
+                    .hero-ctas { width: 100%; }
+                    .btn-hero-primary { width: 100%; text-align: center; }
                 }
 
                 .featured-section {

@@ -1,0 +1,330 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+
+interface DecalShowcaseSectionProps {
+    images?: string[];
+}
+
+export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSectionProps) {
+    const displayImages = images.length > 0 ? images : [
+        "/custom 1.JPG",
+        "/custom 2.JPG",
+        "/custom 3.JPG",
+        "/custom 4.JPG",
+        "/custom 5.JPG"
+    ];
+
+    return (
+        <section className="decal-showcase-section">
+            <div className="container decal-showcase-inner">
+                {/* Header Block */}
+                <div className="decal-header-block">
+                    <div className="decal-badge">
+                        <span className="badge-sparkle">✦</span> 1-OF-1 BESPOKE MOTORSPORT LAB
+                    </div>
+                    <h2 className="decal-title">
+                        BUILD YOUR 1/1 CUSTOM DECAL
+                    </h2>
+                    <p className="decal-description">
+                        Personalize your front plate with custom racing numbers, your rider name, sponsor logos, and tailored colorways. Designed live in our 2D Decal Lab and precision-printed for only <strong>$5.00</strong>.
+                    </p>
+                    <div className="decal-cta-wrapper">
+                        <Link href="/decal-builder" className="btn-decal-lab">
+                            Enter Decal Lab ($5.00) &nbsp;→
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Showcase Photo Grid */}
+                <div className="decal-gallery-grid">
+                    {displayImages.slice(0, 6).map((imgUrl, idx) => (
+                        <div key={idx} className={`decal-gallery-card card-${idx}`}>
+                            <div className="card-image-wrap">
+                                <img src={imgUrl} alt={`Custom Decal Build ${idx + 1}`} className="card-img" />
+                                <div className="card-overlay">
+                                    <span className="card-tag">1/1 CUSTOM</span>
+                                    <span className="card-cta">Design Yours →</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Subfooter banner inside section */}
+                <div className="decal-trust-bar">
+                    <div className="trust-item">
+                        <span className="trust-icon">⚡</span>
+                        <div>
+                            <strong>Instant Live Preview</strong>
+                            <p>Real-time visual editor</p>
+                        </div>
+                    </div>
+                    <div className="trust-divider" />
+                    <div className="trust-item">
+                        <span className="trust-icon">🏁</span>
+                        <div>
+                            <strong>Race-Grade Vinyl</strong>
+                            <p>High-tack &amp; weatherproof</p>
+                        </div>
+                    </div>
+                    <div className="trust-divider" />
+                    <div className="trust-item">
+                        <span className="trust-icon">✨</span>
+                        <div>
+                            <strong>Direct Order Print</strong>
+                            <p>Sent straight to production</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style jsx>{`
+                .decal-showcase-section {
+                    position: relative;
+                    background: #08080a;
+                    color: #ffffff;
+                    padding: 6.5rem 0 5.5rem 0;
+                    border-bottom: 1px solid #1c1c22;
+                    overflow: hidden;
+                }
+
+                .decal-showcase-section::before {
+                    content: '';
+                    position: absolute;
+                    top: -150px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 700px;
+                    height: 350px;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+                    pointer-events: none;
+                }
+
+                .decal-showcase-inner {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 3.5rem;
+                }
+
+                .decal-header-block {
+                    text-align: center;
+                    max-width: 820px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.2rem;
+                }
+
+                .decal-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: rgba(255, 255, 255, 0.06);
+                    border: 1px solid rgba(255, 255, 255, 0.16);
+                    border-radius: 999px;
+                    padding: 6px 18px;
+                    font-size: 0.72rem;
+                    font-weight: 800;
+                    letter-spacing: 0.14em;
+                    text-transform: uppercase;
+                    color: #d4d4d8;
+                }
+
+                .badge-sparkle {
+                    color: #ffffff;
+                }
+
+                .decal-title {
+                    font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+                    font-weight: 950;
+                    letter-spacing: -0.03em;
+                    text-transform: uppercase;
+                    line-height: 1.05;
+                    margin: 0;
+                    background: linear-gradient(180deg, #ffffff 0%, #d1d1d6 60%, #8e8e93 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .decal-description {
+                    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+                    color: rgba(255, 255, 255, 0.75);
+                    line-height: 1.65;
+                    max-width: 680px;
+                    margin: 0;
+                }
+
+                .decal-description strong {
+                    color: #ffffff;
+                }
+
+                .decal-cta-wrapper {
+                    margin-top: 0.5rem;
+                }
+
+                .btn-decal-lab {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.6rem;
+                    padding: 16px 42px;
+                    background: #ffffff;
+                    color: #000000;
+                    border-radius: 999px;
+                    font-weight: 900;
+                    font-size: 1rem;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+                }
+
+                .btn-decal-lab:hover {
+                    background: #e4e4e7;
+                    transform: translateY(-3px) scale(1.02);
+                    box-shadow: 0 14px 40px rgba(255, 255, 255, 0.3);
+                }
+
+                /* Photo Grid */
+                .decal-gallery-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.5rem;
+                    width: 100%;
+                }
+
+                .decal-gallery-card {
+                    position: relative;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    background: #121216;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+                    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                }
+
+                .decal-gallery-card:hover {
+                    transform: translateY(-6px);
+                    border-color: rgba(255, 255, 255, 0.28);
+                    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+                }
+
+                .card-image-wrap {
+                    position: relative;
+                    aspect-ratio: 4 / 3;
+                    width: 100%;
+                    overflow: hidden;
+                }
+
+                .card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+                }
+
+                .decal-gallery-card:hover .card-img {
+                    transform: scale(1.08);
+                }
+
+                .card-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    padding: 1.2rem;
+                    opacity: 0.9;
+                    transition: opacity 0.3s ease;
+                }
+
+                .card-tag {
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    letter-spacing: 0.1em;
+                    background: rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(8px);
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    color: #fff;
+                }
+
+                .card-cta {
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                    letter-spacing: 0.05em;
+                }
+
+                /* Trust Bar */
+                .decal-trust-bar {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                    width: 100%;
+                    max-width: 960px;
+                    padding: 1.8rem 2.5rem;
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border-radius: 16px;
+                    backdrop-filter: blur(12px);
+                }
+
+                .trust-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+
+                .trust-icon {
+                    font-size: 1.8rem;
+                }
+
+                .trust-item strong {
+                    display: block;
+                    font-size: 0.95rem;
+                    font-weight: 800;
+                    letter-spacing: 0.02em;
+                }
+
+                .trust-item p {
+                    margin: 2px 0 0 0;
+                    font-size: 0.8rem;
+                    color: rgba(255, 255, 255, 0.55);
+                }
+
+                .trust-divider {
+                    width: 1px;
+                    height: 40px;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                @media (max-width: 900px) {
+                    .decal-gallery-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                    .decal-trust-bar {
+                        flex-direction: column;
+                        gap: 1.5rem;
+                        align-items: flex-start;
+                        padding: 1.5rem;
+                    }
+                    .trust-divider {
+                        display: none;
+                    }
+                }
+
+                @media (max-width: 550px) {
+                    .decal-gallery-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+        </section>
+    );
+}
