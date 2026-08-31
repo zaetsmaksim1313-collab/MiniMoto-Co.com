@@ -461,57 +461,66 @@ export default function DecalShowcaseSection({ images = [] }: DecalShowcaseSecti
 
                 @media (max-width: 650px) {
                     .decal-showcase-section {
-                        padding: 4.5rem 0 4rem 0;
+                        padding: 3rem 0 2.5rem 0;
                     }
                     .decal-showcase-inner {
-                        gap: 2.5rem;
+                        gap: 1.8rem;
                         padding: 0 1rem;
                     }
+                    .decal-header-block {
+                        gap: 0.8rem;
+                    }
+                    .decal-badge {
+                        font-size: 0.65rem;
+                        padding: 4px 12px;
+                    }
                     .decal-title {
-                        font-size: clamp(1.8rem, 8vw, 2.8rem);
+                        font-size: 1.5rem;
+                        line-height: 1.1;
                     }
                     .decal-description {
-                        font-size: 0.92rem;
-                        padding: 0 0.5rem;
+                        font-size: 0.85rem;
+                        line-height: 1.45;
+                        padding: 0 0.25rem;
                     }
                     .stacked-slider-wrapper {
-                        gap: 0.8rem;
+                        gap: 0.6rem;
                     }
                     .slider-top-labels {
                         padding: 0 0.25rem;
                     }
                     .label-side {
-                        font-size: 0.75rem;
+                        font-size: 0.72rem;
                     }
                     .label-instruction {
                         display: none;
                     }
                     .stacked-compare-viewport {
-                        height: clamp(440px, 62vh, 540px);
-                        border-radius: 18px;
+                        height: 380px;
+                        border-radius: 16px;
                     }
                     .stacked-layer {
-                        padding: 1.2rem 0.5rem;
-                        gap: 0.8rem;
+                        padding: 1rem 0.5rem;
+                        gap: 0.5rem;
                     }
                     .stacked-card {
-                        width: min(260px, 72vw);
-                        border-radius: 14px;
+                        width: 180px;
+                        border-radius: 12px;
                     }
                     .card-top {
-                        transform: rotate(-2deg) translateX(-8px);
+                        transform: rotate(-2deg) translateX(-6px);
                     }
                     .card-bottom {
-                        transform: rotate(2deg) translateX(8px) translateY(-14px);
+                        transform: rotate(2deg) translateX(6px) translateY(-10px);
                     }
                     .drag-knob {
-                        width: 42px;
-                        height: 42px;
+                        width: 38px;
+                        height: 38px;
                     }
                     .btn-make-your-own {
                         width: 100%;
-                        padding: 16px 24px;
-                        font-size: 0.95rem;
+                        padding: 14px 20px;
+                        font-size: 0.9rem;
                     }
                 }
             `}</style>

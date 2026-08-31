@@ -507,28 +507,44 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                 }
 
                 @media (max-width: 600px) {
-                    .hero-content {
-                        padding-bottom: 40px;
-                        gap: 1rem;
+                    .hero {
+                        min-height: 80svh;
+                        height: 88svh;
                     }
-                    .hero-badge {
-                        font-size: 0.68rem;
-                        padding: 6px 14px;
-                        white-space: normal;
+                    .hero-content {
+                        padding-bottom: 30px;
+                        gap: 0.8rem;
+                    }
+                    .hero-wordmark {
+                        font-size: 2rem;
+                        letter-spacing: -0.02em;
+                    }
+                    .hero-slogan {
+                        font-size: 1rem;
+                    }
+                    .hero-sub {
+                        font-size: 0.82rem;
                         line-height: 1.4;
                     }
+                    .hero-badge {
+                        font-size: 0.62rem;
+                        padding: 5px 12px;
+                        white-space: normal;
+                        line-height: 1.3;
+                    }
                     .hero-stats {
-                        gap: 0.8rem;
-                        padding: 10px 14px;
+                        gap: 0.6rem;
+                        padding: 8px 12px;
                         width: 100%;
-                        max-width: 360px;
+                        max-width: 320px;
                         justify-content: space-around;
                     }
-                    .stat-num { font-size: 1.15rem; }
-                    .stat-label { font-size: 0.6rem; }
-                    .hero-stat-divider { height: 28px; }
+                    .stat-num { font-size: 1.05rem; }
+                    .stat-label { font-size: 0.55rem; }
+                    .hero-stat-divider { height: 24px; }
                     .hero-ctas { width: 100%; padding: 0 1rem; }
-                    .btn-hero-primary { width: 100%; text-align: center; padding: 16px 24px; font-size: 0.95rem; }
+                    .btn-hero-primary { width: 100%; text-align: center; padding: 13px 20px; font-size: 0.88rem; }
+                    .featured-section { padding: 2.5rem 0; }
                 }
 
                 .featured-section {
@@ -607,12 +623,25 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
                     }
                 }
 
-                @media (max-width: 480px) {
+                @media (max-width: 600px) {
                     .emotos-grid {
-                        grid-template-columns: 1fr;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 0.75rem;
+                    }
+                    .emotos-header {
+                        margin-bottom: 1.5rem;
+                        padding-bottom: 0.6rem;
                     }
                     .emotos-header h2 {
-                        font-size: 2.5rem;
+                        font-size: 1.4rem;
+                        letter-spacing: -0.01em;
+                    }
+                    .shop-all-link {
+                        font-size: 0.75rem;
+                    }
+                    .btn-more-emotos {
+                        padding: 11px 24px;
+                        font-size: 0.8rem;
                     }
                 }
 

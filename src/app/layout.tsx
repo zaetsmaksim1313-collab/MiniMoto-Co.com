@@ -1,11 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
-  title: "Fully Custom Mini Surrons",
-  description: "Highest quality mini surrons, talarias, and electric dirt bikes.",
+  title: "Mini Moto Co | Custom Mini Motos & Decal Lab",
+  description: "Highest quality custom mini electric motos, bespoke decals, and builds. Hand-built in San Diego, CA.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -15,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body>
         <ClientLayout>
           <ClientNav>

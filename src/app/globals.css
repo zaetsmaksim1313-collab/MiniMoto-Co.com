@@ -68,6 +68,12 @@ ul {
   padding: 0 2rem;
 }
 
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
