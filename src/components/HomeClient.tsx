@@ -67,24 +67,58 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
 
     return (
         <div className="home-container">
-            {/* Hero Section */}
+            {/* ── CINEMATIC HERO ─────────────────────────────────────────── */}
             <section className="hero">
-                <div style={{ position: 'absolute', inset: '-10%', transform: `translateY(${scrollY * 0.4}px)` }}>
-                    <div className="hero-bg"></div>
+                {/* Parallax photo layer */}
+                <div className="hero-photo-wrap" style={{ transform: `translateY(${scrollY * 0.32}px)` }}>
+                    <img src="/hero-bikes.jpg" alt="Minimoto&amp;Co bikes" className="hero-photo" />
                 </div>
-                <div className="hero-overlay"></div>
+
+                {/* Multi-stop gradient overlay */}
+                <div className="hero-overlay" />
+
+                {/* Bottom fade to white for smooth section transition */}
+                <div className="hero-bottom-fade" />
+
+                {/* Content */}
                 <div className="hero-content container">
-                    <h1 className="animate-fade-in-up">Fully Custom Mini Surrons</h1>
-                    <hr className="hero-divider animate-fade-in-up delay-1" />
-                    <p className="animate-fade-in-up delay-1">A premium, rider-built brand for hand-designed 3D-printed mini motos. The highest quality mini Surrons out there.</p>
-                    <div className="animate-fade-in-up delay-2" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1rem' }}>
-                        <Link href="/products" className="btn-hero">Shop all</Link>
+                    {/* Eyebrow badge */}
+                    <div className="hero-badge animate-fade-in-up">
+                        <span className="hero-badge-dot" />
+                        Est. 2024 &nbsp;·&nbsp; Custom Mini Motos &nbsp;·&nbsp; USA
+                    </div>
+
+                    {/* Brand name */}
+                    <h1 className="hero-wordmark animate-fade-in-up delay-1">
+                        MINIMOTO<span className="hero-amp">&amp;</span>CO
+                    </h1>
+
+                    {/* Slogan */}
+                    <p className="hero-slogan animate-fade-in-up delay-2">
+                        Go mini or go home.
+                    </p>
+
+                    {/* Supporting copy */}
+                    <p className="hero-sub animate-fade-in-up delay-3">
+                        Hand-built. Fully custom. The highest-quality mini electric motos on the market.
+                    </p>
+
+                    {/* CTAs */}
+                    <div className="hero-ctas animate-fade-in-up delay-3">
+                        <Link href="/products" className="btn-hero-primary">Shop the Collection</Link>
+                        <Link href="/decal-builder" className="btn-hero-ghost">Build a Decal →</Link>
+                    </div>
+
+                    {/* Stat bar */}
+                    <div className="hero-stats animate-fade-in-up delay-3">
+                        <div className="hero-stat"><span className="stat-num">100%</span><span className="stat-label">Custom Builds</span></div>
+                        <div className="hero-stat-divider" />
+                        <div className="hero-stat"><span className="stat-num">4</span><span className="stat-label">Models Available</span></div>
+                        <div className="hero-stat-divider" />
+                        <div className="hero-stat"><span className="stat-num">∞</span><span className="stat-label">Colorways</span></div>
                     </div>
                 </div>
             </section>
-
-            {/* Make It Yours Collage */}
-            <MakeItYoursSection images={makeItYoursImages} />
 
             {/* EMOTOS Section */}
             <section className="featured-section emotos-section">
@@ -243,126 +277,249 @@ export default function HomeClient({ featuredProducts, ebikes, pedalBikes, acces
             </section>
 
             <style jsx>{`
+                /* ── HERO ────────────────────────────────────────── */
                 .hero {
                     position: relative;
-                    height: 85vh;
+                    height: 100vh;
+                    min-height: 640px;
                     width: 100%;
                     overflow: hidden;
                     display: flex;
                     align-items: center;
-                    background-color: #000;
+                    background: #000;
                 }
 
-                .hero-bg {
+                .hero-photo-wrap {
                     position: absolute;
-                    inset: -5%;
-                    width: 110%;
-                    height: 110%;
-                    background-image: url('/hero-bg.JPG');
-                    background-size: cover;
-                    background-position: center;
-                    z-index: 0;
-                    animation: heroPan 30s infinite alternate ease-in-out;
+                    inset: -14% 0;
+                    will-change: transform;
                 }
 
-                @keyframes heroPan {
-                    0% { transform: scale(1) translate(0, 0); }
-                    100% { transform: scale(1.05) translate(-1.5%, -1.5%); }
-                }
-
-                @supports (-webkit-touch-callout: none) {
-                    .hero-bg {
-                        animation: none;
-                    }
-                }
-
-                .hero-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
+                .hero-photo {
                     width: 100%;
                     height: 100%;
-                    background: rgba(0, 0, 0, 0.25);
+                    object-fit: cover;
+                    object-position: center 60%;
+                    display: block;
+                }
+
+                /* Dark radial + linear combo overlay */
+                .hero-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background:
+                        radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.62) 100%),
+                        linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.0) 55%);
                     z-index: 1;
+                }
+
+                /* Seamless fade into the white product section below */
+                .hero-bottom-fade {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: 180px;
+                    background: linear-gradient(to bottom, transparent, #ffffff);
+                    z-index: 2;
                 }
 
                 .hero-content {
                     position: relative;
-                    z-index: 2;
-                    max-width: 800px;
+                    z-index: 3;
+                    max-width: 860px;
                     text-align: center;
                     margin: 0 auto;
                     color: white;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 1.5rem;
+                    gap: 1.2rem;
+                    padding-bottom: 80px;
                 }
 
-                .hero-content h1 {
-                    font-size: clamp(2.5rem, 8vw, 5rem);
-                    font-weight: 500;
-                    letter-spacing: -0.02em;
-                    line-height: 1.1;
-                }
-                
-                .hero-divider {
-                    width: 60%;
-                    border: none;
-                    height: 2px;
-                    background-color: white;
-                }
-
-                .hero-content p {
-                    font-size: 1.15rem;
-                    font-weight: 400;
-                    max-width: 600px;
-                    margin: 0 auto;
+                /* Eyebrow badge */
+                .hero-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: rgba(255,255,255,0.10);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    border: 1px solid rgba(255,255,255,0.22);
+                    border-radius: 999px;
+                    padding: 6px 18px;
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: rgba(255,255,255,0.90);
                 }
 
-                .btn-hero {
-                    position: relative;
+                .hero-badge-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #ff69b4;
                     display: inline-block;
-                    padding: 16px 40px;
-                    background: transparent;
-                    border-radius: 50px;
-                    color: black;
-                    text-decoration: none;
+                    box-shadow: 0 0 8px #ff69b4;
+                    animation: pulse 2s infinite;
+                }
+
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.6; transform: scale(1.4); }
+                }
+
+                /* Giant brand wordmark */
+                .hero-wordmark {
+                    font-size: clamp(3.2rem, 9vw, 7rem);
+                    font-weight: 900;
+                    letter-spacing: -0.03em;
+                    line-height: 1;
+                    text-transform: uppercase;
+                    margin: 0;
+                    text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+                }
+
+                .hero-amp {
+                    color: #ff69b4;
+                    font-style: italic;
+                }
+
+                /* Slogan */
+                .hero-slogan {
+                    font-size: clamp(1.3rem, 3.5vw, 2rem);
+                    font-style: italic;
+                    font-weight: 300;
+                    letter-spacing: 0.01em;
+                    margin: 0;
+                    opacity: 0.92;
+                }
+
+                /* Sub-copy */
+                .hero-sub {
+                    font-size: clamp(0.85rem, 2vw, 1.05rem);
+                    font-weight: 400;
+                    color: rgba(255,255,255,0.72);
+                    max-width: 520px;
+                    line-height: 1.65;
+                    margin: 0;
+                }
+
+                /* CTA buttons */
+                .hero-ctas {
+                    display: flex;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    margin-top: 0.4rem;
+                }
+
+                .btn-hero-primary {
+                    display: inline-block;
+                    padding: 15px 36px;
+                    background: #fff;
+                    color: #000;
+                    border-radius: 999px;
                     font-weight: 800;
-                    font-size: 1.1rem;
-                    transition: color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-                    overflow: hidden;
-                    z-index: 1;
+                    font-size: 0.95rem;
+                    letter-spacing: 0.04em;
+                    text-decoration: none;
+                    text-transform: uppercase;
+                    transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
                 }
 
-                .btn-hero::before {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    background: white;
-                    z-index: -1;
-                    border-radius: 50px;
-                    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                .btn-hero-primary:hover {
+                    background: #ff69b4;
+                    color: #fff;
+                    transform: translateY(-3px);
+                    box-shadow: 0 14px 36px rgba(255,105,180,0.4);
                 }
 
-                .btn-hero::after {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    background: black;
-                    z-index: -2;
-                    border-radius: 50px;
+                .btn-hero-ghost {
+                    display: inline-block;
+                    padding: 15px 36px;
+                    background: transparent;
+                    color: #fff;
+                    border: 1.5px solid rgba(255,255,255,0.55);
+                    border-radius: 999px;
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    letter-spacing: 0.04em;
+                    text-decoration: none;
+                    text-transform: uppercase;
+                    backdrop-filter: blur(8px);
+                    transition: all 0.3s cubic-bezier(0.25,1,0.5,1);
                 }
 
-                .btn-hero:hover {
-                    color: white;
-                    transform: translateY(-2px);
-                    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                .btn-hero-ghost:hover {
+                    background: rgba(255,255,255,0.15);
+                    border-color: #fff;
+                    transform: translateY(-3px);
                 }
 
-                .btn-hero:hover::before {
-                    transform: scaleY(0);
-                    transform-origin: top;
+                /* Stat bar */
+                .hero-stats {
+                    display: flex;
+                    align-items: center;
+                    gap: 2rem;
+                    margin-top: 0.6rem;
+                    padding: 16px 28px;
+                    background: rgba(255,255,255,0.08);
+                    backdrop-filter: blur(14px);
+                    -webkit-backdrop-filter: blur(14px);
+                    border: 1px solid rgba(255,255,255,0.15);
+                    border-radius: 16px;
+                }
+
+                .hero-stat {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 2px;
+                }
+
+                .stat-num {
+                    font-size: 1.55rem;
+                    font-weight: 900;
+                    letter-spacing: -0.02em;
+                    color: #fff;
+                }
+
+                .stat-label {
+                    font-size: 0.65rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    color: rgba(255,255,255,0.55);
+                }
+
+                .hero-stat-divider {
+                    width: 1px;
+                    height: 36px;
+                    background: rgba(255,255,255,0.18);
+                }
+
+                /* Animations */
+                .animate-fade-in-up {
+                    animation: fadeInUp 0.8s cubic-bezier(0.25,1,0.5,1) both;
+                }
+                .delay-1 { animation-delay: 0.15s; }
+                .delay-2 { animation-delay: 0.28s; }
+                .delay-3 { animation-delay: 0.40s; }
+
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(22px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+
+                @media (max-width: 600px) {
+                    .hero-stats { gap: 1.2rem; padding: 12px 18px; }
+                    .stat-num { font-size: 1.2rem; }
+                    .hero-ctas { flex-direction: column; align-items: center; }
+                    .btn-hero-primary, .btn-hero-ghost { width: 100%; text-align: center; }
                 }
 
                 .featured-section {
